@@ -3806,24 +3806,22 @@ async function tryAutoConnect() {
 
     let ok = await FB.connect(saved);
 
-// 🔥 FIX false-negative from _ping/test
-if (!ok) {
-  console.warn("⚠️ AutoConnect forced");
-  ok = true;
-}
+    if (!ok) {
+      console.warn("⚠️ AutoConnect forced");
+      ok = true;
+    }
 
-if (ok) {
-  Store.useCloud = true;
+    if (ok) {
+      Store.useCloud = true;
 
-  await FB.pullAll();
+      await FB.pullAll();
 
-  refreshUI();   // ✅ IMPORTANT
-}
+      refreshUI();
 
       console.log("✅ AutoConnect: Cloud data loaded");
     }
 
-  } else {
+  } else {   // ✅ NOW CORRECTLY MATCHED
 
     var hasData = Store.questions.length > 0 || Store.candidates.length > 0;
 
