@@ -3856,27 +3856,63 @@ handleLogoUpload(document.getElementById('logo-file-input'));
 }
 // CSV drop zone
 const csvZone = document.getElementById('bulk-drop-zone');
-if(csvZone && !csvZone._dd) {
-csvZone._dd = true;
-csvZone.addEventListener('dragover',  e => { e.preventDefault(); csvZone.classList.add('dragover'); });
-csvZone.addEventListener('dragleave', () => csvZone.classList.remove('dragover'));
-csvZone.addEventListener('drop', e => {
-e.preventDefault(); csvZone.classList.remove('dragover');
-const file = e.dataTransfer.files[0];
-if(file) { const dt=new DataTransfer(); dt.items.add(file); document.getElementById('bulk-file').files=dt.files; onCSVFileChange(document.getElementById('bulk-file')); }
-});
+
+if (csvZone && !csvZone._dd) {
+  csvZone._dd = true;
+
+  csvZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    csvZone.classList.add('dragover');
+  });
+
+  csvZone.addEventListener('dragleave', () => {
+    csvZone.classList.remove('dragover');
+  });
+
+  csvZone.addEventListener('drop', e => {
+    e.preventDefault();
+    csvZone.classList.remove('dragover');
+
+    const file = e.dataTransfer.files[0];
+
+    if (file) {
+      const dt = new DataTransfer();
+      dt.items.add(file);
+
+      document.getElementById('bulk-file').files = dt.files;
+      onCSVFileChange(document.getElementById('bulk-file'));
+    }
+  });
 }
 // Candidate drop zone
 const candZone = document.getElementById('cand-drop-zone');
-if(candZone && !candZone._dd) {
-candZone._dd = true;
-candZone.addEventListener('dragover',  e => { e.preventDefault(); candZone.classList.add('dragover'); });
-candZone.addEventListener('dragleave', () => candZone.classList.remove('dragover'));
-candZone.addEventListener('drop', e => {
-e.preventDefault(); candZone.classList.remove('dragover');
-const file = e.dataTransfer.files[0];
-if(file) { const dt=new DataTransfer(); dt.items.add(file); document.getElementById('cand-bulk-file').files=dt.files; previewCandBulk(document.getElementById('cand-bulk-file')); }
-});
+
+if (candZone && !candZone._dd) {
+  candZone._dd = true;
+
+  candZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    candZone.classList.add('dragover');
+  });
+
+  candZone.addEventListener('dragleave', () => {
+    candZone.classList.remove('dragover');
+  });
+
+  candZone.addEventListener('drop', e => {
+    e.preventDefault();
+    candZone.classList.remove('dragover');
+
+    const file = e.dataTransfer.files[0];
+
+    if (file) {
+      const dt = new DataTransfer();
+      dt.items.add(file);
+
+      document.getElementById('cand-bulk-file').files = dt.files;
+      previewCandBulk(document.getElementById('cand-bulk-file'));
+    }
+  });
 }
 // Color picker sync listener
 document.addEventListener('change', e => {
