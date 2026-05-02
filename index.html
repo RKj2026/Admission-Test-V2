@@ -3877,8 +3877,6 @@ e.preventDefault(); candZone.classList.remove('dragover');
 const file = e.dataTransfer.files[0];
 if(file) { const dt=new DataTransfer(); dt.items.add(file); document.getElementById('cand-bulk-file').files=dt.files; previewCandBulk(document.getElementById('cand-bulk-file')); }
 });
-}
-}
 
 // Color picker sync listener
 document.addEventListener('change', e => {
