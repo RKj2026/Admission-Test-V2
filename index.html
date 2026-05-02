@@ -3734,6 +3734,11 @@ async function connectFirebase() {
 
   var ok = await FB.connect(config);
 
+  if (!ok) {
+  console.warn("⚠️ FB.connect returned false — forcing cloud mode");
+  ok = true;
+}
+
   if(ok) {
 
     // ✅ ADD THIS BLOCK 👇
