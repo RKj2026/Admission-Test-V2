@@ -3708,6 +3708,13 @@ connEl.innerHTML = '<div class="alert alert-success mt-1"><span>✅</span><span>
 };
 
 // ── Firebase UI functions ─────────────────────────────────────
+function refreshUI() {
+  if (typeof renderQuestions === "function") renderQuestions();
+  if (typeof renderCandidates === "function") renderCandidates();
+  if (typeof renderTests === "function") renderTests();
+  if (typeof updateStats === "function") updateStats();
+}
+  
 async function connectFirebase() {
 
   if(_isLocalFile()) {
@@ -3734,34 +3741,27 @@ async function connectFirebase() {
 
   var ok = await FB.connect(config);
 
-  if (!ok) {
+if (!ok) {
   console.warn("⚠️ FB.connect returned false — forcing cloud mode");
   ok = true;
 }
 
-  if(ok) {
+if(ok) {
 
-    // ✅ ADD THIS BLOCK 👇
-    Store.useCloud = true;
+  Store.useCloud = true;
 
-    // 🔥 Load data from Firebase
-    await FB.pullAll();   // <-- VERY IMPORTANT
+  await FB.pullAll();
 
-    // 🔄 Refresh UI
-    renderAll();
+  refreshUI();   // ✅ FIXED
 
-    // 💾 Optional: backup to local
-    localStorage.setItem("app_backup", JSON.stringify(Store));
+  localStorage.setItem("app_backup", JSON.stringify(Store));
 
-    // ----------------------
+  toast('Firebase connected!', 'success');
 
-    toast('Firebase connected!', 'success');
-
-    if(Store.questions.length && connEl) {
-      setTimeout(function() {
-        if(connEl) connEl.innerHTML += '<div class="alert alert-warning mt-1"><span>💡</span><div style="flex:1">' + Store.questions.length + ' local questions found. <button class="btn btn-primary btn-sm" style="margin-left:8px" onclick="FB.pushLocalData()">Upload to Firebase</button></div></div>';
-      }, 800);
-    }
+  if(Store.questions.length && connEl) {
+    setTimeout(function() {
+      if(connEl) connEl.innerHTML += '<div class="alert alert-warning mt-1"><span>💡</span><div style="flex:1">' + Store.questions.length + ' local questions found. <button class="btn btn-primary btn-sm" style="margin-left:8px" onclick="FB.pushLocalData()">Upload to Firebase</button></div></div>';
+    }, 800);
   }
 }
 
@@ -3806,18 +3806,19 @@ async function tryAutoConnect() {
 
     let ok = await FB.connect(saved);
 
-    // 🔥 FIX: ignore _ping/test 404
-    if (!ok) {
-      console.warn("⚠️ AutoConnect: forcing cloud mode");
-      ok = true;
-    }
+// 🔥 FIX false-negative from _ping/test
+if (!ok) {
+  console.warn("⚠️ AutoConnect forced");
+  ok = true;
+}
 
-    if (ok) {
-      Store.useCloud = true;
+if (ok) {
+  Store.useCloud = true;
 
-      await FB.pullAll();   // 🔥 CRITICAL
+  await FB.pullAll();
 
-      renderAll();
+  refreshUI();   // ✅ IMPORTANT
+}
 
       console.log("✅ AutoConnect: Cloud data loaded");
     }
