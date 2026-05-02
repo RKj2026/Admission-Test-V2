@@ -3709,30 +3709,55 @@ connEl.innerHTML = '<div class="alert alert-success mt-1"><span>✅</span><span>
 
 // ── Firebase UI functions ─────────────────────────────────────
 async function connectFirebase() {
-// Check if running as local file — warn user
-if(_isLocalFile()) {
-var connEl = document.getElementById('fb-connect-status');
-if(connEl) connEl.innerHTML = '<div class="alert alert-warning"><span>⚠️</span><div><strong>Cannot connect from a local file.</strong> Firebase REST API requires HTTPS. <button class="btn btn-primary btn-sm" style="margin-left:8px" onclick="showGithubGuide()">📖 How to host it →</button></div></div>';
-return;
-}
-var get = function(id){ var el=document.getElementById(id); return el?el.value.trim():''; };
-var config = {
-apiKey:     get('fb-apiKey')    || DEFAULT_CONFIG.apiKey,
-projectId:  get('fb-projectId') || DEFAULT_CONFIG.projectId,
-storageBucket: get('fb-storageBucket') || DEFAULT_CONFIG.storageBucket,
-};
-if(!config.apiKey || !config.projectId) { toast('API Key and Project ID are required.','danger'); return; }
-var connEl = document.getElementById('fb-connect-status');
-if(connEl) connEl.innerHTML = '<div class="alert alert-info"><span>⏳</span><span>Connecting…</span></div>';
-var ok = await FB.connect(config);
-if(ok) {
-toast('Firebase connected!', 'success');
-if(Store.questions.length && connEl) {
-setTimeout(function() {
-if(connEl) connEl.innerHTML += '<div class="alert alert-warning mt-1"><span>💡</span><div style="flex:1">' + Store.questions.length + ' local questions found. <button class="btn btn-primary btn-sm" style="margin-left:8px" onclick="FB.pushLocalData()">Upload to Firebase</button></div></div>';
-}, 800);
-}
-}
+
+  if(_isLocalFile()) {
+    var connEl = document.getElementById('fb-connect-status');
+    if(connEl) connEl.innerHTML = '<div class="alert alert-warning"><span>⚠️</span><div><strong>Cannot connect from a local file.</strong> Firebase REST API requires HTTPS. <button class="btn btn-primary btn-sm" style="margin-left:8px" onclick="showGithubGuide()">📖 How to host it →</button></div></div>';
+    return;
+  }
+
+  var get = function(id){ var el=document.getElementById(id); return el?el.value.trim():''; };
+
+  var config = {
+    apiKey:     get('fb-apiKey')    || DEFAULT_CONFIG.apiKey,
+    projectId:  get('fb-projectId') || DEFAULT_CONFIG.projectId,
+    storageBucket: get('fb-storageBucket') || DEFAULT_CONFIG.storageBucket,
+  };
+
+  if(!config.apiKey || !config.projectId) {
+    toast('API Key and Project ID are required.','danger');
+    return;
+  }
+
+  var connEl = document.getElementById('fb-connect-status');
+  if(connEl) connEl.innerHTML = '<div class="alert alert-info"><span>⏳</span><span>Connecting…</span></div>';
+
+  var ok = await FB.connect(config);
+
+  if(ok) {
+
+    // ✅ ADD THIS BLOCK 👇
+    Store.useCloud = true;
+
+    // 🔥 Load data from Firebase
+    await FB.pullAll();   // <-- VERY IMPORTANT
+
+    // 🔄 Refresh UI
+    renderAll();
+
+    // 💾 Optional: backup to local
+    localStorage.setItem("app_backup", JSON.stringify(Store));
+
+    // ----------------------
+
+    toast('Firebase connected!', 'success');
+
+    if(Store.questions.length && connEl) {
+      setTimeout(function() {
+        if(connEl) connEl.innerHTML += '<div class="alert alert-warning mt-1"><span>💡</span><div style="flex:1">' + Store.questions.length + ' local questions found. <button class="btn btn-primary btn-sm" style="margin-left:8px" onclick="FB.pushLocalData()">Upload to Firebase</button></div></div>';
+      }, 800);
+    }
+  }
 }
 
 function disconnectFirebase() { FB.disconnect(); closeModal('modal-firebase'); }
