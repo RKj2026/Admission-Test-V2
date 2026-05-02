@@ -3154,7 +3154,7 @@ function selectOption(optIdx) {
 const ts = App.testState;
 const q = ts.questions[ts.currentIndex];
 if(q.type === 'mcq-multi') {
-let ans = Array.isArray(ts.answers[ts.currentIndex]) ? […ts.answers[ts.currentIndex]] : [];
+let ans = Array.isArray(ts.answers[ts.currentIndex]) ? [...ts.answers[ts.currentIndex]] : [];
 const i = ans.indexOf(optIdx);
 if(i>=0) ans.splice(i,1); else ans.push(optIdx);
 ts.answers[ts.currentIndex] = ans;
