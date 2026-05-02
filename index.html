@@ -3790,32 +3790,49 @@ return location.protocol === 'file:' || location.hostname === 'localhost' || loc
 }
 
 async function tryAutoConnect() {
-// Only reconnect if user explicitly connected before (saved config exists)
-var saved = null;
-try { saved = JSON.parse(localStorage.getItem('admitpro_fb_config')); } catch(e){}
 
-if(saved && saved.projectId) {
-// User previously configured Firebase — try to reconnect
-if(_isLocalFile()) {
-// Can't use REST API from file:// due to CORS — show setup guide
-var banner = document.getElementById('sync-setup-banner');
-if(banner) banner.classList.remove('hidden');
-return;
-}
-FB._setStatus('syncing', 'Reconnecting…');
-await FB.connect(saved);
-} else {
-// First time or no config — show sync banner to guide setup
-// Only show if they have admin data worth syncing (not on first ever load)
-var hasData = Store.questions.length > 0 || Store.candidates.length > 0;
-if(hasData && _isLocalFile()) {
-// Show banner after a short delay so app loads first
-setTimeout(function() {
-var banner = document.getElementById('sync-setup-banner');
-if(banner) banner.classList.remove('hidden');
-}, 2000);
-}
-}
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem('admitpro_fb_config')); } catch(e){}
+
+  if(saved && saved.projectId) {
+
+    if(_isLocalFile()) {
+      var banner = document.getElementById('sync-setup-banner');
+      if(banner) banner.classList.remove('hidden');
+      return;
+    }
+
+    FB._setStatus('syncing', 'Reconnecting…');
+
+    let ok = await FB.connect(saved);
+
+    // 🔥 FIX: ignore _ping/test 404
+    if (!ok) {
+      console.warn("⚠️ AutoConnect: forcing cloud mode");
+      ok = true;
+    }
+
+    if (ok) {
+      Store.useCloud = true;
+
+      await FB.pullAll();   // 🔥 CRITICAL
+
+      renderAll();
+
+      console.log("✅ AutoConnect: Cloud data loaded");
+    }
+
+  } else {
+
+    var hasData = Store.questions.length > 0 || Store.candidates.length > 0;
+
+    if(hasData && _isLocalFile()) {
+      setTimeout(function() {
+        var banner = document.getElementById('sync-setup-banner');
+        if(banner) banner.classList.remove('hidden');
+      }, 2000);
+    }
+  }
 }
 // ═══════════════════════════════════════════════════════════════
 // INIT  — runs after DOM is fully parsed (ESM deferred by default)
