@@ -501,7 +501,7 @@ background:var(--neutral-100);color:var(--neutral-500);
         <div>Firebase sync requires the app to be served over <strong>HTTPS</strong>. The easiest way is <strong>GitHub Pages</strong> — free, instant, no server needed.</div>
       </div>
 
-```
+
   <div class="config-step">
     <div class="config-step-num">1</div>
     <div>
@@ -555,7 +555,7 @@ background:var(--neutral-100);color:var(--neutral-500);
   <a href="https://github.com" target="_blank" class="btn btn-outline btn-sm">Open GitHub →</a>
   <button class="btn btn-primary" onclick="closeModal('modal-github-guide')">Got it!</button>
 </div>
-```
+
 
   </div>
 </div>
@@ -1090,7 +1090,7 @@ background:var(--neutral-100);color:var(--neutral-500);
     <!-- Pages -->
     <main class="admin-content">
 
-```
+
   <!-- DASHBOARD PAGE -->
   <div id="page-dashboard" class="admin-page active">
     <div class="page-header">
@@ -1450,7 +1450,7 @@ background:var(--neutral-100);color:var(--neutral-500);
   </div>
 
 </main>
-```
+
 
   </div>
 </div>
@@ -3120,15 +3120,25 @@ function renderQuestion() {
       }).join('')}
     </div>`;
   } else {
-    const textVal = typeof ans==='string' ? ans : '';
-    optionsHTML = `<div class="form-group">
-      <label class="form-label">Your Answer</label>
-      <textarea class="form-control" id="subj-answer" rows="6" placeholder="Write your answer here..." onchange="saveSubjectiveAnswer(this.value)" oninput="saveSubjectiveAnswer(this.value)">${textVal}</textarea>
+    const textVal = typeof ans === 'string' ? ans : '';
 
-```
-  <div class="form-hint">Write a detailed answer. This will be reviewed by the evaluator.</div>
-</div>`;
-```
+optionsHTML = `
+  <div class="form-group">
+    <label class="form-label">Your Answer</label>
+    <textarea
+      class="form-control"
+      id="subj-answer"
+      rows="6"
+      placeholder="Write your answer here..."
+      onchange="saveSubjectiveAnswer(this.value)"
+      oninput="saveSubjectiveAnswer(this.value)"
+    >${textVal}</textarea>
+
+    <div class="form-hint">
+      Write a detailed answer. This will be reviewed by the evaluator.
+    </div>
+  </div>
+`;
 
 }
 
@@ -3267,7 +3277,7 @@ if(!sectionScores[secName]) sectionScores[secName]={score:0,max:0,correct:0,inco
 sectionScores[secName].max += q.marks;
 sectionScores[secName].total++;
 
-```
+
 const ans = ts.answers[i];
 answersForResult[i] = {qId:q.id, userAnswer:ans, type:q.type};
 
@@ -3290,7 +3300,7 @@ if(ans===undefined||ans===null||ans===''||(Array.isArray(ans)&&!ans.length)) {
     answersForResult[i].status='incorrect';
   }
 }
-```
+
 
 });
 
@@ -3362,7 +3372,7 @@ const ans = result.answers?.[i];
 const status = ans?.status || 'skipped';
 if(filter!=='all' && filter!==status && !(filter==='incorrect'&&status==='incorrect') && !(filter==='correct'&&status==='correct') && !(filter==='skipped'&&status==='skipped')) return '';
 
-```
+
 const statusConfig = {correct:{icon:'✅',color:'var(--success)',bg:'rgba(26,140,90,.06)'},incorrect:{icon:'❌',color:'var(--danger)',bg:'rgba(192,57,43,.05)'},skipped:{icon:'—',color:'var(--neutral-500)',bg:'var(--neutral-50)'},manual:{icon:'📝',color:'var(--warning)',bg:'rgba(230,126,34,.06)'}};
 const sc = statusConfig[status] || statusConfig.skipped;
 
@@ -3385,7 +3395,7 @@ return `<div style="padding:16px;border:1px solid var(--neutral-200);border-radi
   `:`<div class="text-xs"><strong>Your answer:</strong> ${typeof userAns==='string'&&userAns?userAns.substring(0,150)+'...':'Not answered'}</div>`}
   ${q.explanation?`<div class="text-xs text-muted mt-1" style="font-style:italic">💡 ${q.explanation}</div>`:''}
 </div>`;
-```
+
 
 }).join('') || '<div class="text-muted text-sm">No questions in this filter.</div>';
 }
@@ -3503,7 +3513,7 @@ if(!testRes.ok && testRes.status !== 404 && testRes.status !== 400) {
 throw new Error('Firestore returned HTTP ' + testRes.status + '. Check Project ID and API key.');
 }
 
-```
+
   localStorage.setItem('admitpro_fb_config', JSON.stringify(config));
   this._setStatus('connected', 'Connected · ' + config.projectId);
   this._updateSettingsUI(true, config.projectId);
@@ -3516,7 +3526,7 @@ throw new Error('Firestore returned HTTP ' + testRes.status + '. Check Project I
   this._updateSettingsUI(false);
   return false;
 }
-```
+
 
 },
 
