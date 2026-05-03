@@ -466,8 +466,8 @@ background:var(--neutral-100);color:var(--neutral-500);
 
 <div id="firebase-status-bar">
   <div class="fb-dot" id="fb-dot"></div>
-  <span id="fb-status-text">Local mode — data saved on this device only</span>
-  <button onclick="openFirebaseModal()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:2px 10px;border-radius:6px;font-size:.72rem;cursor:pointer;margin-left:8px">Enable Sync →</button>
+  <span id="fb-status-text">Local mode</span>
+  <button onclick="openFirebaseModal()">Enable Sync →</button>
 </div>
 
 <!-- Sync Setup Banner (shown when not hosted on HTTP) -->
@@ -2158,6 +2158,160 @@ function renderAll() {
   const fns = { dashboard: renderDashboard, questions: renderQuestions, tests: renderTests, candidates: renderCandidates, results: renderResults, analytics: renderAnalytics };
   if(fns[pid]) fns[pid]();
 }
+// ═══════════════════════════════════════════════════════════════
+// FIREBASE MODULE — Pure REST API (Multi-Device Sync Engine)
+// ═══════════════════════════════════════════════════════════════
+
+const DEFAULT_CONFIG = {
+  apiKey: "AIzaSyDBi7xwowE7f7xVqWhfms-cV2zTYI6cOL4",
+  projectId: "admission-test-v2",
+  storageBucket: "admission-test-v2.firebasestorage.app"
+};
+
+const FB = {
+  cfg: null,
+  _pollTimers: {},
+  _etags: {},
+  POLL_MS: 6000,
+
+  _base() { return 'https://firestore.googleapis.com/v1/projects/' + this.cfg.projectId + '/databases/(default)/documents'; },
+  _key() { return '?key=' + this.cfg.apiKey; },
+  _colURL(col) { return this._base() + '/' + col + this._key(); },
+  _docURL(col, id) { return this._base() + '/' + col + '/' + id + this._key(); },
+
+  _encode(val) {
+    if (val === null || val === undefined) return { nullValue: null };
+    if (typeof val === 'boolean') return { booleanValue: val };
+    if (typeof val === 'number') return Number.isInteger(val) ? { integerValue: String(val) } : { doubleValue: val };
+    if (typeof val === 'string') return { stringValue: val };
+    if (Array.isArray(val)) return { arrayValue: { values: val.map(v => this._encode(v)) } };
+    if (typeof val === 'object') return { mapValue: { fields: this._encodeObj(val) } };
+    return { stringValue: String(val) };
+  },
+
+  _encodeObj(obj) {
+    var fields = {};
+    Object.keys(obj).forEach(k => { fields[k] = this._encode(obj[k]); });
+    return fields;
+  },
+
+  _decode(val) {
+    if (!val) return null;
+    if ('nullValue' in val) return null;
+    if ('booleanValue' in val) return val.booleanValue;
+    if ('integerValue' in val) return parseInt(val.integerValue, 10);
+    if ('doubleValue' in val) return val.doubleValue;
+    if ('stringValue' in val) return val.stringValue;
+    if ('arrayValue' in val) return (val.arrayValue.values || []).map(v => this._decode(v));
+    if ('mapValue' in val) return this._decodeObj(val.mapValue.fields || {});
+    return null;
+  },
+
+  _decodeObj(fields) {
+    var obj = {};
+    Object.keys(fields || {}).forEach(k => { obj[k] = this._decode(fields[k]); });
+    return obj;
+  },
+
+  _docToObj(doc) {
+    var obj = this._decodeObj(doc.fields || {});
+    obj.id = doc.name ? doc.name.split('/').pop() : obj.id;
+    return obj;
+  },
+
+  async connect(config, silent) {
+    this.cfg = config;
+    if (!silent) this._setStatus('syncing', 'Connecting to Firebase...');
+    try {
+      var testRes = await fetch(this._base() + '/_ping/test' + this._key(), { method: 'GET', mode: 'cors' }).catch(() => { throw new Error('offline'); });
+      if (!testRes.ok && testRes.status >= 500) throw new Error('Firestore server error');
+      
+      localStorage.setItem('admitpro_fb_config', JSON.stringify(config));
+      this._setStatus('connected', 'Synced · ' + config.projectId);
+      await this.pullAll();
+      this._startPolling();
+      return true;
+    } catch (err) {
+      this.cfg = null;
+      if (!silent && err.message !== 'offline') toast('Firebase: ' + err.message, 'danger');
+      return false;
+    }
+  },
+
+  async pullAll() {
+    if (!this.cfg) return;
+    try {
+      const res = await Promise.all([
+        this._getAll('questions'), this._getAll('tests'), this._getAll('candidates'), this._getAll('results'), this._getDoc('settings', 'main')
+      ]);
+      if (res[0].length) Store.questions = res[0];
+      if (res[1].length) Store.tests = res[1];
+      if (res[2].length) Store.candidates = res[2];
+      if (res[3].length) Store.results = res[3];
+      if (res[4] && res[4].instituteName) Object.assign(Store.settings, res[4]);
+      
+      renderAll();
+    } catch (e) { console.error("Sync pull failed", e); }
+  },
+
+  _startPolling() {
+    this._stopPolling();
+    const cols = ['questions', 'tests', 'candidates', 'results'];
+    cols.forEach(col => {
+      this._pollTimers[col] = setInterval(async () => {
+        try {
+          const docs = await this._getAll(col);
+          const sig = docs.length + '|' + (docs[0] ? JSON.stringify(docs[1]).length : 0);
+          if (sig !== this._etags[col]) {
+            this._etags[col] = sig;
+            Store[col] = docs;
+            renderAll();
+          }
+        } catch (e) {}
+      }, this.POLL_MS);
+    });
+  },
+
+  _stopPolling() { Object.keys(this._pollTimers).forEach(k => clearInterval(this._pollTimers[k])); },
+
+  _setStatus(state, msg) {
+    const bar = document.getElementById('firebase-status-bar');
+    const dot = document.getElementById('fb-dot');
+    const text = document.getElementById('fb-status-text');
+    if (bar) {
+      bar.classList.add('show');
+      dot.className = 'fb-dot ' + state;
+      text.textContent = msg;
+    }
+  },
+
+  async _getAll(col) {
+    const res = await fetch(this._colURL(col), { mode: 'cors' });
+    const data = await res.json();
+    return data.documents ? data.documents.map(d => this._docToObj(d)) : [];
+  },
+
+  async _getDoc(col, id) {
+    const res = await fetch(this._docURL(col, id), { mode: 'cors' });
+    return res.ok ? this._docToObj(await res.json()) : null;
+  },
+
+  // Real-time Push Helpers
+  syncQuestion(q)   { if(this.cfg) this._set('questions',  q.id, q); },
+  syncTest(t)       { if(this.cfg) this._set('tests',      t.id, t); },
+  syncCandidate(c)  { if(this.cfg) this._set('candidates', c.id, c); },
+  syncResult(r)     { if(this.cfg) this._set('results',    r.id, r); },
+  syncSettings()    { if(this.cfg) this._set('settings', 'main', Store.settings); },
+  
+  async _set(col, id, data) {
+    return fetch(this._docURL(col, id), {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fields: this._encodeObj(data) })
+    });
+  }
+};
 
 init();
 </script>
