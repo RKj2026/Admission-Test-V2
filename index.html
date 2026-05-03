@@ -2052,16 +2052,37 @@ function saveSettings() {
 // ADMIN PAGES
 // ═══════════════════════════════════════════════════════════════
 function showAdminPage(page, btn) {
-  document.querySelectorAll('.admin-page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
-  document.getElementById(`page-${page}`).classList.add('active');
-  if(btn) btn.classList.add('active');
-  const renders = { dashboard:renderDashboard, questions:renderQuestions, tests:renderTests, candidates:renderCandidates, results:renderResults, analytics:renderAnalytics };
-  if(renders[page]) renders[page]();
-}
-function updateSidebarCounts() {
-  const el = document.getElementById('sb-q-count');
-  if(el) el.textContent = Store.questions.length;
+  // 1. Remove active class from ALL admin pages
+  document.querySelectorAll('.admin-page').forEach(p => {
+    p.classList.remove('active');
+    p.style.display = 'none'; // Force hide
+  });
+
+  // 2. Remove active class from ALL sidebar items
+  document.querySelectorAll('.sidebar-item').forEach(b => {
+    b.classList.remove('active');
+  });
+
+  // 3. Show only the target page
+  const targetPage = document.getElementById(`page-${page}`);
+  if (targetPage) {
+    targetPage.classList.add('active');
+    targetPage.style.display = 'block'; // Force show
+  }
+
+  // 4. Set the clicked button to active
+  if (btn) btn.classList.add('active');
+
+  // 5. Trigger the specific render function
+  const renders = { 
+    dashboard: renderDashboard, 
+    questions: renderQuestions, 
+    tests: renderTests, 
+    candidates: renderCandidates, 
+    results: renderResults, 
+    analytics: renderAnalytics 
+  };
+  if (renders[page]) renders[page]();
 }
 
 // ─── DASHBOARD ────────────────────────────────────────────────
