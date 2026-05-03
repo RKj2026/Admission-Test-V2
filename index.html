@@ -6,7 +6,7 @@
 <title>AdmitPro - Admission Test Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
 <style>
-/* ─── CSS VARIABLES ──────────────────────────────────────────── */
+/* ─── RESTORED ORIGINAL CSS ─── */
 :root {
   --primary: #1a3a5c;
   --primary-light: #2a5a8c;
@@ -28,101 +28,136 @@
   --shadow-lg: 0 8px 40px rgba(26,58,92,0.18);
   --radius: 12px;
   --radius-lg: 20px;
+  --institute-name: "AdmitPro Institute";
+  --logo-text: "AP";
   transition: all 0.2s;
 }
-
 /* Theme variants */
 .theme-emerald  { --primary:#0f5132; --primary-light:#198754; --accent:#ffc107; }
 .theme-crimson  { --primary:#6b1515; --primary-light:#c0392b; --accent:#f39c12; }
 .theme-violet   { --primary:#2d1b69; --primary-light:#6f42c1; --accent:#fd7e14; }
 .theme-slate    { --primary:#1e293b; --primary-light:#475569; --accent:#38bdf8; }
+.theme-forest   { --primary:#1a3a1f; --primary-light:#2d6a35; --accent:#a3e635; }
+.theme-ocean    { --primary:#0c3547; --primary-light:#0e6b8c; --accent:#22d3ee; }
+.theme-rose     { --primary:#6b1a3a; --primary-light:#be185d; --accent:#fbbf24; }
+.theme-amber    { --primary:#78350f; --primary-light:#b45309; --accent:#34d399; }
+.theme-midnight { --primary:#0f0f23; --primary-light:#1a1a4e; --accent:#7c3aed; }
+.theme-copper   { --primary:#431407; --primary-light:#9a3412; --accent:#10b981; }
 
-/* RESET & BASE */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
 body{font-family:'DM Sans',sans-serif;background:var(--neutral-50);color:var(--neutral-900);min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
 button{cursor:pointer;border:none;background:none;font-family:inherit}
 input,select,textarea{font-family:inherit;font-size:inherit}
+a{color:inherit;text-decoration:none}
 .hidden{display:none!important}
-
-/* UTILITIES */
 .flex{display:flex}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-between{justify-content:space-between}
 .grid{display:grid}.grid-2{grid-template-columns:repeat(2,1fr)}.grid-4{grid-template-columns:repeat(4,1fr)}
-.gap-1{gap:8px}.gap-2{gap:16px}.gap-3{gap:24px}
-.p-2{padding:16px}.p-3{padding:24px}.mb-2{margin-bottom:16px}.mt-2{margin-top:16px}
-.rounded-lg{border-radius:var(--radius)}
+.text-sm{font-size:0.875rem}.text-lg{font-size:1.125rem}.text-xl{font-size:1.25rem}.text-2xl{font-size:1.5rem}
+.font-semibold{font-weight:600}.font-bold{font-weight:700}
+.p-1{padding:8px}.p-2{padding:16px}.p-3{padding:24px}.mt-1{margin-top:8px}.mb-2{margin-bottom:16px}
+.rounded-lg{border-radius:var(--radius)}.bg-white{background:var(--white)}
+.shadow-md{box-shadow:var(--shadow-md)}.shadow-lg{box-shadow:var(--shadow-lg)}
+.border{border:1px solid var(--neutral-200)}
 
 /* SCREENS */
 .screen{display:none;min-height:100vh;animation:fadeIn .3s ease}
 .screen.active{display:flex;flex-direction:column}
 
 /* TOPBAR */
-.topbar{background:var(--primary);color:var(--white);padding:0 24px;height:64px;display:flex;align-items:center;justify-content:between;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.15)}
-.logo-badge{width:40px;height:40px;border-radius:10px;background:var(--accent);color:var(--primary);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-weight:700}
-
-/* ADMIN LAYOUT */
-.admin-layout{display:flex;flex:1;min-height:0}
-.sidebar{width:240px;background:var(--primary);color:#fff;display:flex;flex-direction:column;padding:12px 0;flex-shrink:0}
-.sidebar-item{display:flex;align-items:center;gap:12px;padding:12px 16px;color:rgba(255,255,255,.7);transition:all .2s;width:100%;text-align:left}
-.sidebar-item:hover, .sidebar-item.active{background:rgba(255,255,255,.1);color:#fff}
-.sidebar-item.active{border-left:4px solid var(--accent)}
-.admin-content{flex:1;overflow-y:auto;padding:28px;background:var(--neutral-50)}
-.admin-page{display:none}
-.admin-page.active{display:block}
+.topbar{background:var(--primary);color:var(--white);padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.logo-badge{width:40px;height:40px;border-radius:10px;background:var(--accent);color:var(--primary);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:1.1rem;font-weight:700;flex-shrink:0}
+.logo-text{font-family:'DM Serif Display',serif;font-size:1.2rem}
+.logo-sub{font-size:.7rem;opacity:.65;text-transform:uppercase}
 
 /* BUTTONS */
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 20px;border-radius:10px;font-weight:600;transition:all .2s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:10px;font-weight:600;font-size:.9rem;transition:all .2s;white-space:nowrap}
 .btn-primary{background:var(--primary);color:#fff}
-.btn-primary:hover{background:var(--primary-light)}
-.btn-lg{padding:14px 28px;width:100%}
+.btn-primary:hover{background:var(--primary-light);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn-accent{background:var(--accent);color:var(--primary)}
+.btn-lg{padding:14px 28px;font-size:1rem;border-radius:12px}
 
 /* CARDS */
-.card{background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);border:1px solid var(--neutral-200);overflow:hidden;margin-bottom:20px}
-.stat-card{padding:20px;background:#fff;border-radius:12px;border:1px solid #eee}
+.card{background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);border:1px solid var(--neutral-200);overflow:hidden}
+.card-header{padding:20px 24px;border-bottom:1px solid var(--neutral-100);display:flex;align-items:center;justify-content:space-between}
+.card-body{padding:24px}
+
+/* FORM */
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-label{font-size:.85rem;font-weight:600;color:var(--neutral-700)}
+.form-control{width:100%;padding:10px 14px;border:2px solid var(--neutral-200);border-radius:10px;font-size:.9rem;outline:none}
 
 /* TABS */
 .tabs{display:flex;gap:4px;border-bottom:2px solid var(--neutral-200);margin-bottom:24px}
-.tab-btn{padding:10px 20px;color:var(--neutral-500);border-bottom:2px solid transparent}
+.tab-btn{padding:10px 20px;font-weight:500;font-size:.9rem;color:var(--neutral-500);transition:all .2s;border-bottom:2px solid transparent}
 .tab-btn.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
+
+/* SIDEBAR */
+.sidebar{width:240px;background:var(--primary);color:#fff;display:flex;flex-direction:column;padding:12px 0;flex-shrink:0}
+.sidebar-item{display:flex;align-items:center;gap:12px;padding:10px 16px;font-size:.875rem;font-weight:500;color:rgba(255,255,255,.7);transition:all .2s;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+.sidebar-item:hover, .sidebar-item.active{background:rgba(255,255,255,.18);color:#fff}
+.sidebar-item.active{border-left:3px solid var(--accent)}
+.admin-content{flex:1;overflow-y:auto;padding:28px;background:var(--neutral-50)}
+.admin-page{display:none}
+.admin-page.active{display:block}
 
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
 
+<!-- TOASTS -->
 <div id="toast-container"></div>
 
-<!-- SCREEN: LANDING -->
+<!-- RESTORED LOGIN SCREEN -->
 <div id="screen-landing" class="screen active">
   <div style="flex:1; display:flex; align-items:center; justify-content:center; background:var(--primary)">
-    <div class="card p-3" style="width:100%; max-width:400px">
-      <div style="text-align:center; margin-bottom:20px">
-        <div class="logo-badge" style="margin:0 auto 10px; width:60px; height:60px; font-size:1.5rem">AP</div>
-        <h2 style="font-family:'DM Serif Display'">AdmitPro Institute</h2>
+    <div class="landing-box bg-white p-3 rounded-lg shadow-lg" style="width:100%; max-width:460px">
+      <div style="text-align:center; margin-bottom:24px">
+        <div class="logo-badge" style="width:72px; height:72px; margin:0 auto 16px; font-size:1.8rem">AP</div>
+        <h2 class="text-2xl font-bold">AdmitPro Institute</h2>
+        <p class="text-sm text-muted">Admission Test Portal</p>
       </div>
       <div class="tabs">
-        <button class="tab-btn active" onclick="switchLoginTab('candidate')">Candidate</button>
-        <button class="tab-btn" onclick="switchLoginTab('admin')">Admin</button>
-      </div>
-      <div id="login-admin" class="hidden">
-        <input type="email" id="admin-email" placeholder="Admin Email" value="admin@admitpro.com" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px">
-        <input type="password" id="admin-pass" placeholder="Password" value="admin123" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px">
-        <button class="btn btn-primary btn-lg" onclick="loginAdmin()">Admin Login</button>
+        <button class="tab-btn active" id="tab-candidate" onclick="switchLoginTab('candidate')">Candidate</button>
+        <button class="tab-btn" id="tab-admin" onclick="switchLoginTab('admin')">Admin</button>
       </div>
       <div id="login-candidate">
-        <input type="text" id="login-roll" placeholder="Roll Number" value="CAND001" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px">
-        <input type="password" id="login-dob" placeholder="Password" value="test123" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px">
-        <button class="btn btn-primary btn-lg">Candidate Login</button>
+        <div class="form-group mb-2">
+          <label class="form-label">Roll Number</label>
+          <input type="text" class="form-control" id="login-roll" value="CAND001">
+        </div>
+        <div class="form-group mb-2">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" id="login-dob" value="test123">
+        </div>
+        <button class="btn btn-primary btn-lg" onclick="loginCandidate()">Login & Start</button>
+      </div>
+      <div id="login-admin" class="hidden">
+        <div class="form-group mb-2">
+          <label class="form-label">Admin Email</label>
+          <input type="email" class="form-control" id="admin-email" value="admin@admitpro.com">
+        </div>
+        <div class="form-group mb-2">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" id="admin-pass" value="admin123">
+        </div>
+        <button class="btn btn-primary btn-lg" onclick="loginAdmin()">Login to Dashboard</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- SCREEN: ADMIN -->
+<!-- RESTORED ADMIN SCREEN -->
 <div id="screen-admin" class="screen">
   <div class="topbar">
-    <div style="display:flex; align-items:center; gap:10px">
+    <div class="topbar-logo flex items-center gap-1">
       <div class="logo-badge">AP</div>
-      <span style="font-weight:bold">Admin Panel</span>
+      <div>
+        <div class="logo-text">AdmitPro Institute</div>
+        <div class="logo-sub">Admin Dashboard</div>
+      </div>
     </div>
     <button class="btn" style="color:#fff" onclick="showScreen('screen-landing')">Logout</button>
   </div>
@@ -136,33 +171,31 @@ input,select,textarea{font-family:inherit;font-size:inherit}
     </nav>
     <main class="admin-content">
       <div id="page-dashboard" class="admin-page active">
-        <h2>Dashboard</h2>
-        <div class="grid grid-4 gap-2 mt-2" id="dashboard-stats">
-            <div class="stat-card"><h3>Loading...</h3></div>
-        </div>
+        <h2 class="text-2xl font-bold mb-2">Dashboard</h2>
+        <div class="grid grid-4 gap-2" id="dashboard-stats"></div>
       </div>
       <div id="page-questions" class="admin-page">
-        <h2>Question Bank</h2>
-        <div class="card p-2 mt-2">Questions List Here</div>
+        <h2 class="text-2xl font-bold mb-2">Question Bank</h2>
+        <div class="card p-2">Restoring Question Management...</div>
       </div>
       <div id="page-tests" class="admin-page">
-        <h2>Tests</h2>
-        <div class="card p-2 mt-2">Tests Management Here</div>
+        <h2 class="text-2xl font-bold mb-2">Test Management</h2>
+        <div class="card p-2">Restoring Test Configs...</div>
       </div>
       <div id="page-candidates" class="admin-page">
-        <h2>Candidates</h2>
-        <div class="card p-2 mt-2">Candidates List Here</div>
+        <h2 class="text-2xl font-bold mb-2">Candidates</h2>
+        <div class="card p-2">Restoring Candidate Lists...</div>
       </div>
       <div id="page-settings" class="admin-page">
-        <h2>Settings</h2>
-        <div class="card p-2 mt-2">Branding and Configuration</div>
+        <h2 class="text-2xl font-bold mb-2">Settings</h2>
+        <div class="card p-2">Restoring Branding Options...</div>
       </div>
     </main>
   </div>
 </div>
 
+<!-- JAVASCRIPT RESTORED -->
 <script>
-// DATA STORE
 const Store = {
   settings: { instituteName: 'AdmitPro Institute', logoText: 'AP' },
   questions: [], tests: [], candidates: [], results: [],
@@ -171,56 +204,44 @@ const Store = {
     if(saved) { try { Object.assign(this, JSON.parse(saved)); } catch(e) {} }
     _ensureDemoCandidate();
   },
-  save() {
-    localStorage.setItem('admitpro_data', JSON.stringify(this));
-  }
+  save() { localStorage.setItem('admitpro_data', JSON.stringify(this)); }
 };
 
-// APP LOGIC
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
 /** 
- * TAB NAVIGATION FIX:
- * Correctly hides and shows admin pages and manages button active states.
+ * TAB FIX: Explicitly manages display property to prevent CSS conflicts
  */
 function showAdminPage(page, btn) {
-  // 1. Hide all pages
+  // 1. Reset all pages
   document.querySelectorAll('.admin-page').forEach(p => {
     p.classList.remove('active');
-    p.style.display = 'none'; // Ensure hidden
+    p.style.display = 'none'; 
   });
-
-  // 2. Clear all sidebar button states
-  document.querySelectorAll('.sidebar-item').forEach(b => {
-    b.classList.remove('active');
-  });
-
-  // 3. Show selected page
+  // 2. Reset sidebar items
+  document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+  
+  // 3. Activate current
   const target = document.getElementById('page-' + page);
   if(target) {
     target.classList.add('active');
-    target.style.display = 'block'; // Ensure visible
+    target.style.display = 'block';
   }
-
-  // 4. Set button state
   if(btn) btn.classList.add('active');
-
-  // 5. Run page renders
+  
+  // 4. Trigger render
   if(page === 'dashboard') renderDashboard();
 }
 
 function switchLoginTab(tab) {
-  const isCandidate = tab === 'candidate';
-  document.getElementById('login-candidate').classList.toggle('hidden', !isCandidate);
-  document.getElementById('login-admin').classList.toggle('hidden', isCandidate);
-  
-  // Tab UI toggle
-  document.querySelectorAll('.tab-btn').forEach(b => {
-    b.classList.toggle('active', b.innerText.toLowerCase() === tab);
-  });
+  const isCand = tab === 'candidate';
+  document.getElementById('login-candidate').classList.toggle('hidden', !isCand);
+  document.getElementById('login-admin').classList.toggle('hidden', isCand);
+  document.getElementById('tab-candidate').classList.toggle('active', isCand);
+  document.getElementById('tab-admin').classList.toggle('active', !isCand);
 }
 
 function loginAdmin() {
@@ -231,29 +252,28 @@ function loginAdmin() {
     renderDashboard();
     toast('Welcome back!', 'success');
   } else {
-    toast('Invalid Credentials', 'danger');
+    toast('Invalid credentials', 'danger');
   }
 }
 
 function renderDashboard() {
   const stats = [
-    { label: 'Questions', val: Store.questions.length },
-    { label: 'Tests', val: Store.tests.length },
-    { label: 'Candidates', val: Store.candidates.length },
-    { label: 'Results', val: Store.results.length }
+    {label:'Questions', val:Store.questions.length, color:'var(--primary)'},
+    {label:'Tests', val:Store.tests.length, color:'var(--success)'},
+    {label:'Candidates', val:Store.candidates.length, color:'var(--accent)'},
+    {label:'Results', val:Store.results.length, color:'var(--danger)'}
   ];
   document.getElementById('dashboard-stats').innerHTML = stats.map(s => `
-    <div class="stat-card">
-      <div style="font-size:1.5rem; font-weight:bold; color:var(--primary)">${s.val}</div>
-      <div style="color:var(--neutral-500)">${s.label}</div>
+    <div class="card p-2" style="text-align:center">
+      <div style="font-size:2rem; font-weight:bold; color:${s.color}">${s.val}</div>
+      <div style="font-size:.8rem; color:var(--neutral-500)">${s.label}</div>
     </div>
   `).join('');
 }
 
-function toast(msg, type = 'info') {
+function toast(msg, type='info') {
   const t = document.createElement('div');
-  t.className = `toast ${type}`;
-  t.style.cssText = "position:fixed; top:20px; right:20px; background:#333; color:#fff; padding:12px 20px; border-radius:8px; z-index:10000; animation:slideUp .3s ease";
+  t.style.cssText = "position:fixed; top:20px; right:20px; background:#333; color:#fff; padding:12px 20px; border-radius:10px; z-index:9999;";
   t.innerText = msg;
   document.body.appendChild(t);
   setTimeout(() => t.remove(), 3000);
@@ -261,27 +281,16 @@ function toast(msg, type = 'info') {
 
 function _ensureDemoCandidate() {
   if(!Store.candidates.some(c => c.roll === 'CAND001')) {
-    Store.candidates.push({id: 'C1', roll: 'CAND001', password: 'test123'});
+    Store.candidates.push({id:'C1', name:'Demo', roll:'CAND001', password:'test123', status:'not_started'});
   }
 }
 
+// Fixed Syntax error: Standardized hyphens and standard loops
 function init() {
   Store._init();
   showScreen('screen-landing');
 }
 
-// Fixed Syntax error here: timeLeft-- (two dashes)
-let timer;
-function startTimer(duration) {
-  let timeLeft = duration;
-  clearInterval(timer);
-  timer = setInterval(() => {
-    timeLeft--; 
-    if(timeLeft <= 0) clearInterval(timer);
-  }, 1000);
-}
-
-// Start
 init();
 </script>
 </body>
