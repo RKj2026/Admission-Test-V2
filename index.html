@@ -2052,12 +2052,11 @@ function saveSettings() {
 // ADMIN PAGES
 // ═══════════════════════════════════════════════════════════════
 function showAdminPage(page, btn) {
-  // 1. Select all pages and hide them
-  const allPages = document.querySelectorAll('.admin-page');
-  allPages.forEach(p => {
+  // 1. Hide all pages by removing the 'active' class
+  document.querySelectorAll('.admin-page').forEach(p => {
     p.classList.remove('active');
-    // Important: Force the display to none so they don't stack
-    p.style.display = 'none'; 
+    // REMOVE any inline styles that might be blocking the CSS
+    p.style.display = ''; 
   });
 
   // 2. Remove active class from all sidebar buttons
@@ -2065,11 +2064,10 @@ function showAdminPage(page, btn) {
     b.classList.remove('active');
   });
 
-  // 3. Show only the requested page
+  // 3. Show only the requested page using the class
   const targetPage = document.getElementById('page-' + page);
   if (targetPage) {
     targetPage.classList.add('active');
-    targetPage.style.display = 'block';
   }
 
   // 4. Set the clicked button to active
