@@ -50,7 +50,7 @@
 /* ─── RESET & BASE ───────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;scroll-behavior:smooth}
-body{font-family:‘DM Sans’,sans-serif;background:var(-neutral-50);color:var(-neutral-900);min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{font-family:'DM Sans',sans-serif;background:var(-neutral-50);color:var(-neutral-900);min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased}
 img{max-width:100%;display:block}
 button{cursor:pointer;border:none;background:none;font-family:inherit}
 input,select,textarea{font-family:inherit;font-size:inherit}
@@ -106,10 +106,10 @@ box-shadow:0 2px 12px rgba(0,0,0,.15);
 width:40px;height:40px;border-radius:10px;
 background:var(-accent);color:var(-primary);
 display:flex;align-items:center;justify-content:center;
-font-family:‘DM Serif Display’,serif;font-size:1.1rem;font-weight:700;
+font-family:'DM Serif Display',serif;font-size:1.1rem;font-weight:700;
 flex-shrink:0;
 }
-.logo-text{font-family:‘DM Serif Display’,serif;font-size:1.2rem;letter-spacing:-.01em}
+.logo-text{font-family:'DM Serif Display',serif;font-size:1.2rem;letter-spacing:-.01em}
 .logo-sub{font-size:.7rem;opacity:.65;letter-spacing:.08em;text-transform:uppercase}
 .topbar-nav{display:flex;gap:4px}
 .topbar-nav button{
@@ -162,7 +162,7 @@ background:var(-white);transition:all .2s;outline:none;
 .form-control:focus{border-color:var(-primary);box-shadow:0 0 0 3px rgba(26,58,92,.1)}
 .form-control::placeholder{color:var(-neutral-300)}
 textarea.form-control{resize:vertical;min-height:100px}
-select.form-control{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ fill=‘none’ viewBox=‘0 0 24 24’ stroke=’%238090b0’%3E%3Cpath stroke-linecap=‘round’ stroke-linejoin=‘round’ stroke-width=‘2’ d=‘M19 9l-7 7-7-7’/%3E%3C/svg%3E”);background-repeat:no-repeat;background-position:right 12px center;background-size:16px;padding-right:40px}
+select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238090b0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:16px;padding-right:40px}
 .form-hint{font-size:.78rem;color:var(-neutral-500)}
 .form-error{font-size:.78rem;color:var(-danger)}
 .checkbox-label{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.9rem}
@@ -207,7 +207,7 @@ box-shadow:var(-shadow-lg);width:100%;max-width:620px;max-height:90vh;
 overflow-y:auto;animation:slideUp .3s ease;
 }
 .modal-header{padding:20px 24px;border-bottom:1px solid var(-neutral-100);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(-white);z-index:1}
-.modal-title{font-family:‘DM Serif Display’,serif;font-size:1.25rem;color:var(-primary)}
+.modal-title{font-family:'DM Serif Display',serif;font-size:1.25rem;color:var(-primary)}
 .modal-body{padding:24px}
 .modal-footer{padding:16px 24px;border-top:1px solid var(-neutral-100);display:flex;justify-content:flex-end;gap:12px;background:var(-neutral-50)}
 .modal-close{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(-neutral-500);transition:all .2s}
@@ -233,7 +233,7 @@ background:var(-white);border-radius:var(-radius-lg);padding:20px 24px;
 border:1px solid var(-neutral-200);box-shadow:var(-shadow-sm);
 }
 .stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
-.stat-value{font-family:‘DM Serif Display’,serif;font-size:2rem;color:var(-primary);line-height:1}
+.stat-value{font-family:'DM Serif Display',serif;font-size:2rem;color:var(-primary);line-height:1}
 .stat-label{font-size:.8rem;color:var(-neutral-500);font-weight:500;margin-top:4px}
 .stat-change{font-size:.75rem;font-weight:600;margin-top:6px}
 .stat-change.up{color:var(-success)}.stat-change.down{color:var(-danger)}
@@ -251,12 +251,12 @@ animation:slideUp .3s ease;transition:all .3s;
 
 /* ─── LANDING / LOGIN ────────────────────────────────────────── */
 #screen-landing{background:linear-gradient(135deg,var(-primary) 0%,var(-primary-light) 50%,#1a4a7a 100%);position:relative;overflow:hidden}
-#screen-landing::before{content:’’;position:absolute;inset:0;background:url(“data:image/svg+xml,%3Csvg width=‘60’ height=‘60’ viewBox=‘0 0 60 60’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cg fill=‘none’ fill-rule=‘evenodd’%3E%3Cg fill=’%23ffffff’ fill-opacity=‘0.04’%3E%3Cpath d=‘M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z’/%3E%3C/g%3E%3C/g%3E%3C/svg%3E”)}
+#screen-landing::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
 .landing-container{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
 .landing-box{background:rgba(255,255,255,.97);border-radius:24px;box-shadow:0 24px 80px rgba(0,0,0,.25);width:100%;max-width:460px;overflow:hidden}
 .landing-header{background:var(-primary,#1a3a5c);padding:32px;text-align:center;color:#fff}
-.landing-logo{width:72px;height:72px;border-radius:18px;background:var(-accent,#e8a020);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-family:‘DM Serif Display’,serif;font-size:1.8rem;color:var(-primary,#1a3a5c);position:relative;overflow:hidden}
-.landing-title{font-family:‘DM Serif Display’,serif;font-size:1.75rem;margin-bottom:4px}
+.landing-logo{width:72px;height:72px;border-radius:18px;background:var(-accent,#e8a020);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(-primary,#1a3a5c);position:relative;overflow:hidden}
+.landing-title{font-family:'DM Serif Display',serif;font-size:1.75rem;margin-bottom:4px}
 .landing-sub{opacity:.7;font-size:.9rem}
 .landing-body{padding:32px}
 .landing-tabs{display:flex;background:var(-neutral-100,#f0f2f7);border-radius:12px;padding:4px;margin-bottom:24px;gap:4px}
@@ -288,7 +288,7 @@ border-radius:0;transition:all .2s;cursor:pointer;border:none;background:none;wi
 .admin-page{display:none;animation:fadeIn .3s ease}
 .admin-page.active{display:block}
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
-.page-title{font-family:‘DM Serif Display’,serif;font-size:1.75rem;color:var(-primary)}
+.page-title{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(-primary)}
 .page-subtitle{color:var(-neutral-500);font-size:.9rem;margin-top:2px}
 
 /* ─── TEST INTERFACE ─────────────────────────────────────────── */
@@ -298,11 +298,11 @@ background:var(-primary);color:#fff;padding:0 24px;
 height:64px;display:flex;align-items:center;justify-content:space-between;
 position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.2);
 }
-.test-title{font-family:‘DM Serif Display’,serif;font-size:1.1rem}
+.test-title{font-family:'DM Serif Display',serif;font-size:1.1rem}
 .test-timer{
 display:flex;align-items:center;gap:8px;
 background:rgba(255,255,255,.15);border-radius:10px;padding:8px 16px;
-font-family:‘DM Serif Display’,serif;font-size:1.3rem;letter-spacing:.05em;
+font-family:'DM Serif Display',serif;font-size:1.3rem;letter-spacing:.05em;
 }
 .test-timer.warning{background:rgba(230,126,34,.3);animation:pulse 1s infinite}
 .test-timer.danger{background:rgba(192,57,43,.4);animation:pulse .5s infinite}
@@ -351,14 +351,14 @@ border:2px solid var(-neutral-200);color:var(-neutral-700);transition:all .15s;c
 background:linear-gradient(135deg,var(-primary),var(-primary-light));
 color:#fff;padding:40px 24px;text-align:center;position:relative;overflow:hidden;
 }
-.result-header::after{content:’’;position:absolute;bottom:-1px;left:0;right:0;height:40px;background:var(-neutral-50);border-radius:40px 40px 0 0}
+.result-header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:40px;background:var(-neutral-50);border-radius:40px 40px 0 0}
 .result-score-ring{
 width:130px;height:130px;border-radius:50%;
 background:rgba(255,255,255,.12);border:3px solid rgba(255,255,255,.3);
 display:flex;flex-direction:column;align-items:center;justify-content:center;
 margin:24px auto 16px;backdrop-filter:blur(8px);
 }
-.result-score-num{font-family:‘DM Serif Display’,serif;font-size:2.5rem;line-height:1}
+.result-score-num{font-family:'DM Serif Display',serif;font-size:2.5rem;line-height:1}
 .result-score-total{font-size:.8rem;opacity:.7}
 .result-content{padding:32px 24px;max-width:900px;margin:0 auto}
 .section-score-bar{margin-bottom:16px}
@@ -2052,37 +2052,39 @@ function saveSettings() {
 // ADMIN PAGES
 // ═══════════════════════════════════════════════════════════════
 function showAdminPage(page, btn) {
-  // 1. Hide all pages first
+  // 1. Select all pages and hide them
   const allPages = document.querySelectorAll('.admin-page');
   allPages.forEach(p => {
     p.classList.remove('active');
+    // Important: Force the display to none so they don't stack
     p.style.display = 'none'; 
   });
 
-  // 2. Remove active state from all sidebar buttons
-  const allButtons = document.querySelectorAll('.sidebar-item');
-  allButtons.forEach(b => b.classList.remove('active'));
+  // 2. Remove active class from all sidebar buttons
+  document.querySelectorAll('.sidebar-item').forEach(b => {
+    b.classList.remove('active');
+  });
 
-  // 3. Show the selected page
+  // 3. Show only the requested page
   const targetPage = document.getElementById('page-' + page);
   if (targetPage) {
     targetPage.classList.add('active');
     targetPage.style.display = 'block';
   }
 
-  // 4. Highlight the clicked button
+  // 4. Set the clicked button to active
   if (btn) btn.classList.add('active');
 
-  // 5. Run the specific render function
-  const renders = { 
-    dashboard: renderDashboard, 
-    questions: renderQuestions, 
-    tests: renderTests, 
-    candidates: renderCandidates, 
-    results: renderResults, 
-    analytics: renderAnalytics 
+  // 5. Re-run data rendering for that specific page
+  const fns = {
+    dashboard: renderDashboard,
+    questions: renderQuestions,
+    tests: renderTests,
+    candidates: renderCandidates,
+    results: renderResults,
+    analytics: renderAnalytics
   };
-  if (renders[page]) renders[page]();
+  if (fns[page]) fns[page]();
 }
 
 // ─── DASHBOARD ────────────────────────────────────────────────
@@ -3205,18 +3207,18 @@ function renderQuestion() {
 
 }
 
-document.getElementById(‘question-container’).innerHTML = ` <div class="question-card"> <div class="question-meta"> <span class="question-num">Q${ts.currentIndex+1} of ${ts.questions.length}</span> <span class="badge badge-primary">${q.section}</span> <span class="question-marks">+${q.marks}${q.negative?` / -${q.negative}`:''}</span> <span class="badge ${q.type==='subjective'?'badge-accent':'badge-primary'} ml-auto">${q.type==='mcq-multi'?'Multi-correct':q.type==='subjective'?'Subjective':'Single correct'}</span> ${isFlagged?'<span class="badge badge-warning">🚩 Flagged</span>':''} </div> <div class="question-text">${q.text}</div> ${q.type==='mcq-multi'?'<div class="alert alert-info mb-2" style="font-size:.82rem"><span>ℹ️</span><span>Select all correct options.</span></div>':''} ${optionsHTML} </div>`;
+document.getElementById('question-container').innerHTML = ` <div class="question-card"> <div class="question-meta"> <span class="question-num">Q${ts.currentIndex+1} of ${ts.questions.length}</span> <span class="badge badge-primary">${q.section}</span> <span class="question-marks">+${q.marks}${q.negative?` / -${q.negative}`:''}</span> <span class="badge ${q.type==='subjective'?'badge-accent':'badge-primary'} ml-auto">${q.type==='mcq-multi'?'Multi-correct':q.type==='subjective'?'Subjective':'Single correct'}</span> ${isFlagged?'<span class="badge badge-warning">🚩 Flagged</span>':''} </div> <div class="question-text">${q.text}</div> ${q.type==='mcq-multi'?'<div class="alert alert-info mb-2" style="font-size:.82rem"><span>ℹ️</span><span>Select all correct options.</span></div>':''} ${optionsHTML} </div>`;
 
 // Nav buttons
-document.getElementById(‘btn-prev’).disabled = ts.currentIndex === 0;
-document.getElementById(‘btn-next’).textContent = ts.currentIndex===ts.questions.length-1 ? ‘Finish →’ : ‘Next →’;
+document.getElementById('btn-prev').disabled = ts.currentIndex === 0;
+document.getElementById('btn-next').textContent = ts.currentIndex===ts.questions.length-1 ? 'Finish →' : 'Next →';
 updateProgress();
 }
 
 function selectOption(optIdx) {
 const ts = App.testState;
 const q = ts.questions[ts.currentIndex];
-if(q.type === ‘mcq-multi’) {
+if(q.type === 'mcq-multi') {
 let ans = Array.isArray(ts.answers[ts.currentIndex]) ? ts.answers[ts.currentIndex].slice() : [];
 const i = ans.indexOf(optIdx);
 if(i>=0) ans.splice(i,1); else ans.push(optIdx);
@@ -3238,7 +3240,7 @@ function flagQuestion() {
 const ts = App.testState;
 ts.flags[ts.currentIndex] = !ts.flags[ts.currentIndex];
 renderQuestion(); renderQNavGrid();
-toast(ts.flags[ts.currentIndex]?‘Question flagged for review.’:‘Flag removed.’,‘info’,1500);
+toast(ts.flags[ts.currentIndex]?'Question flagged for review.':'Flag removed.','info',1500);
 }
 function navigateQuestion(dir) {
 const ts = App.testState;
@@ -3255,12 +3257,12 @@ const ts = App.testState;
 const secName = App.currentTest.sections[ts.sectionIdx]?.name;
 const secQs = ts.questions.map((q,i)=>({q,i})).filter(({q})=>!secName||q.section===secName);
 
-document.getElementById(‘q-nav-grid’).innerHTML = secQs.map(({q,i})=>{
-const isAnswered = ts.answers[i]!==undefined && ts.answers[i]!==null && ts.answers[i]!==’’;
+document.getElementById('q-nav-grid').innerHTML = secQs.map(({q,i})=>{
+const isAnswered = ts.answers[i]!==undefined && ts.answers[i]!==null && ts.answers[i]!=='';
 const isCurrent = i===ts.currentIndex;
 const isFlagged = ts.flags[i];
 return `<button class="q-nav-btn ${isFlagged?'flagged':isAnswered?'answered':''} ${isCurrent?'current':''}" onclick="jumpToQuestion(${i})">${i+1}</button>`;
-}).join(’’);
+}).join('');
 updateProgress();
 }
 
@@ -3271,13 +3273,13 @@ renderQuestion(); renderQNavGrid();
 }
 function updateProgress() {
 const ts = App.testState;
-const answered = Object.keys(ts.answers).filter(k=>ts.answers[k]!==undefined&&ts.answers[k]!==’’&&!(Array.isArray(ts.answers[k])&&!ts.answers[k].length)).length;
+const answered = Object.keys(ts.answers).filter(k=>ts.answers[k]!==undefined&&ts.answers[k]!==''&&!(Array.isArray(ts.answers[k])&&!ts.answers[k].length)).length;
 const total = ts.questions.length;
 const flagged = Object.keys(ts.flags).filter(k=>ts.flags[k]).length;
-document.getElementById(‘progress-answered’).textContent = `${answered}/${total}`;
-document.getElementById(‘progress-bar’).style.width = `${answered/total*100}%`;
-document.getElementById(‘progress-flagged’).textContent = `Flagged: ${flagged}`;
-document.getElementById(‘progress-unanswered’).textContent = `Unanswered: ${total-answered}`;
+document.getElementById('progress-answered').textContent = `${answered}/${total}`;
+document.getElementById('progress-bar').style.width = `${answered/total*100}%`;
+document.getElementById('progress-flagged').textContent = `Flagged: ${flagged}`;
+document.getElementById('progress-unanswered').textContent = `Unanswered: ${total-answered}`;
 }
 
 // ─── TIMER ────────────────────────────────────────────────────
@@ -3293,36 +3295,36 @@ function updateTimerDisplay() {
 const t = App.testState.timeLeft;
 const h = Math.floor(t/3600), m = Math.floor((t%3600)/60), s = t%60;
 const str = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-const el = document.getElementById(‘test-timer’);
+const el = document.getElementById('test-timer');
 if(!el) return;
 el.textContent = str;
-el.className = ‘test-timer’ + (t<300?’ danger’:t<900?’ warning’:’’);
+el.className = 'test-timer' + (t<300?' danger':t<900?' warning':'');
 }
 
 // ─── SUBMIT ───────────────────────────────────────────────────
 function showSubmitModal() {
 const ts = App.testState;
-const answered = Object.keys(ts.answers).filter(k=>ts.answers[k]!==undefined&&ts.answers[k]!==’’&&!(Array.isArray(ts.answers[k])&&!ts.answers[k].length)).length;
+const answered = Object.keys(ts.answers).filter(k=>ts.answers[k]!==undefined&&ts.answers[k]!==''&&!(Array.isArray(ts.answers[k])&&!ts.answers[k].length)).length;
 const total = ts.questions.length;
-document.getElementById(‘submit-summary’).innerHTML = ` <div class="grid grid-3 gap-2 mb-2"> <div style="text-align:center;padding:12px;background:var(--neutral-50);border-radius:10px"> <div style="font-size:1.5rem;font-weight:700;color:var(--primary)">${answered}</div> <div style="font-size:.75rem;color:var(--neutral-500)">Answered</div> </div> <div style="text-align:center;padding:12px;background:var(--neutral-50);border-radius:10px"> <div style="font-size:1.5rem;font-weight:700;color:var(--warning)">${Object.keys(ts.flags).filter(k=>ts.flags[k]).length}</div> <div style="font-size:.75rem;color:var(--neutral-500)">Flagged</div> </div> <div style="text-align:center;padding:12px;background:var(--neutral-50);border-radius:10px"> <div style="font-size:1.5rem;font-weight:700;color:var(--danger)">${total-answered}</div> <div style="font-size:.75rem;color:var(--neutral-500)">Unanswered</div> </div> </div> ${total-answered>0?`<div class="alert alert-warning"><span>⚠️</span><span>You have ${total-answered} unanswered questions. Are you sure you want to submit?</span></div>`:'<div class="alert alert-success"><span>✅</span><span>All questions answered!</span></div>'}`;
-openModal(‘modal-submit’);
+document.getElementById('submit-summary').innerHTML = ` <div class="grid grid-3 gap-2 mb-2"> <div style="text-align:center;padding:12px;background:var(--neutral-50);border-radius:10px"> <div style="font-size:1.5rem;font-weight:700;color:var(--primary)">${answered}</div> <div style="font-size:.75rem;color:var(--neutral-500)">Answered</div> </div> <div style="text-align:center;padding:12px;background:var(--neutral-50);border-radius:10px"> <div style="font-size:1.5rem;font-weight:700;color:var(--warning)">${Object.keys(ts.flags).filter(k=>ts.flags[k]).length}</div> <div style="font-size:.75rem;color:var(--neutral-500)">Flagged</div> </div> <div style="text-align:center;padding:12px;background:var(--neutral-50);border-radius:10px"> <div style="font-size:1.5rem;font-weight:700;color:var(--danger)">${total-answered}</div> <div style="font-size:.75rem;color:var(--neutral-500)">Unanswered</div> </div> </div> ${total-answered>0?`<div class="alert alert-warning"><span>⚠️</span><span>You have ${total-answered} unanswered questions. Are you sure you want to submit?</span></div>`:'<div class="alert alert-success"><span>✅</span><span>All questions answered!</span></div>'}`;
+openModal('modal-submit');
 }
 
 function finalSubmitTest() {
-closeModal(‘modal-submit’);
+closeModal('modal-submit');
 clearInterval(App.testState.timer);
-document.removeEventListener(‘visibilitychange’, handleTabSwitch);
+document.removeEventListener('visibilitychange', handleTabSwitch);
 const result = scoreTest();
 Store.results.push(result);
 if(FB.cfg) FB.syncResult(result);
 const c = App.currentUser;
-if(c) { const ci=Store.candidates.find(x=>x.id===c.id); if(ci) ci.status=‘completed’; }
+if(c) { const ci=Store.candidates.find(x=>x.id===c.id); if(ci) ci.status='completed'; }
 Store.save();
 if(App.currentTest.showResult && Store.settings.resultsVisible) {
 showResultScreen(result);
 } else {
-toast(‘Test submitted successfully! Results will be announced shortly.’,‘success’);
-setTimeout(()=>showScreen(‘screen-landing’),3000);
+toast('Test submitted successfully! Results will be announced shortly.','success');
+setTimeout(()=>showScreen('screen-landing'),3000);
 }
 }
 
@@ -3370,7 +3372,7 @@ if(ans===undefined||ans===null||ans===''||(Array.isArray(ans)&&!ans.length)) {
 const timeTaken = Math.floor((Date.now()-ts.startTime)/60000);
 return {
 id:`R${Date.now()}`, candidateId:(App.currentUser && App.currentUser.id), testId:test.id,
-candidateName:(App.currentUser && App.currentUser.name)||‘Candidate’, roll:(App.currentUser && App.currentUser.roll)||’-’,
+candidateName:(App.currentUser && App.currentUser.name)||'Candidate', roll:(App.currentUser && App.currentUser.roll)||'-',
 score:Math.max(0,score), totalMarks:test.totalMarks||300,
 percentage:Math.max(0,Math.min(100,Math.round(score/test.totalMarks*1000)/10)),
 correct, incorrect, unanswered, attempted:correct+incorrect,
@@ -3380,19 +3382,19 @@ submittedAt:new Date().toISOString()
 }
 
 function showResultScreen(result) {
-document.getElementById(‘result-test-name’).textContent = Store.tests.find(t=>t.id===result.testId)?.name||‘Test Result’;
-document.getElementById(‘result-candidate-name’).textContent = result.candidateName;
-document.getElementById(‘result-score’).textContent = result.score;
-document.getElementById(‘result-total’).textContent = ‘/’+result.totalMarks;
+document.getElementById('result-test-name').textContent = Store.tests.find(t=>t.id===result.testId)?.name||'Test Result';
+document.getElementById('result-candidate-name').textContent = result.candidateName;
+document.getElementById('result-score').textContent = result.score;
+document.getElementById('result-total').textContent = '/'+result.totalMarks;
 const pct = result.percentage;
-document.getElementById(‘result-verdict’).textContent = pct>=75?‘🏆 Excellent!’:pct>=60?‘✅ Passed’:pct>=40?‘⚠️ Average’:‘❌ Needs Improvement’;
-document.getElementById(‘result-percentage’).textContent = `${pct.toFixed(1)}% - Rank #${Store.results.filter(r=>r.testId===result.testId).sort((a,b)=>b.score-a.score).findIndex(r=>r.id===result.id)+1}`;
+document.getElementById('result-verdict').textContent = pct>=75?'🏆 Excellent!':pct>=60?'✅ Passed':pct>=40?'⚠️ Average':'❌ Needs Improvement';
+document.getElementById('result-percentage').textContent = `${pct.toFixed(1)}% - Rank #${Store.results.filter(r=>r.testId===result.testId).sort((a,b)=>b.score-a.score).findIndex(r=>r.id===result.id)+1}`;
 
-document.getElementById(‘result-stats’).innerHTML = [
-{label:‘Correct’,val:result.correct,icon:‘✅’,color:‘var(-success)’},
-{label:‘Incorrect’,val:result.incorrect,icon:‘❌’,color:‘var(-danger)’},
-{label:‘Skipped’,val:result.unanswered,icon:’-’,color:‘var(-neutral-500)’},
-{label:‘Time Taken’,val:result.timeTaken+‘m’,icon:‘⏱’,color:‘var(-primary)’},
+document.getElementById('result-stats').innerHTML = [
+{label:'Correct',val:result.correct,icon:'✅',color:'var(-success)'},
+{label:'Incorrect',val:result.incorrect,icon:'❌',color:'var(-danger)'},
+{label:'Skipped',val:result.unanswered,icon:'-',color:'var(-neutral-500)'},
+{label:'Time Taken',val:result.timeTaken+'m',icon:'⏱',color:'var(-primary)'},
 ].map(s=>`<div class="stat-card text-center">
 <div style="font-size:1.5rem">${s.icon}</div>
 <div style="font-family:'DM Serif Display',serif;font-size:1.75rem;color:${s.color}">${s.val}</div>
@@ -3402,38 +3404,38 @@ document.getElementById(‘result-stats’).innerHTML = [
 
 // Section performance
 const sections = result.sections || {};
-document.getElementById(‘result-sections’).innerHTML = Object.keys(sections).length ?
+document.getElementById('result-sections').innerHTML = Object.keys(sections).length ?
 Object.entries(sections).map(([name,s])=>{
 const pct = s.max ? Math.round(s.score/s.max*100) : 0;
 return `<div class="section-score-bar"> <div class="section-score-header"> <span class="font-semibold">${name}</span> <span>${s.score}/${s.max} (${pct}%)</span> </div> <div class="progress-bar-wrap mb-1"> <div class="progress-bar ${pct>=60?'success':pct>=40?'warning':'danger'}" style="width:${pct}%"></div> </div> <div class="flex gap-2 text-xs text-muted"> <span>✅ ${s.correct||0} correct</span> <span>❌ ${s.incorrect||0} wrong</span> <span>- ${s.skipped||0} skipped</span> </div> </div>`;
-}).join(’’)
-: ‘<div class="text-muted text-sm">Section data not available.</div>’;
+}).join('')
+: '<div class="text-muted text-sm">Section data not available.</div>';
 
 // Answer review
-App.reviewFilter = ‘all’;
+App.reviewFilter = 'all';
 renderReview(result);
-showScreen(‘screen-result’);
+showScreen('screen-result');
 }
 
 function filterReview(filter, btn) {
 App.reviewFilter = filter;
-document.querySelectorAll(’#result-review’).forEach(()=>{});
-const result = Store.results.find(r=>r.candidateName===document.getElementById(‘result-candidate-name’).textContent);
+document.querySelectorAll('#result-review').forEach(()=>{});
+const result = Store.results.find(r=>r.candidateName===document.getElementById('result-candidate-name').textContent);
 if(result) renderReview(result);
-document.querySelectorAll(’[onclick^=“filterReview”]’).forEach(b=>b.classList.remove(‘btn-primary’));
-if(btn) btn.classList.add(‘btn-primary’);
+document.querySelectorAll('[onclick^="filterReview"]').forEach(b=>b.classList.remove('btn-primary'));
+if(btn) btn.classList.add('btn-primary');
 }
 
 function renderReview(result) {
 const qs = App.testState.questions.length ? App.testState.questions : Store.questions.filter(q=>((App.currentTest && App.currentTest.questions)||[]).includes(q.id));
-if(!qs.length) { document.getElementById(‘result-review’).innerHTML=’<div class="text-muted text-sm">Answer details not available for admin-viewed results.</div>’; return; }
+if(!qs.length) { document.getElementById('result-review').innerHTML='<div class="text-muted text-sm">Answer details not available for admin-viewed results.</div>'; return; }
 
 const filter = App.reviewFilter;
-const letters = [‘A’,‘B’,‘C’,‘D’,‘E’,‘F’];
-document.getElementById(‘result-review’).innerHTML = qs.map((q,i)=>{
+const letters = ['A','B','C','D','E','F'];
+document.getElementById('result-review').innerHTML = qs.map((q,i)=>{
 const ans = result.answers?.[i];
-const status = (ans && ans.status) || ‘skipped’;
-if(filter!==‘all’ && filter!==status && !(filter===‘incorrect’&&status===‘incorrect’) && !(filter===‘correct’&&status===‘correct’) && !(filter===‘skipped’&&status===‘skipped’)) return ‘’;
+const status = (ans && ans.status) || 'skipped';
+if(filter!=='all' && filter!==status && !(filter==='incorrect'&&status==='incorrect') && !(filter==='correct'&&status==='correct') && !(filter==='skipped'&&status==='skipped')) return '';
 
 ```
 const statusConfig = {correct:{icon:'✅',color:'var(--success)',bg:'rgba(26,140,90,.06)'},incorrect:{icon:'❌',color:'var(--danger)',bg:'rgba(192,57,43,.05)'},skipped:{icon:'-',color:'var(--neutral-500)',bg:'var(--neutral-50)'},manual:{icon:'📝',color:'var(--warning)',bg:'rgba(230,126,34,.06)'}};
@@ -3460,7 +3462,7 @@ return `<div style="padding:16px;border:1px solid var(--neutral-200);border-radi
 </div>`;
 ```
 
-}).join(’’) || ‘<div class="text-muted text-sm">No questions in this filter.</div>’;
+}).join('') || '<div class="text-muted text-sm">No questions in this filter.</div>';
 }
 
 // ─── ANTI-CHEAT ───────────────────────────────────────────────
@@ -3469,10 +3471,10 @@ if(document.hidden) {
 App.testState.tabSwitches++;
 const max = Store.settings.maxTabSwitches;
 if(max > 0 && App.testState.tabSwitches >= max) {
-toast(`⚠️ Tab switch detected! Auto-submitting test.`, ‘danger’, 4000);
+toast(`⚠️ Tab switch detected! Auto-submitting test.`, 'danger', 4000);
 setTimeout(finalSubmitTest, 2000);
 } else {
-toast(`⚠️ Tab switch detected! (${App.testState.tabSwitches}${max?' of '+max:''} warnings)`, ‘warning’, 3000);
+toast(`⚠️ Tab switch detected! (${App.testState.tabSwitches}${max?' of '+max:''} warnings)`, 'warning', 3000);
 }
 }
 }
@@ -3489,8 +3491,8 @@ if(a.length!==b.length) return false;
 return a.every((v,i)=>v===b[i]);
 }
 function formatDate(iso) {
-if(!iso) return ‘-’;
-return new Date(iso).toLocaleDateString(‘en-IN’,{day:‘2-digit’,month:‘short’,year:‘numeric’});
+if(!iso) return '-';
+return new Date(iso).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -3498,9 +3500,9 @@ return new Date(iso).toLocaleDateString(‘en-IN’,{day:‘2-digit’,month:‘
 // ═══════════════════════════════════════════════════════════════
 
 const DEFAULT_CONFIG = {
-apiKey:     “AIzaSyDBi7xwowE7f7xVqWhfms-cV2zTYI6cOL4”,
-projectId:  “admission-test-v2”,
-storageBucket: “admission-test-v2.firebasestorage.app”
+apiKey:     "AIzaSyDBi7xwowE7f7xVqWhfms-cV2zTYI6cOL4",
+projectId:  "admission-test-v2",
+storageBucket: "admission-test-v2.firebasestorage.app"
 };
 
 /* ── Firestore REST helpers ─────────────────────────────────────
@@ -3515,20 +3517,20 @@ POLL_MS: 6000,      // poll every 6 s for live updates
 
 // ── internal URL builder ──────────────────────────────────
 _base() {
-return ‘https://firestore.googleapis.com/v1/projects/’ + this.cfg.projectId + ‘/databases/(default)/documents’;
+return 'https://firestore.googleapis.com/v1/projects/' + this.cfg.projectId + '/databases/(default)/documents';
 },
-_key() { return ‘?key=’ + this.cfg.apiKey; },
-_colURL(col)      { return this._base() + ‘/’ + col + this._key(); },
-_docURL(col, id)  { return this._base() + ‘/’ + col + ‘/’ + id + this._key(); },
+_key() { return '?key=' + this.cfg.apiKey; },
+_colURL(col)      { return this._base() + '/' + col + this._key(); },
+_docURL(col, id)  { return this._base() + '/' + col + '/' + id + this._key(); },
 
 // ── Firestore value encoder ───────────────────────────────
 _encode(val) {
 if(val === null || val === undefined) return { nullValue: null };
-if(typeof val === ‘boolean’)  return { booleanValue: val };
-if(typeof val === ‘number’)   return Number.isInteger(val) ? { integerValue: String(val) } : { doubleValue: val };
-if(typeof val === ‘string’)   return { stringValue: val };
+if(typeof val === 'boolean')  return { booleanValue: val };
+if(typeof val === 'number')   return Number.isInteger(val) ? { integerValue: String(val) } : { doubleValue: val };
+if(typeof val === 'string')   return { stringValue: val };
 if(Array.isArray(val))        return { arrayValue: { values: val.map(v => this._encode(v)) } };
-if(typeof val === ‘object’)   return { mapValue: { fields: this._encodeObj(val) } };
+if(typeof val === 'object')   return { mapValue: { fields: this._encodeObj(val) } };
 return { stringValue: String(val) };
 },
 _encodeObj(obj) {
@@ -3540,13 +3542,13 @@ return fields;
 // ── Firestore value decoder ───────────────────────────────
 _decode(val) {
 if(!val) return null;
-if(‘nullValue’     in val) return null;
-if(‘booleanValue’  in val) return val.booleanValue;
-if(‘integerValue’  in val) return parseInt(val.integerValue, 10);
-if(‘doubleValue’   in val) return val.doubleValue;
-if(‘stringValue’   in val) return val.stringValue;
-if(‘arrayValue’    in val) return (val.arrayValue.values || []).map(v => this._decode(v));
-if(‘mapValue’      in val) return this._decodeObj(val.mapValue.fields || {});
+if('nullValue'     in val) return null;
+if('booleanValue'  in val) return val.booleanValue;
+if('integerValue'  in val) return parseInt(val.integerValue, 10);
+if('doubleValue'   in val) return val.doubleValue;
+if('stringValue'   in val) return val.stringValue;
+if('arrayValue'    in val) return (val.arrayValue.values || []).map(v => this._decode(v));
+if('mapValue'      in val) return this._decodeObj(val.mapValue.fields || {});
 return null;
 },
 _decodeObj(fields) {
@@ -3556,22 +3558,22 @@ return obj;
 },
 _docToObj(doc) {
 var obj = this._decodeObj(doc.fields || {});
-// extract id from doc.name  “…/documents/collection/ID”
-obj.id = doc.name ? doc.name.split(’/’).pop() : obj.id;
+// extract id from doc.name  "…/documents/collection/ID"
+obj.id = doc.name ? doc.name.split('/').pop() : obj.id;
 return obj;
 },
 
 // ── CONNECT ───────────────────────────────────────────────
 async connect(config, silent) {
 this.cfg = config;
-if(!silent) this._setStatus(‘syncing’, ‘Connecting to Firebase…’);
+if(!silent) this._setStatus('syncing', 'Connecting to Firebase…');
 try {
 // Lightweight ping - just check if Firestore is reachable
 var testRes = await fetch(
-‘https://firestore.googleapis.com/v1/projects/’ + config.projectId + ‘/databases/(default)/documents/_ping/test’ + this._key(),
-{ method: ‘GET’, mode: ‘cors’ }
+'https://firestore.googleapis.com/v1/projects/' + config.projectId + '/databases/(default)/documents/_ping/test' + this._key(),
+{ method: 'GET', mode: 'cors' }
 ).catch(function(e){
-throw new Error(‘offline’);
+throw new Error('offline');
 });
 
 ```
@@ -3610,10 +3612,10 @@ throw new Error(‘offline’);
 disconnect() {
 this._stopPolling();
 this.cfg = null;
-localStorage.removeItem(‘admitpro_fb_config’);
-this._setStatus(‘off’, ‘Firebase disconnected - local mode’);
+localStorage.removeItem('admitpro_fb_config');
+this._setStatus('off', 'Firebase disconnected - local mode');
 this._updateSettingsUI(false);
-toast(‘Firebase disconnected. Running in local mode.’, ‘info’);
+toast('Firebase disconnected. Running in local mode.', 'info');
 },
 
 // ── CRUD via REST ─────────────────────────────────────────
@@ -3621,37 +3623,37 @@ async _set(col, id, data) {
 var fields = this._encodeObj(data);
 var url = this._docURL(col, id);
 var res = await fetch(url, {
-method: ‘PATCH’,
-mode: ‘cors’,
-headers: { ‘Content-Type’: ‘application/json’ },
+method: 'PATCH',
+mode: 'cors',
+headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify({ fields: fields })
 });
 if(!res.ok) {
-var errBody = ‘’;
+var errBody = '';
 try { errBody = await res.text(); } catch(e){}
-throw new Error(‘Write failed (’ + res.status + ’): ’ + errBody.slice(0,120));
+throw new Error('Write failed (' + res.status + '): ' + errBody.slice(0,120));
 }
 return res.json();
 },
 
 async _delete(col, id) {
-var res = await fetch(this._docURL(col, id), { method: ‘DELETE’, mode: ‘cors’ });
+var res = await fetch(this._docURL(col, id), { method: 'DELETE', mode: 'cors' });
 // 404 is fine (already deleted)
-if(!res.ok && res.status !== 404) throw new Error(’Delete failed: ’ + res.status);
+if(!res.ok && res.status !== 404) throw new Error('Delete failed: ' + res.status);
 },
 
 async _getAll(col) {
-var res = await fetch(this._colURL(col), { mode: ‘cors’ });
-if(!res.ok) { if(res.status === 404) return []; throw new Error(’GetAll failed: ’ + res.status); }
+var res = await fetch(this._colURL(col), { mode: 'cors' });
+if(!res.ok) { if(res.status === 404) return []; throw new Error('GetAll failed: ' + res.status); }
 var data = await res.json();
 if(!data.documents) return [];
 return data.documents.map(d => this._docToObj(d));
 },
 
 async _getDoc(col, id) {
-var res = await fetch(this._docURL(col, id), { mode: ‘cors’ });
+var res = await fetch(this._docURL(col, id), { mode: 'cors' });
 if(res.status === 404) return null;
-if(!res.ok) throw new Error(’Get failed: ’ + res.status);
+if(!res.ok) throw new Error('Get failed: ' + res.status);
 var data = await res.json();
 return this._docToObj(data);
 },
@@ -3659,14 +3661,14 @@ return this._docToObj(data);
 // ── PULL ALL DATA ─────────────────────────────────────────
 async pullAll() {
 if(!this.cfg) return;
-this._setStatus(‘syncing’, ‘Syncing…’);
+this._setStatus('syncing', 'Syncing…');
 try {
 var results = await Promise.all([
-this._getAll(‘questions’),
-this._getAll(‘tests’),
-this._getAll(‘candidates’),
-this._getAll(‘results’),
-this._getDoc(‘settings’, ‘main’),
+this._getAll('questions'),
+this._getAll('tests'),
+this._getAll('candidates'),
+this._getAll('results'),
+this._getDoc('settings', 'main'),
 ]);
 
 ```
@@ -3714,13 +3716,13 @@ this._getDoc(‘settings’, ‘main’),
 _startPolling() {
 this._stopPolling();
 var self = this;
-var cols = [‘questions’,‘tests’,‘candidates’,‘results’];
+var cols = ['questions','tests','candidates','results'];
 cols.forEach(function(col) {
 self._pollTimers[col] = setInterval(async function() {
 if(!self.cfg) return;
 try {
 var docs = await self._getAll(col);
-var sig = docs.length + ‘|’ + (docs[0] ? JSON.stringify(docs[0]).length : 0);
+var sig = docs.length + '|' + (docs[0] ? JSON.stringify(docs[0]).length : 0);
 if(sig !== self._etags[col]) {
 self._etags[col] = sig;
 Store[col] = docs;
@@ -3739,67 +3741,67 @@ this._pollTimers = {};
 },
 
 // ── SYNC HELPERS ─────────────────────────────────────────
-syncQuestion(q)   { if(this.cfg) this._set(‘questions’,  q.id, q).catch(()=>{}); },
-syncTest(t)       { if(this.cfg) this._set(‘tests’,      t.id, t).catch(()=>{}); },
-syncCandidate(c)  { if(this.cfg) this._set(‘candidates’, c.id, c).catch(()=>{}); },
-syncResult(r)     { if(this.cfg) this._set(‘results’,    r.id, r).catch(()=>{}); },
-syncSettings()    { if(this.cfg) this._set(‘settings’, ‘main’, Store.settings).catch(()=>{}); },
-deleteQuestion(id){ if(this.cfg) this._delete(‘questions’,  id).catch(()=>{}); },
-deleteTest(id)    { if(this.cfg) this._delete(‘tests’,      id).catch(()=>{}); },
-deleteCandidate(id){ if(this.cfg) this._delete(‘candidates’,id).catch(()=>{}); },
+syncQuestion(q)   { if(this.cfg) this._set('questions',  q.id, q).catch(()=>{}); },
+syncTest(t)       { if(this.cfg) this._set('tests',      t.id, t).catch(()=>{}); },
+syncCandidate(c)  { if(this.cfg) this._set('candidates', c.id, c).catch(()=>{}); },
+syncResult(r)     { if(this.cfg) this._set('results',    r.id, r).catch(()=>{}); },
+syncSettings()    { if(this.cfg) this._set('settings', 'main', Store.settings).catch(()=>{}); },
+deleteQuestion(id){ if(this.cfg) this._delete('questions',  id).catch(()=>{}); },
+deleteTest(id)    { if(this.cfg) this._delete('tests',      id).catch(()=>{}); },
+deleteCandidate(id){ if(this.cfg) this._delete('candidates',id).catch(()=>{}); },
 
 // ── PUSH ALL LOCAL DATA ───────────────────────────────────
 async pushLocalData(silent) {
 if(!this.cfg) return;
-if(!silent) this._setStatus(‘syncing’, ‘Uploading local data…’);
+if(!silent) this._setStatus('syncing', 'Uploading local data…');
 try {
 var tasks = [];
-Store.questions.forEach(function(q)  { tasks.push(FB._set(‘questions’,  q.id, q)); });
-Store.tests.forEach(function(t)      { tasks.push(FB._set(‘tests’,      t.id, t)); });
-Store.candidates.forEach(function(c) { tasks.push(FB._set(‘candidates’, c.id, c)); });
-Store.results.forEach(function(r)    { tasks.push(FB._set(‘results’,    r.id, r)); });
-tasks.push(FB._set(‘settings’, ‘main’, Store.settings));
+Store.questions.forEach(function(q)  { tasks.push(FB._set('questions',  q.id, q)); });
+Store.tests.forEach(function(t)      { tasks.push(FB._set('tests',      t.id, t)); });
+Store.candidates.forEach(function(c) { tasks.push(FB._set('candidates', c.id, c)); });
+Store.results.forEach(function(r)    { tasks.push(FB._set('results',    r.id, r)); });
+tasks.push(FB._set('settings', 'main', Store.settings));
 await Promise.all(tasks);
 if(!silent) {
-this._setStatus(‘connected’, ‘All data uploaded ✓’);
-toast(‘All local data pushed to Firebase!’, ‘success’);
+this._setStatus('connected', 'All data uploaded ✓');
+toast('All local data pushed to Firebase!', 'success');
 }
 } catch(err) {
-this._setStatus(‘error’, ’Push failed: ’ + err.message);
-if(!silent) toast(’Push failed: ’ + err.message, ‘danger’);
+this._setStatus('error', 'Push failed: ' + err.message);
+if(!silent) toast('Push failed: ' + err.message, 'danger');
 }
 },
 
 // ── STATUS BAR ────────────────────────────────────────────
 _setStatus(state, msg) {
-var bar  = document.getElementById(‘firebase-status-bar’);
-var dot  = document.getElementById(‘fb-dot’);
-var text = document.getElementById(‘fb-status-text’);
+var bar  = document.getElementById('firebase-status-bar');
+var dot  = document.getElementById('fb-dot');
+var text = document.getElementById('fb-status-text');
 if(!bar) return;
-if(state === ‘off’ || state === ‘’) return; // Don’t show bar for inactive/local states
-bar.classList.add(‘show’);
-dot.className = ‘fb-dot ’ + (state===‘connected’?‘connected’:state===‘error’?‘error’:state===‘syncing’?‘syncing’:’’);
+if(state === 'off' || state === '') return; // Don't show bar for inactive/local states
+bar.classList.add('show');
+dot.className = 'fb-dot ' + (state==='connected'?'connected':state==='error'?'error':state==='syncing'?'syncing':'');
 text.textContent = msg;
-if(state===‘connected’) setTimeout(function(){ bar.classList.remove(‘show’); }, 5000);
-if(state===‘error’)     setTimeout(function(){ bar.classList.remove(‘show’); }, 8000);
+if(state==='connected') setTimeout(function(){ bar.classList.remove('show'); }, 5000);
+if(state==='error')     setTimeout(function(){ bar.classList.remove('show'); }, 8000);
 },
 
 _updateSettingsUI(connected, projId) {
-projId = projId || ‘’;
-var statusEl = document.getElementById(‘fb-settings-status’);
-var projEl   = document.getElementById(‘fb-project-info’);
-var projName = document.getElementById(‘fb-project-name’);
-var connEl   = document.getElementById(‘fb-connect-status’);
+projId = projId || '';
+var statusEl = document.getElementById('fb-settings-status');
+var projEl   = document.getElementById('fb-project-info');
+var projName = document.getElementById('fb-project-name');
+var connEl   = document.getElementById('fb-connect-status');
 if(statusEl) {
-statusEl.className = ’alert ’ + (connected ? ‘alert-success’ : ‘alert-warning’);
+statusEl.className = 'alert ' + (connected ? 'alert-success' : 'alert-warning');
 statusEl.innerHTML = connected
-? ‘<span>✅</span><span>Connected to <strong>’ + projId + ‘</strong> - sync active</span>’
-: ‘<span>⚠️</span><span>Firebase not connected. Running in local mode.</span>’;
+? '<span>✅</span><span>Connected to <strong>' + projId + '</strong> - sync active</span>'
+: '<span>⚠️</span><span>Firebase not connected. Running in local mode.</span>';
 }
-if(projEl)   projEl.classList.toggle(‘hidden’, !connected);
+if(projEl)   projEl.classList.toggle('hidden', !connected);
 if(projName) projName.textContent = projId;
 if(connEl && connected) {
-connEl.innerHTML = ‘<div class="alert alert-success mt-1"><span>✅</span><span>Connected to <strong>’ + projId + ‘</strong>!</span></div>’;
+connEl.innerHTML = '<div class="alert alert-success mt-1"><span>✅</span><span>Connected to <strong>' + projId + '</strong>!</span></div>';
 }
 },
 };
@@ -3807,74 +3809,74 @@ connEl.innerHTML = ‘<div class="alert alert-success mt-1"><span>✅</span><spa
 // ── Firebase UI functions ─────────────────────────────────────
 async function connectFirebase() {
 if(_isLocalFile()) {
-var connEl = document.getElementById(‘fb-connect-status’);
-if(connEl) connEl.innerHTML = ‘<div class="alert alert-warning"><span>⚠️</span><div><strong>Cannot connect from a local file.</strong> Firebase REST API requires HTTPS. <button class="btn btn-primary btn-sm" style="margin-left:8px" onclick="showGithubGuide()">📖 How to host it →</button></div></div>’;
+var connEl = document.getElementById('fb-connect-status');
+if(connEl) connEl.innerHTML = '<div class="alert alert-warning"><span>⚠️</span><div><strong>Cannot connect from a local file.</strong> Firebase REST API requires HTTPS. <button class="btn btn-primary btn-sm" style="margin-left:8px" onclick="showGithubGuide()">📖 How to host it →</button></div></div>';
 return;
 }
-var get = function(id){ var el=document.getElementById(id); return el?el.value.trim():’’; };
+var get = function(id){ var el=document.getElementById(id); return el?el.value.trim():''; };
 var config = {
-apiKey:     get(‘fb-apiKey’)    || DEFAULT_CONFIG.apiKey,
-projectId:  get(‘fb-projectId’) || DEFAULT_CONFIG.projectId,
-storageBucket: get(‘fb-storageBucket’) || DEFAULT_CONFIG.storageBucket,
+apiKey:     get('fb-apiKey')    || DEFAULT_CONFIG.apiKey,
+projectId:  get('fb-projectId') || DEFAULT_CONFIG.projectId,
+storageBucket: get('fb-storageBucket') || DEFAULT_CONFIG.storageBucket,
 };
-if(!config.apiKey || !config.projectId) { toast(‘API Key and Project ID are required.’,‘danger’); return; }
-var connEl = document.getElementById(‘fb-connect-status’);
-if(connEl) connEl.innerHTML = ‘<div class="alert alert-info"><span>⏳</span><span>Connecting to Firebase…</span></div>’;
+if(!config.apiKey || !config.projectId) { toast('API Key and Project ID are required.','danger'); return; }
+var connEl = document.getElementById('fb-connect-status');
+if(connEl) connEl.innerHTML = '<div class="alert alert-info"><span>⏳</span><span>Connecting to Firebase…</span></div>';
 var ok = await FB.connect(config);
 if(ok) {
 // Auto-seed happens inside pullAll() - nothing manual needed
 if(connEl) {
-connEl.innerHTML = ‘<div class="alert alert-success"><span>✅</span><span>Connected! Data is syncing automatically.</span></div>’;
+connEl.innerHTML = '<div class="alert alert-success"><span>✅</span><span>Connected! Data is syncing automatically.</span></div>';
 }
 } else {
-toast(‘Connection failed. Make sure Firestore rules are set to: allow read, write: if true’, ‘danger’, 7000);
+toast('Connection failed. Make sure Firestore rules are set to: allow read, write: if true', 'danger', 7000);
 if(connEl) {
-connEl.innerHTML = ‘<div class="alert alert-danger"><span>❌</span><div><strong>Connection failed.</strong><br><span style="font-size:.82rem">Go to Firebase Console → Firestore → Rules → set <code>allow read, write: if true;</code> → Publish, then try again.</span></div></div>’;
+connEl.innerHTML = '<div class="alert alert-danger"><span>❌</span><div><strong>Connection failed.</strong><br><span style="font-size:.82rem">Go to Firebase Console → Firestore → Rules → set <code>allow read, write: if true;</code> → Publish, then try again.</span></div></div>';
 }
 }
 }
-function disconnectFirebase() { FB.disconnect(); closeModal(‘modal-firebase’); }
+function disconnectFirebase() { FB.disconnect(); closeModal('modal-firebase'); }
 
 function openFirebaseModal() {
 var saved = {};
-try { saved = JSON.parse(localStorage.getItem(‘admitpro_fb_config’) || ‘{}’); } catch(e){}
-var set = function(id, val){ var el=document.getElementById(id); if(el) el.value=val||’’; };
-set(‘fb-apiKey’,     saved.apiKey    || DEFAULT_CONFIG.apiKey);
-set(‘fb-projectId’,  saved.projectId || DEFAULT_CONFIG.projectId);
-set(‘fb-authDomain’, saved.authDomain || (DEFAULT_CONFIG.projectId + ‘.firebaseapp.com’));
-set(‘fb-storageBucket’, saved.storageBucket || DEFAULT_CONFIG.storageBucket);
-set(‘fb-messagingSenderId’, saved.messagingSenderId || ‘564989414059’);
-set(‘fb-appId’,      saved.appId     || ‘1:564989414059:web:bf803619c90935b11ec5ee’);
-set(‘fb-measurementId’, saved.measurementId || ‘G-1HTB9XXFPT’);
-openModal(‘modal-firebase’);
+try { saved = JSON.parse(localStorage.getItem('admitpro_fb_config') || '{}'); } catch(e){}
+var set = function(id, val){ var el=document.getElementById(id); if(el) el.value=val||''; };
+set('fb-apiKey',     saved.apiKey    || DEFAULT_CONFIG.apiKey);
+set('fb-projectId',  saved.projectId || DEFAULT_CONFIG.projectId);
+set('fb-authDomain', saved.authDomain || (DEFAULT_CONFIG.projectId + '.firebaseapp.com'));
+set('fb-storageBucket', saved.storageBucket || DEFAULT_CONFIG.storageBucket);
+set('fb-messagingSenderId', saved.messagingSenderId || '564989414059');
+set('fb-appId',      saved.appId     || '1:564989414059:web:bf803619c90935b11ec5ee');
+set('fb-measurementId', saved.measurementId || 'G-1HTB9XXFPT');
+openModal('modal-firebase');
 }
 
 function showGithubGuide() {
-openModal(‘modal-github-guide’);
+openModal('modal-github-guide');
 }
 
 function _isLocalFile() {
-return location.protocol === ‘file:’ || location.hostname === ‘localhost’ || location.hostname === ‘127.0.0.1’;
+return location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 }
 
 async function tryAutoConnect() {
 var saved = null;
-try { saved = JSON.parse(localStorage.getItem(‘admitpro_fb_config’)); } catch(e){}
+try { saved = JSON.parse(localStorage.getItem('admitpro_fb_config')); } catch(e){}
 
 if(saved && saved.projectId) {
 if(_isLocalFile()) {
-var banner = document.getElementById(‘sync-setup-banner’);
-if(banner) banner.classList.remove(‘hidden’);
+var banner = document.getElementById('sync-setup-banner');
+if(banner) banner.classList.remove('hidden');
 return;
 }
-FB._setStatus(‘syncing’, ‘Reconnecting…’);
+FB._setStatus('syncing', 'Reconnecting…');
 await FB.connect(saved, true); // silent=true: no console errors if offline
 } else {
 var hasData = Store.questions.length > 0 || Store.candidates.length > 0;
 if(hasData && _isLocalFile()) {
 setTimeout(function() {
-var banner = document.getElementById(‘sync-setup-banner’);
-if(banner) banner.classList.remove(‘hidden’);
+var banner = document.getElementById('sync-setup-banner');
+if(banner) banner.classList.remove('hidden');
 }, 3000);
 }
 }
@@ -3884,57 +3886,57 @@ if(banner) banner.classList.remove(‘hidden’);
 // ═══════════════════════════════════════════════════════════════
 function _setupDragDropZones() {
 // Logo drop zone
-const logoZone = document.getElementById(‘logo-drop-zone’);
+const logoZone = document.getElementById('logo-drop-zone');
 if(logoZone && !logoZone._dd) {
 logoZone._dd = true;
-logoZone.addEventListener(‘dragover’,  e => { e.preventDefault(); logoZone.classList.add(‘dragover’); });
-logoZone.addEventListener(‘dragleave’, () => logoZone.classList.remove(‘dragover’));
-logoZone.addEventListener(‘drop’, e => {
-e.preventDefault(); logoZone.classList.remove(‘dragover’);
+logoZone.addEventListener('dragover',  e => { e.preventDefault(); logoZone.classList.add('dragover'); });
+logoZone.addEventListener('dragleave', () => logoZone.classList.remove('dragover'));
+logoZone.addEventListener('drop', e => {
+e.preventDefault(); logoZone.classList.remove('dragover');
 const file = e.dataTransfer.files[0];
-if(file && file.type.startsWith(‘image/’)) {
+if(file && file.type.startsWith('image/')) {
 const dt = new DataTransfer(); dt.items.add(file);
-document.getElementById(‘logo-file-input’).files = dt.files;
-handleLogoUpload(document.getElementById(‘logo-file-input’));
+document.getElementById('logo-file-input').files = dt.files;
+handleLogoUpload(document.getElementById('logo-file-input'));
 }
 });
 }
 // CSV drop zone
-const csvZone = document.getElementById(‘bulk-drop-zone’);
+const csvZone = document.getElementById('bulk-drop-zone');
 if(csvZone && !csvZone._dd) {
 csvZone._dd = true;
-csvZone.addEventListener(‘dragover’,  e => { e.preventDefault(); csvZone.classList.add(‘dragover’); });
-csvZone.addEventListener(‘dragleave’, () => csvZone.classList.remove(‘dragover’));
-csvZone.addEventListener(‘drop’, e => {
-e.preventDefault(); csvZone.classList.remove(‘dragover’);
+csvZone.addEventListener('dragover',  e => { e.preventDefault(); csvZone.classList.add('dragover'); });
+csvZone.addEventListener('dragleave', () => csvZone.classList.remove('dragover'));
+csvZone.addEventListener('drop', e => {
+e.preventDefault(); csvZone.classList.remove('dragover');
 const file = e.dataTransfer.files[0];
-if(file) { const dt=new DataTransfer(); dt.items.add(file); document.getElementById(‘bulk-file’).files=dt.files; onCSVFileChange(document.getElementById(‘bulk-file’)); }
+if(file) { const dt=new DataTransfer(); dt.items.add(file); document.getElementById('bulk-file').files=dt.files; onCSVFileChange(document.getElementById('bulk-file')); }
 });
 }
 // Candidate drop zone
-const candZone = document.getElementById(‘cand-drop-zone’);
+const candZone = document.getElementById('cand-drop-zone');
 if(candZone && !candZone._dd) {
 candZone._dd = true;
-candZone.addEventListener(‘dragover’,  e => { e.preventDefault(); candZone.classList.add(‘dragover’); });
-candZone.addEventListener(‘dragleave’, () => candZone.classList.remove(‘dragover’));
-candZone.addEventListener(‘drop’, e => {
-e.preventDefault(); candZone.classList.remove(‘dragover’);
+candZone.addEventListener('dragover',  e => { e.preventDefault(); candZone.classList.add('dragover'); });
+candZone.addEventListener('dragleave', () => candZone.classList.remove('dragover'));
+candZone.addEventListener('drop', e => {
+e.preventDefault(); candZone.classList.remove('dragover');
 const file = e.dataTransfer.files[0];
-if(file) { const dt=new DataTransfer(); dt.items.add(file); document.getElementById(‘cand-bulk-file’).files=dt.files; previewCandBulk(document.getElementById(‘cand-bulk-file’)); }
+if(file) { const dt=new DataTransfer(); dt.items.add(file); document.getElementById('cand-bulk-file').files=dt.files; previewCandBulk(document.getElementById('cand-bulk-file')); }
 });
 }
 }
 
 // Color picker sync listener
-document.addEventListener(‘change’, e => {
-if(e.target.id===‘custom-primary-color’) { const hex=document.getElementById(‘custom-primary-hex’); if(hex) hex.value=e.target.value; }
-if(e.target.id===‘custom-accent-color’)  { const hex=document.getElementById(‘custom-accent-hex’);  if(hex) hex.value=e.target.value; }
+document.addEventListener('change', e => {
+if(e.target.id==='custom-primary-color') { const hex=document.getElementById('custom-primary-hex'); if(hex) hex.value=e.target.value; }
+if(e.target.id==='custom-accent-color')  { const hex=document.getElementById('custom-accent-hex');  if(hex) hex.value=e.target.value; }
 });
 
 function init() {
 Store._init();
 applyBranding();
-showScreen(‘screen-landing’);
+showScreen('screen-landing');
 _setupDragDropZones();
 // Reconnect Firebase only if previously configured by user
 tryAutoConnect();
@@ -3946,116 +3948,116 @@ tryAutoConnect();
 
 // ─── QUESTIONS ───────────────────────────────────────────────
 function getSelectedQIds() {
-return Array.from(document.querySelectorAll(’.q-row-check:checked’)).map(el => el.dataset.id);
+return Array.from(document.querySelectorAll('.q-row-check:checked')).map(el => el.dataset.id);
 }
 
 function updateQSelection() {
 var ids = getSelectedQIds();
-var total = document.querySelectorAll(’.q-row-check’).length;
-var bar = document.getElementById(‘q-mass-actions’);
-var countEl = document.getElementById(‘q-selected-count’);
-var allChk = document.getElementById(‘q-select-all’);
-if(bar) bar.style.display = ids.length > 0 ? ‘flex’ : ‘none’;
-if(countEl) countEl.textContent = ids.length + ’ selected’;
+var total = document.querySelectorAll('.q-row-check').length;
+var bar = document.getElementById('q-mass-actions');
+var countEl = document.getElementById('q-selected-count');
+var allChk = document.getElementById('q-select-all');
+if(bar) bar.style.display = ids.length > 0 ? 'flex' : 'none';
+if(countEl) countEl.textContent = ids.length + ' selected';
 if(allChk) allChk.indeterminate = ids.length > 0 && ids.length < total;
 if(allChk) allChk.checked = ids.length === total && total > 0;
 }
 
 function toggleSelectAllQuestions(chk) {
-document.querySelectorAll(’.q-row-check’).forEach(function(el){ el.checked = chk.checked; });
+document.querySelectorAll('.q-row-check').forEach(function(el){ el.checked = chk.checked; });
 updateQSelection();
 }
 
 function massDeleteQuestions() {
 var ids = getSelectedQIds();
-if(!ids.length) { toast(‘No questions selected.’, ‘warning’); return; }
-document.getElementById(‘confirm-title’).textContent = ‘Delete ’ + ids.length + ’ Questions’;
-document.getElementById(‘confirm-message’).textContent =
-‘Are you sure you want to permanently delete ’ + ids.length + ’ selected question(s)? This cannot be undone.’;
-document.getElementById(‘confirm-btn’).onclick = function() {
+if(!ids.length) { toast('No questions selected.', 'warning'); return; }
+document.getElementById('confirm-title').textContent = 'Delete ' + ids.length + ' Questions';
+document.getElementById('confirm-message').textContent =
+'Are you sure you want to permanently delete ' + ids.length + ' selected question(s)? This cannot be undone.';
+document.getElementById('confirm-btn').onclick = function() {
 ids.forEach(function(id) {
 Store.questions = Store.questions.filter(function(q){ return q.id !== id; });
 FB.deleteQuestion(id);
 });
 Store.save();
-closeModal(‘modal-confirm’);
+closeModal('modal-confirm');
 renderQuestions();
-toast(ids.length + ’ question(s) deleted.’, ‘success’);
+toast(ids.length + ' question(s) deleted.', 'success');
 };
-openModal(‘modal-confirm’);
+openModal('modal-confirm');
 }
 
 // ─── CANDIDATES ──────────────────────────────────────────────
 function getSelectedCIds() {
-return Array.from(document.querySelectorAll(’.c-row-check:checked’)).map(el => el.dataset.id);
+return Array.from(document.querySelectorAll('.c-row-check:checked')).map(el => el.dataset.id);
 }
 
 function updateCSelection() {
 var ids = getSelectedCIds();
-var total = document.querySelectorAll(’.c-row-check’).length;
-var bar = document.getElementById(‘c-mass-actions’);
-var countEl = document.getElementById(‘c-selected-count’);
-var allChk = document.getElementById(‘c-select-all’);
-if(bar) bar.style.display = ids.length > 0 ? ‘flex’ : ‘none’;
-if(countEl) countEl.textContent = ids.length + ’ selected’;
+var total = document.querySelectorAll('.c-row-check').length;
+var bar = document.getElementById('c-mass-actions');
+var countEl = document.getElementById('c-selected-count');
+var allChk = document.getElementById('c-select-all');
+if(bar) bar.style.display = ids.length > 0 ? 'flex' : 'none';
+if(countEl) countEl.textContent = ids.length + ' selected';
 if(allChk) allChk.indeterminate = ids.length > 0 && ids.length < total;
 if(allChk) allChk.checked = ids.length === total && total > 0;
 }
 
 function toggleSelectAllCandidates(chk) {
-document.querySelectorAll(’.c-row-check’).forEach(function(el){ el.checked = chk.checked; });
+document.querySelectorAll('.c-row-check').forEach(function(el){ el.checked = chk.checked; });
 updateCSelection();
 }
 
 function massDeleteCandidates() {
 var ids = getSelectedCIds();
-if(!ids.length) { toast(‘No candidates selected.’, ‘warning’); return; }
-document.getElementById(‘confirm-title’).textContent = ‘Delete ’ + ids.length + ’ Candidates’;
-document.getElementById(‘confirm-message’).textContent =
-‘Are you sure you want to permanently delete ’ + ids.length + ’ selected candidate(s) and all their results? This cannot be undone.’;
-document.getElementById(‘confirm-btn’).onclick = function() {
+if(!ids.length) { toast('No candidates selected.', 'warning'); return; }
+document.getElementById('confirm-title').textContent = 'Delete ' + ids.length + ' Candidates';
+document.getElementById('confirm-message').textContent =
+'Are you sure you want to permanently delete ' + ids.length + ' selected candidate(s) and all their results? This cannot be undone.';
+document.getElementById('confirm-btn').onclick = function() {
 ids.forEach(function(id) {
 Store.candidates = Store.candidates.filter(function(c){ return c.id !== id; });
 Store.results    = Store.results.filter(function(r){ return r.candidateId !== id; });
 FB.deleteCandidate(id);
 });
 Store.save();
-closeModal(‘modal-confirm’);
+closeModal('modal-confirm');
 renderCandidates();
-toast(ids.length + ’ candidate(s) deleted.’, ‘success’);
+toast(ids.length + ' candidate(s) deleted.', 'success');
 };
-openModal(‘modal-confirm’);
+openModal('modal-confirm');
 }
 
 function massResetCandidates() {
 var ids = getSelectedCIds();
-if(!ids.length) { toast(‘No candidates selected.’, ‘warning’); return; }
-document.getElementById(‘confirm-title’).textContent = ‘Reset ’ + ids.length + ’ Candidates’;
-document.getElementById(‘confirm-message’).textContent =
-‘Reset test progress for ’ + ids.length + ’ candidate(s)? Their results will be deleted but accounts kept.’;
-document.getElementById(‘confirm-btn’).onclick = function() {
+if(!ids.length) { toast('No candidates selected.', 'warning'); return; }
+document.getElementById('confirm-title').textContent = 'Reset ' + ids.length + ' Candidates';
+document.getElementById('confirm-message').textContent =
+'Reset test progress for ' + ids.length + ' candidate(s)? Their results will be deleted but accounts kept.';
+document.getElementById('confirm-btn').onclick = function() {
 ids.forEach(function(id) {
 var cand = Store.candidates.find(function(c){ return c.id === id; });
 if(cand) {
-cand.status = ‘not_started’;
+cand.status = 'not_started';
 FB.syncCandidate(cand);
 }
 Store.results = Store.results.filter(function(r){ return r.candidateId !== id; });
 });
 Store.save();
-closeModal(‘modal-confirm’);
+closeModal('modal-confirm');
 renderCandidates();
-toast(ids.length + ’ candidate(s) reset.’, ‘success’);
+toast(ids.length + ' candidate(s) reset.', 'success');
 };
-openModal(‘modal-confirm’);
+openModal('modal-confirm');
 }
 
 // ── renderAll: refresh whichever admin page is visible ──────────
 function renderAll() {
 updateSidebarCounts();
-const ap = document.querySelector(’.admin-page.active’);
+const ap = document.querySelector('.admin-page.active');
 if(!ap) return;
-const pid = ap.id.replace(‘page-’, ‘’);
+const pid = ap.id.replace('page-', '');
 const fns = {
 dashboard: renderDashboard,
 questions: renderQuestions,
