@@ -1757,7 +1757,7 @@ function switchLoginTab(tab) {
 function _ensureDemoCandidate() {
   var hasDemo = Store.candidates.some(function(c){ return c.roll === 'CAND001'; });
   if(!hasDemo && Store.tests.length > 0) {
-    var testId = Store.tests.find(function(t){ return t.status==='active'; })?.id || Store.tests[0].id;
+    var testId = (function(){ var at=Store.tests.find(function(t){return t.status==='active';}); return at?at.id:Store.tests[0].id; })();
     Store.candidates.push({
       id:'C_DEMO1', name:'Demo Candidate', roll:'CAND001',
       email:'demo@candidate.com', password:'test123',
@@ -2007,9 +2007,9 @@ function applyCustomColors() {
 }
 
 function syncColorFromHex(type) {
-  const hexEl = document.getElementById(`custom-${type}-hex`);
-  const pickerEl = document.getElementById(`custom-${type}-color`);
-  const hex = hexEl?.value;
+  const hexEl = document.getElementById('custom-'+type+'-hex');
+  const pickerEl = document.getElementById('custom-'+type+'-color');
+  const hex = hexEl ? hexEl.value : null;
   if(hex && /^#[0-9a-fA-F]{6}$/.test(hex)) { if(pickerEl) pickerEl.value = hex; }
 }
 
@@ -2094,7 +2094,7 @@ function renderDashboard() {
     </div>`).join('') : '<div class="p-3 text-muted text-sm">No tests yet.</div>';
 
   // Top performers
-  const top = [...Store.results].sort((a,b)=>b.score-a.score).slice(0,5);
+  const top = Store.results.slice().sort((a,b)=>b.score-a.score).slice(0,5);
   document.getElementById('dashboard-top-performers').innerHTML = top.length ? top.map((r,i)=>`
     <div class="flex items-center justify-between" style="padding:12px 20px;border-bottom:1px solid var(--neutral-100)">
       <div class="flex items-center gap-2">
@@ -2113,9 +2113,9 @@ function renderDashboard() {
 
 // ─── QUESTIONS ────────────────────────────────────────────────
 function renderQuestions() {
-  const search = (document.getElementById('q-search')?.value||'').toLowerCase();
-  const sec = document.getElementById('q-filter-section')?.value||'';
-  const type = document.getElementById('q-filter-type')?.value||'';
+  const search = ((document.getElementById('q-search') ? document.getElementById('q-search').value : '')||'').toLowerCase();
+  const sec = (document.getElementById('q-filter-section') ? document.getElementById('q-filter-section').value : '')||'';
+  const type = (document.getElementById('q-filter-type') ? document.getElementById('q-filter-type').value : '')||'';
   let qs = Store.questions.filter(q =>
     (!search || q.text.toLowerCase().includes(search) || (q.tags||[]).join(' ').includes(search)) &&
     (!sec || q.section===sec) && (!type || q.type===type)
@@ -2141,7 +2141,7 @@ function renderQuestions() {
       </td>
     </tr>`).join('') || `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--neutral-500)">No questions found. <button class="btn btn-ghost btn-sm" onclick="openQuestionModal()">Add one →</button></td></tr>`;
   // Populate section filter
-  const sections = [...new Set(Store.questions.map(q=>q.section))];
+  const sections = Store.questions.map(function(q){return q.section;}).filter(function(v,i,a){return a.indexOf(v)===i;});
   const secSel = document.getElementById('q-filter-section');
   const cur = secSel.value;
   secSel.innerHTML = '<option value="">All Sections</option>' + sections.map(s=>`<option value="${s}"${cur===s?' selected':''}>${s}</option>`).join('');
@@ -2155,20 +2155,20 @@ function openQuestionModal(id=null) {
   document.getElementById('modal-q-title').textContent = id ? 'Edit Question' : 'Add Question';
   optionCount = 0;
   const q = id ? Store.questions.find(x=>x.id===id) : null;
-  document.getElementById('q-text').value = q?.text||'';
-  document.getElementById('q-type').value = q?.type||'mcq-single';
-  document.getElementById('q-marks').value = q?.marks??Store.settings.defMarks;
-  document.getElementById('q-negative').value = q?.negative??Store.settings.defNeg;
-  document.getElementById('q-explanation').value = q?.explanation||'';
-  document.getElementById('q-tags').value = (q?.tags||[]).join(', ');
-  document.getElementById('q-model-answer').value = q?.modelAnswer||'';
+  document.getElementById('q-text').value = (q && q.text)||'';
+  document.getElementById('q-type').value = (q && q.type)||'mcq-single';
+  document.getElementById('q-marks').value = (q && q.marks !== undefined) ? q.marks : Store.settings.defMarks;
+  document.getElementById('q-negative').value = (q && q.negative !== undefined) ? q.negative : Store.settings.defNeg;
+  document.getElementById('q-explanation').value = (q && q.explanation)||'';
+  document.getElementById('q-tags').value = ((q && q.tags)||[]).join(', ');
+  document.getElementById('q-model-answer').value = (q && q.modelAnswer)||'';
   // Populate section dropdown
-  const sections = [...new Set(Store.questions.map(x=>x.section)), 'Physics','Chemistry','Mathematics','Biology','English','General Knowledge'].filter((v,i,a)=>a.indexOf(v)===i);
-  document.getElementById('q-section').innerHTML = sections.map(s=>`<option${q?.section===s?' selected':''}>${s}</option>`).join('');
+  const sections = (Store.questions.map(function(q){return q.section;}).concat(['Physics','Chemistry','Mathematics','Biology','English','General Knowledge'])).filter(function(v,i,a){return a.indexOf(v)===i;});
+  document.getElementById('q-section').innerHTML = sections.map(s=>`<option${q && q.section===s?' selected':''}>${s}</option>`).join('');
   // Options
   document.getElementById('q-options-list').innerHTML = '';
-  if(q && q.options?.length) {
-    q.options.forEach((opt,i) => addOptionEditor(opt, q.correct?.includes(i), q.type==='mcq-multi'));
+  if(q && q.options && q.options.length) {
+    q.options.forEach((opt,i) => addOptionEditor(opt, q.correct && q.correct.includes(i), q.type==='mcq-multi'));
   } else {
     ['','','',''].forEach(() => addOptionEditor('', false));
   }
@@ -2207,9 +2207,9 @@ function saveQuestion() {
     document.querySelectorAll('.option-editor').forEach((row,i) => {
       const textEl = row.querySelector('input[type=text]');
       const checkEl = row.querySelector('.option-correct-check');
-      if(textEl?.value.trim()) {
+      if((textEl ? textEl.value.trim() : '')) {
         options.push(textEl.value.trim());
-        if(checkEl?.checked) correct.push(options.length-1);
+        if((checkEl ? checkEl.checked : false)) correct.push(options.length-1);
       }
     });
     if(options.length < 2) { toast('Add at least 2 options.','danger'); return; }
@@ -2284,7 +2284,7 @@ const BulkParser = {
     str = str.replace(/correct[:\s]*/i,'').replace(/ans(?:wer)?[:\s]*/i,'').trim();
     // Split on commas, semicolons, "and", spaces
     const tokens = str.split(/[,;/\s&]+/).map(t=>t.trim()).filter(Boolean);
-    return [...new Set(tokens.map(t=>this.letterToIndex(t)).filter(i=>i>=0))];
+    var _arr=tokens.map(function(t){return BulkParser.letterToIndex(t);}).filter(function(i){return i>=0;}); return _arr.filter(function(v,i,a){return a.indexOf(v)===i;});
   },
 
   // ─── DETECT FORMAT ─────────────────────────────────────────
@@ -2447,13 +2447,13 @@ function setPasteFormat(fmt, el) {
   BulkParser.format = fmt;
   document.querySelectorAll('.paste-fmt-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
-  const text = document.getElementById('smart-paste-area')?.value||'';
+  const text = (document.getElementById('smart-paste-area') ? document.getElementById('smart-paste-area').value : '')||'';
   if(text.trim()) runSmartParse();
 }
 
 function onSmartPasteInput() {
   const area = document.getElementById('smart-paste-area');
-  const text = area?.value||'';
+  const text = (area ? area.value : '')||'';
   const badge = document.getElementById('paste-live-badge');
   if(badge) badge.textContent = `${text.length} chars`;
   clearTimeout(_parseDebounce);
@@ -2462,7 +2462,7 @@ function onSmartPasteInput() {
 }
 
 function runSmartParse() {
-  const text = (document.getElementById('smart-paste-area')?.value||'').trim();
+  const text = ((document.getElementById('smart-paste-area') ? document.getElementById('smart-paste-area').value : '')||'').trim();
   if(!text) { setParseStatus('', ''); return; }
 
   const defaults = {
@@ -2564,7 +2564,7 @@ function onCSVFileChange(input) {
     // Parse CSV rows into BulkParser.csvParsed
     BulkParser.csvParsed = [];
     dataLines.forEach(line => {
-      const [type,section,question,optA,optB,optC,optD,correct,marks,negative,explanation] = line.split(',').map(s=>s?.trim());
+      const [type,section,question,optA,optB,optC,optD,correct,marks,negative,explanation] = line.split(',').map(s=>(s ? s.trim() : ''));
       if(!question) return;
       const options = [optA,optB,optC,optD].filter(Boolean);
       const correctArr = correct ? correct.split(/[;/]/).map(c=>BulkParser.letterToIndex(c.trim())).filter(i=>i>=0) : [];
@@ -2596,7 +2596,7 @@ function runBulkImport() {
   if(!qs.length) { toast('Nothing to import.','warning'); return; }
 
   let added = 0;
-  const defSection = document.getElementById('paste-default-section')?.value.trim()||'General';
+  const defSection = (document.getElementById('paste-default-section') ? document.getElementById('paste-default-section').value.trim() : '')||'General';
 
   qs.forEach((q,i) => {
     const question = {
@@ -2683,18 +2683,18 @@ function openTestModal(id=null) {
   App.editingTestId = id;
   document.getElementById('modal-test-title').textContent = id ? 'Edit Test' : 'Create Test';
   const t = id ? Store.tests.find(x=>x.id===id) : null;
-  document.getElementById('t-name').value = t?.name||'';
-  document.getElementById('t-duration').value = t?.duration||180;
-  document.getElementById('t-total-marks').value = t?.totalMarks||300;
-  document.getElementById('t-instructions').value = t?.instructions||'';
-  document.getElementById('t-randomize').checked = t?.randomize||false;
-  document.getElementById('t-randomize-options').checked = t?.randomizeOptions||false;
-  document.getElementById('t-negative').checked = t?.negativeMarking??true;
-  document.getElementById('t-show-result').checked = t?.showResult??true;
-  document.getElementById('t-sectional-timing').checked = t?.sectionalTiming||false;
+  document.getElementById('t-name').value = (t && t.name)||'';
+  document.getElementById('t-duration').value = (t && t.duration)||180;
+  document.getElementById('t-total-marks').value = (t && t.totalMarks)||300;
+  document.getElementById('t-instructions').value = (t && t.instructions)||'';
+  document.getElementById('t-randomize').checked = (t && t.randomize)||false;
+  document.getElementById('t-randomize-options').checked = (t && t.randomizeOptions)||false;
+  document.getElementById('t-negative').checked = (t && t.negativeMarking !== undefined) ? t.negativeMarking : true;
+  document.getElementById('t-show-result').checked = (t && t.showResult !== undefined) ? t.showResult : true;
+  document.getElementById('t-sectional-timing').checked = (t && t.sectionalTiming)||false;
   // Sections
   document.getElementById('t-sections-list').innerHTML = '';
-  const secs = t?.sections || [{name:'Section 1',time:60}];
+  const secs = (t && t.sections) || [{name:'Section 1',time:60}];
   secs.forEach(s => addSectionEditor(s.name, s.time));
   openModal('modal-test');
 }
@@ -2754,9 +2754,9 @@ function toggleTestStatus(id) {
 
 // ─── CANDIDATES ───────────────────────────────────────────────
 function renderCandidates() {
-  const search  = (document.getElementById('cand-search')?.value||'').toLowerCase();
-  const testFil = document.getElementById('cand-filter-test')?.value||'';
-  const staFil  = document.getElementById('cand-filter-status')?.value||'';
+  const search  = ((document.getElementById('cand-search') ? document.getElementById('cand-search').value : '')||'').toLowerCase();
+  const testFil = (document.getElementById('cand-filter-test') ? document.getElementById('cand-filter-test').value : '')||'';
+  const staFil  = (document.getElementById('cand-filter-status') ? document.getElementById('cand-filter-status').value : '')||'';
 
   // Populate test filter dropdown
   const tSel = document.getElementById('cand-filter-test');
@@ -2786,7 +2786,7 @@ function renderCandidates() {
       <td><span class="badge badge-primary">${c.roll}</span></td>
       <td class="text-sm">${c.email}</td>
       <td class="text-sm" style="max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-        ${Store.tests.find(t=>t.id===c.testId)?.name||'<span class="text-muted">—</span>'}
+        ${((function(){var _t=Store.tests.find(function(t){return t.id===c.testId;});return _t?_t.name:''})())||'<span class="text-muted">—</span>'}
       </td>
       <td><span class="badge ${c.status==='completed'?'badge-success':c.status==='in_progress'?'badge-warning':'badge-primary'}">${(c.status||'not_started').replace('_',' ')}</span></td>
       <td>
@@ -2807,16 +2807,16 @@ function openAddCandidateModal(editId=null) {
   App.editingCandidateId = editId;
   document.getElementById('cand-modal-title').textContent = editId ? 'Edit Candidate' : 'Add Candidate';
   const c = editId ? Store.candidates.find(x=>x.id===editId) : null;
-  document.getElementById('cand-name').value     = c?.name||'';
-  document.getElementById('cand-roll').value     = c?.roll||'';
-  document.getElementById('cand-email').value    = c?.email||'';
-  document.getElementById('cand-password').value = c?.password||'';
-  document.getElementById('cand-phone').value    = c?.phone||'';
-  document.getElementById('cand-category').value = c?.category||'';
+  document.getElementById('cand-name').value     = (c && c.name)||'';
+  document.getElementById('cand-roll').value     = (c && c.roll)||'';
+  document.getElementById('cand-email').value    = (c && c.email)||'';
+  document.getElementById('cand-password').value = (c && c.password)||'';
+  document.getElementById('cand-phone').value    = (c && c.phone)||'';
+  document.getElementById('cand-category').value = (c && c.category)||'';
   // Populate test dropdown
   const sel = document.getElementById('cand-test-assign');
-  sel.innerHTML = Store.tests.map(t=>`<option value="${t.id}"${c?.testId===t.id?' selected':''}>${t.name}</option>`).join('');
-  if(!c && Store.tests.length) sel.value = Store.tests.find(t=>t.status==='active')?.id || Store.tests[0].id;
+  sel.innerHTML = Store.tests.map(t=>`<option value="${t.id}"${c && c.testId===t.id?' selected':''}>${t.name}</option>`).join('');
+  if(!c && Store.tests.length) sel.value = ((function(){var _t=Store.tests.find(function(t){return t.status==='active';});return _t?_t.id:''})()) || Store.tests[0].id;
   openModal('modal-add-candidate');
 }
 
@@ -2868,7 +2868,7 @@ function resetCandidate(id) {
 function confirmDeleteCandidate(id) {
   const c = Store.candidates.find(x=>x.id===id);
   document.getElementById('confirm-title').textContent = 'Remove Candidate';
-  document.getElementById('confirm-message').textContent = `Remove ${c?.name||'this candidate'}? Their results will also be deleted.`;
+  document.getElementById('confirm-message').textContent = `Remove ${(c && c.name)||'this candidate'}? Their results will also be deleted.`;
   document.getElementById('confirm-btn').onclick = () => {
     Store.candidates = Store.candidates.filter(c=>c.id!==id);
     Store.results    = Store.results.filter(r=>r.candidateId!==id);
@@ -2907,7 +2907,7 @@ function previewCandBulk(input) {
       <tr>
         <td>${r.name}</td><td>${r.roll}</td><td>${r.email}</td>
         <td>${r.password}</td>
-        <td style="max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${Store.tests.find(t=>t.id===r.testId)?.name||r.testId||'First Active'}</td>
+        <td style="max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${((function(){var _t=Store.tests.find(function(t){return t.id===r.testId;});return _t?_t.name:''})())||r.testId||'First Active'}</td>
       </tr>`).join('');
     document.getElementById('cand-preview-table').innerHTML = `
       <table class="data-table">
@@ -2924,7 +2924,7 @@ function processCandBulkUpload() {
   if(!_candBulkRows.length) { toast('No valid rows to import.','warning'); return; }
   let added=0, skipped=0, errors=[];
   const logLines = [];
-  const defaultTestId = Store.tests.find(t=>t.status==='active')?.id || Store.tests[0]?.id || '';
+  const defaultTestId = ((function(){var _t=Store.tests.find(function(t){return t.status==='active';});return _t?_t.id:''})()) || Store.tests[0]?.id || '';
 
   _candBulkRows.forEach((row,i) => {
     const dup = Store.candidates.find(c=>c.roll===row.roll);
@@ -2967,7 +2967,7 @@ Meera Nair,CAND2025004,meera@example.com,secure456,,General`;
 
 // ─── RESULTS ─────────────────────────────────────────────────
 function renderResults() {
-  const filter = document.getElementById('result-filter-test')?.value||'';
+  const filter = (document.getElementById('result-filter-test') ? document.getElementById('result-filter-test').value : '')||'';
   // Populate test filter
   const sel = document.getElementById('result-filter-test');
   const cur = sel.value;
@@ -2975,7 +2975,7 @@ function renderResults() {
 
   let results = Store.results.filter(r=>!filter||r.testId===filter)
     .sort((a,b)=>b.score-a.score)
-    .map((r,i)=>({...r,rank:i+1}));
+    .map(function(r,i){ return Object.assign({},r,{rank:i+1}); });
   const visible = Store.settings.resultsVisible;
 
   document.getElementById('results-tbody').innerHTML = results.length ? results.map(r=>`
@@ -2983,7 +2983,7 @@ function renderResults() {
       <td><span class="badge badge-primary">#${r.rank}</span></td>
       <td class="font-medium">${r.candidateName}</td>
       <td><span class="badge badge-accent">${r.roll}</span></td>
-      <td class="text-sm text-muted">${Store.tests.find(t=>t.id===r.testId)?.name||r.testId}</td>
+      <td class="text-sm text-muted">${((function(){var _t=Store.tests.find(function(t){return t.id===r.testId;});return _t?_t.name:''})())||r.testId}</td>
       <td>${visible?`<strong>${r.score}</strong>/<span class="text-muted">${r.totalMarks}</span>`:'<span class="badge">Hidden</span>'}</td>
       <td>${visible?`<span class="${r.percentage>=60?'text-success':r.percentage>=40?'text-accent':'text-danger'}">${r.percentage.toFixed(1)}%</span>`:'—'}</td>
       <td class="text-sm text-muted">${r.timeTaken||'—'} min</td>
@@ -3035,7 +3035,7 @@ function renderAnalytics() {
 
   // Score distribution
   const brackets = [{label:'90-100%',min:90},{label:'75-90%',min:75},{label:'60-75%',min:60},{label:'40-60%',min:40},{label:'Below 40%',min:0}];
-  const dist = brackets.map(b=>({...b,count:rs.filter(r=>r.percentage>=b.min&&(b.min===90?r.percentage<=100:r.percentage<brackets[brackets.indexOf(b)-1]?.min||9999)).length}));
+  const dist = brackets.map(function(b){ return Object.assign({},b,{count:rs.filter(function(r){ return r.percentage>=b.min&&(b.min===90?r.percentage<=100:r.percentage<(brackets[brackets.indexOf(b)-1]?brackets[brackets.indexOf(b)-1].min:9999)); }).length}); });
   const max = Math.max(...dist.map(d=>d.count),1);
   document.getElementById('score-distribution').innerHTML = dist.map(d=>`
     <div class="section-score-bar">
@@ -3104,7 +3104,7 @@ function startTest() {
   // Get questions for this test
   let qs = Store.questions.filter(q => (test.questions||[]).includes(q.id));
   if(!qs.length) qs = Store.questions; // fallback: all questions
-  if(test.randomize) qs = shuffle([...qs]);
+  if(test.randomize) qs = shuffle(qs.slice());
 
   App.testState = {
     questions: qs, currentIndex: 0, answers: {}, flags: {},
@@ -3196,7 +3196,7 @@ function selectOption(optIdx) {
 const ts = App.testState;
 const q = ts.questions[ts.currentIndex];
 if(q.type === ‘mcq-multi’) {
-let ans = Array.isArray(ts.answers[ts.currentIndex]) ? […ts.answers[ts.currentIndex]] : [];
+let ans = Array.isArray(ts.answers[ts.currentIndex]) ? ts.answers[ts.currentIndex].slice() : [];
 const i = ans.indexOf(optIdx);
 if(i>=0) ans.splice(i,1); else ans.push(optIdx);
 ts.answers[ts.currentIndex] = ans;
@@ -3348,8 +3348,8 @@ if(ans===undefined||ans===null||ans===''||(Array.isArray(ans)&&!ans.length)) {
 
 const timeTaken = Math.floor((Date.now()-ts.startTime)/60000);
 return {
-id:`R${Date.now()}`, candidateId:App.currentUser?.id, testId:test.id,
-candidateName:App.currentUser?.name||‘Candidate’, roll:App.currentUser?.roll||’—’,
+id:`R${Date.now()}`, candidateId:(App.currentUser && App.currentUser.id), testId:test.id,
+candidateName:(App.currentUser && App.currentUser.name)||‘Candidate’, roll:(App.currentUser && App.currentUser.roll)||’—’,
 score:Math.max(0,score), totalMarks:test.totalMarks||300,
 percentage:Math.max(0,Math.min(100,Math.round(score/test.totalMarks*1000)/10)),
 correct, incorrect, unanswered, attempted:correct+incorrect,
@@ -3400,25 +3400,25 @@ document.querySelectorAll(’#result-review’).forEach(()=>{});
 const result = Store.results.find(r=>r.candidateName===document.getElementById(‘result-candidate-name’).textContent);
 if(result) renderReview(result);
 document.querySelectorAll(’[onclick^=“filterReview”]’).forEach(b=>b.classList.remove(‘btn-primary’));
-btn?.classList.add(‘btn-primary’);
+if(btn) btn.classList.add(‘btn-primary’);
 }
 
 function renderReview(result) {
-const qs = App.testState.questions.length ? App.testState.questions : Store.questions.filter(q=>(App.currentTest?.questions||[]).includes(q.id));
+const qs = App.testState.questions.length ? App.testState.questions : Store.questions.filter(q=>((App.currentTest && App.currentTest.questions)||[]).includes(q.id));
 if(!qs.length) { document.getElementById(‘result-review’).innerHTML=’<div class="text-muted text-sm">Answer details not available for admin-viewed results.</div>’; return; }
 
 const filter = App.reviewFilter;
 const letters = [‘A’,‘B’,‘C’,‘D’,‘E’,‘F’];
 document.getElementById(‘result-review’).innerHTML = qs.map((q,i)=>{
 const ans = result.answers?.[i];
-const status = ans?.status || ‘skipped’;
+const status = (ans && ans.status) || ‘skipped’;
 if(filter!==‘all’ && filter!==status && !(filter===‘incorrect’&&status===‘incorrect’) && !(filter===‘correct’&&status===‘correct’) && !(filter===‘skipped’&&status===‘skipped’)) return ‘’;
 
 ```
 const statusConfig = {correct:{icon:'✅',color:'var(--success)',bg:'rgba(26,140,90,.06)'},incorrect:{icon:'❌',color:'var(--danger)',bg:'rgba(192,57,43,.05)'},skipped:{icon:'—',color:'var(--neutral-500)',bg:'var(--neutral-50)'},manual:{icon:'📝',color:'var(--warning)',bg:'rgba(230,126,34,.06)'}};
 const sc = statusConfig[status] || statusConfig.skipped;
 
-const userAns = ans?.userAnswer;
+const userAns = (ans && ans.userAnswer);
 const userAnsText = userAns===undefined||userAns===null||userAns==='' ? 'Not answered' :
   typeof userAns==='string' ? userAns.substring(0,100)+'...' :
   Array.isArray(userAns) ? userAns.map(i=>letters[i]).join(', ') :
@@ -3548,9 +3548,9 @@ try {
 // Lightweight ping — just check if Firestore is reachable
 var testRes = await fetch(
 ‘https://firestore.googleapis.com/v1/projects/’ + config.projectId + ‘/databases/(default)/documents/_ping/test’ + this._key(),
-{ method: ‘GET’, mode: ‘cors’, signal: AbortSignal.timeout(8000) }
+{ method: ‘GET’, mode: ‘cors’ }
 ).catch(function(e){
-throw new Error(‘offline’);  // Mark as offline, handle silently
+throw new Error(‘offline’);
 });
 
 ```
@@ -3925,7 +3925,7 @@ tryAutoConnect();
 
 // ─── QUESTIONS ───────────────────────────────────────────────
 function getSelectedQIds() {
-return […document.querySelectorAll(’.q-row-check:checked’)].map(el => el.dataset.id);
+return Array.from(document.querySelectorAll(’.q-row-check:checked’)).map(el => el.dataset.id);
 }
 
 function updateQSelection() {
@@ -3966,7 +3966,7 @@ openModal(‘modal-confirm’);
 
 // ─── CANDIDATES ──────────────────────────────────────────────
 function getSelectedCIds() {
-return […document.querySelectorAll(’.c-row-check:checked’)].map(el => el.dataset.id);
+return Array.from(document.querySelectorAll(’.c-row-check:checked’)).map(el => el.dataset.id);
 }
 
 function updateCSelection() {
