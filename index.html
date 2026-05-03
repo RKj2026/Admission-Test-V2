@@ -4,9 +4,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AdmitPro — Admission Test Platform</title>
+<title>AdmitPro - Admission Test Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-<!-- Firebase via REST API — no SDK needed -->
+<!-- Firebase via REST API - no SDK needed -->
 <style>
 /* ─── CSS VARIABLES ──────────────────────────────────────────── */
 :root {
@@ -34,7 +34,7 @@
   --logo-text: "AP";
   transition: all 0.2s;
 }
-/* Theme variants — preset palettes */
+/* Theme variants - preset palettes */
 .theme-emerald  { --primary:#0f5132; --primary-light:#198754; --accent:#ffc107;  --shadow-sm:0 2px 8px rgba(15,81,50,.08);  --shadow-md:0 4px 20px rgba(15,81,50,.14); }
 .theme-crimson  { --primary:#6b1515; --primary-light:#c0392b; --accent:#f39c12;  --shadow-sm:0 2px 8px rgba(107,21,21,.08); --shadow-md:0 4px 20px rgba(107,21,21,.14);}
 .theme-violet   { --primary:#2d1b69; --primary-light:#6f42c1; --accent:#fd7e14;  --shadow-sm:0 2px 8px rgba(45,27,105,.08); --shadow-md:0 4px 20px rgba(45,27,105,.14);}
@@ -50,7 +50,7 @@
 /* ─── RESET & BASE ───────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;scroll-behavior:smooth}
-body{font-family:‘DM Sans’,sans-serif;background:var(–neutral-50);color:var(–neutral-900);min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{font-family:‘DM Sans’,sans-serif;background:var(-neutral-50);color:var(-neutral-900);min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased}
 img{max-width:100%;display:block}
 button{cursor:pointer;border:none;background:none;font-family:inherit}
 input,select,textarea{font-family:inherit;font-size:inherit}
@@ -63,18 +63,18 @@ a{color:inherit;text-decoration:none}
 .grid{display:grid}.grid-2{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:repeat(3,1fr)}.grid-4{grid-template-columns:repeat(4,1fr)}
 .text-sm{font-size:0.875rem}.text-xs{font-size:0.75rem}.text-lg{font-size:1.125rem}.text-xl{font-size:1.25rem}.text-2xl{font-size:1.5rem}.text-3xl{font-size:2rem}.text-4xl{font-size:2.5rem}
 .font-medium{font-weight:500}.font-semibold{font-weight:600}.font-bold{font-weight:700}
-.text-muted{color:var(–neutral-500)}.text-accent{color:var(–accent)}.text-primary{color:var(–primary)}.text-success{color:var(–success)}.text-danger{color:var(–danger)}
+.text-muted{color:var(-neutral-500)}.text-accent{color:var(-accent)}.text-primary{color:var(-primary)}.text-success{color:var(-success)}.text-danger{color:var(-danger)}
 .mt-1{margin-top:8px}.mt-2{margin-top:16px}.mt-3{margin-top:24px}.mb-1{margin-bottom:8px}.mb-2{margin-bottom:16px}
 .p-1{padding:8px}.p-2{padding:16px}.p-3{padding:24px}.p-4{padding:32px}
-.rounded{border-radius:8px}.rounded-lg{border-radius:var(–radius)}.rounded-xl{border-radius:var(–radius-lg)}
-.bg-white{background:var(–white)}.bg-primary{background:var(–primary)}.bg-accent{background:var(–accent)}
+.rounded{border-radius:8px}.rounded-lg{border-radius:var(-radius)}.rounded-xl{border-radius:var(-radius-lg)}
+.bg-white{background:var(-white)}.bg-primary{background:var(-primary)}.bg-accent{background:var(-accent)}
 .w-full{width:100%}.h-full{height:100%}
 .overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}
 .relative{position:relative}.absolute{position:absolute}.fixed{position:fixed}
 .inset-0{top:0;left:0;right:0;bottom:0}
 .z-10{z-index:10}.z-50{z-index:50}.z-100{z-index:100}
-.shadow{box-shadow:var(–shadow-sm)}.shadow-md{box-shadow:var(–shadow-md)}.shadow-lg{box-shadow:var(–shadow-lg)}
-.border{border:1px solid var(–neutral-200)}.border-2{border:2px solid var(–neutral-200)}
+.shadow{box-shadow:var(-shadow-sm)}.shadow-md{box-shadow:var(-shadow-md)}.shadow-lg{box-shadow:var(-shadow-lg)}
+.border{border:1px solid var(-neutral-200)}.border-2{border:2px solid var(-neutral-200)}
 .cursor-pointer{cursor:pointer}.select-none{user-select:none}
 .transition{transition:all .2s ease}
 .animate-fade-in{animation:fadeIn .4s ease forwards}
@@ -91,8 +91,8 @@ a{color:inherit;text-decoration:none}
 
 /* ─── TOPBAR ─────────────────────────────────────────────────── */
 .topbar{
-background:var(–primary);
-color:var(–white);
+background:var(-primary);
+color:var(-white);
 padding:0 24px;
 height:64px;
 display:flex;
@@ -104,7 +104,7 @@ box-shadow:0 2px 12px rgba(0,0,0,.15);
 .topbar-logo{display:flex;align-items:center;gap:12px}
 .logo-badge{
 width:40px;height:40px;border-radius:10px;
-background:var(–accent);color:var(–primary);
+background:var(-accent);color:var(-primary);
 display:flex;align-items:center;justify-content:center;
 font-family:‘DM Serif Display’,serif;font-size:1.1rem;font-weight:700;
 flex-shrink:0;
@@ -125,17 +125,17 @@ display:inline-flex;align-items:center;justify-content:center;gap:8px;
 padding:10px 20px;border-radius:10px;font-weight:600;font-size:.9rem;
 transition:all .2s;white-space:nowrap;
 }
-.btn-primary{background:var(–primary);color:#fff}
-.btn-primary:hover{background:var(–primary-light);transform:translateY(-1px);box-shadow:var(–shadow-md)}
-.btn-accent{background:var(–accent);color:var(–primary)}
-.btn-accent:hover{background:var(–accent-light);transform:translateY(-1px)}
-.btn-outline{border:2px solid var(–primary);color:var(–primary);background:transparent}
-.btn-outline:hover{background:var(–primary);color:#fff}
-.btn-ghost{color:var(–neutral-700);background:transparent}
-.btn-ghost:hover{background:var(–neutral-100)}
-.btn-danger{background:var(–danger);color:#fff}
+.btn-primary{background:var(-primary);color:#fff}
+.btn-primary:hover{background:var(-primary-light);transform:translateY(-1px);box-shadow:var(-shadow-md)}
+.btn-accent{background:var(-accent);color:var(-primary)}
+.btn-accent:hover{background:var(-accent-light);transform:translateY(-1px)}
+.btn-outline{border:2px solid var(-primary);color:var(-primary);background:transparent}
+.btn-outline:hover{background:var(-primary);color:#fff}
+.btn-ghost{color:var(-neutral-700);background:transparent}
+.btn-ghost:hover{background:var(-neutral-100)}
+.btn-danger{background:var(-danger);color:#fff}
 .btn-danger:hover{background:#a93226}
-.btn-success{background:var(–success);color:#fff}
+.btn-success{background:var(-success);color:#fff}
 .btn-sm{padding:6px 12px;font-size:.8rem;border-radius:8px}
 .btn-lg{padding:14px 28px;font-size:1rem;border-radius:12px}
 .btn-icon{padding:8px;border-radius:8px;width:36px;height:36px}
@@ -143,56 +143,56 @@ transition:all .2s;white-space:nowrap;
 
 /* ─── CARDS ──────────────────────────────────────────────────── */
 .card{
-background:var(–white);border-radius:var(–radius-lg);
-box-shadow:var(–shadow-sm);border:1px solid var(–neutral-200);
+background:var(-white);border-radius:var(-radius-lg);
+box-shadow:var(-shadow-sm);border:1px solid var(-neutral-200);
 overflow:hidden;
 }
-.card-header{padding:20px 24px;border-bottom:1px solid var(–neutral-100);display:flex;align-items:center;justify-content:space-between}
+.card-header{padding:20px 24px;border-bottom:1px solid var(-neutral-100);display:flex;align-items:center;justify-content:space-between}
 .card-body{padding:24px}
-.card-footer{padding:16px 24px;border-top:1px solid var(–neutral-100);background:var(–neutral-50)}
+.card-footer{padding:16px 24px;border-top:1px solid var(-neutral-100);background:var(-neutral-50)}
 
 /* ─── FORM ELEMENTS ──────────────────────────────────────────── */
 .form-group{display:flex;flex-direction:column;gap:6px}
-.form-label{font-size:.85rem;font-weight:600;color:var(–neutral-700)}
+.form-label{font-size:.85rem;font-weight:600;color:var(-neutral-700)}
 .form-control{
-width:100%;padding:10px 14px;border:2px solid var(–neutral-200);
-border-radius:10px;font-size:.9rem;color:var(–neutral-900);
-background:var(–white);transition:all .2s;outline:none;
+width:100%;padding:10px 14px;border:2px solid var(-neutral-200);
+border-radius:10px;font-size:.9rem;color:var(-neutral-900);
+background:var(-white);transition:all .2s;outline:none;
 }
-.form-control:focus{border-color:var(–primary);box-shadow:0 0 0 3px rgba(26,58,92,.1)}
-.form-control::placeholder{color:var(–neutral-300)}
+.form-control:focus{border-color:var(-primary);box-shadow:0 0 0 3px rgba(26,58,92,.1)}
+.form-control::placeholder{color:var(-neutral-300)}
 textarea.form-control{resize:vertical;min-height:100px}
 select.form-control{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ fill=‘none’ viewBox=‘0 0 24 24’ stroke=’%238090b0’%3E%3Cpath stroke-linecap=‘round’ stroke-linejoin=‘round’ stroke-width=‘2’ d=‘M19 9l-7 7-7-7’/%3E%3C/svg%3E”);background-repeat:no-repeat;background-position:right 12px center;background-size:16px;padding-right:40px}
-.form-hint{font-size:.78rem;color:var(–neutral-500)}
-.form-error{font-size:.78rem;color:var(–danger)}
+.form-hint{font-size:.78rem;color:var(-neutral-500)}
+.form-error{font-size:.78rem;color:var(-danger)}
 .checkbox-label{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.9rem}
-.checkbox-label input[type=checkbox]{width:18px;height:18px;accent-color:var(–primary);cursor:pointer}
+.checkbox-label input[type=checkbox]{width:18px;height:18px;accent-color:var(-primary);cursor:pointer}
 .radio-label{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.9rem}
-.radio-label input[type=radio]{width:18px;height:18px;accent-color:var(–primary);cursor:pointer}
+.radio-label input[type=radio]{width:18px;height:18px;accent-color:var(-primary);cursor:pointer}
 
 /* ─── BADGE ──────────────────────────────────────────────────── */
 .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:600;gap:4px}
-.badge-primary{background:rgba(26,58,92,.1);color:var(–primary)}
-.badge-success{background:rgba(26,140,90,.12);color:var(–success)}
-.badge-danger{background:rgba(192,57,43,.1);color:var(–danger)}
-.badge-warning{background:rgba(230,126,34,.12);color:var(–warning)}
+.badge-primary{background:rgba(26,58,92,.1);color:var(-primary)}
+.badge-success{background:rgba(26,140,90,.12);color:var(-success)}
+.badge-danger{background:rgba(192,57,43,.1);color:var(-danger)}
+.badge-warning{background:rgba(230,126,34,.12);color:var(-warning)}
 .badge-accent{background:rgba(232,160,32,.15);color:#b07800}
 
 /* ─── TABS ───────────────────────────────────────────────────── */
-.tabs{display:flex;gap:4px;border-bottom:2px solid var(–neutral-200);padding-bottom:0;margin-bottom:24px}
-.tab-btn{padding:10px 20px;border-radius:8px 8px 0 0;font-weight:500;font-size:.9rem;color:var(–neutral-500);transition:all .2s;border-bottom:2px solid transparent;margin-bottom:-2px}
-.tab-btn:hover{color:var(–primary);background:var(–neutral-100)}
-.tab-btn.active{color:var(–primary);border-bottom-color:var(–primary);font-weight:600}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(-neutral-200);padding-bottom:0;margin-bottom:24px}
+.tab-btn{padding:10px 20px;border-radius:8px 8px 0 0;font-weight:500;font-size:.9rem;color:var(-neutral-500);transition:all .2s;border-bottom:2px solid transparent;margin-bottom:-2px}
+.tab-btn:hover{color:var(-primary);background:var(-neutral-100)}
+.tab-btn.active{color:var(-primary);border-bottom-color:var(-primary);font-weight:600}
 .tab-panel{display:none;animation:fadeIn .3s ease}
 .tab-panel.active{display:block}
 
 /* ─── TABLE ──────────────────────────────────────────────────── */
 .data-table{width:100%;border-collapse:collapse}
-.data-table th{padding:10px 16px;text-align:left;font-size:.8rem;font-weight:600;color:var(–neutral-500);text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(–neutral-200);background:var(–neutral-50)}
-.data-table td{padding:12px 16px;border-bottom:1px solid var(–neutral-100);font-size:.9rem;vertical-align:middle}
+.data-table th{padding:10px 16px;text-align:left;font-size:.8rem;font-weight:600;color:var(-neutral-500);text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(-neutral-200);background:var(-neutral-50)}
+.data-table td{padding:12px 16px;border-bottom:1px solid var(-neutral-100);font-size:.9rem;vertical-align:middle}
 .data-table tr:last-child td{border-bottom:none}
-.data-table tr:hover td{background:var(–neutral-50)}
-.data-table-wrap{overflow-x:auto;border-radius:var(–radius);border:1px solid var(–neutral-200)}
+.data-table tr:hover td{background:var(-neutral-50)}
+.data-table-wrap{overflow-x:auto;border-radius:var(-radius);border:1px solid var(-neutral-200)}
 
 /* ─── MODAL ──────────────────────────────────────────────────── */
 .modal-overlay{
@@ -202,16 +202,16 @@ animation:fadeIn .2s ease;
 }
 .modal-overlay.hidden{display:none!important}
 .modal{
-background:var(–white);border-radius:var(–radius-lg);
-box-shadow:var(–shadow-lg);width:100%;max-width:620px;max-height:90vh;
+background:var(-white);border-radius:var(-radius-lg);
+box-shadow:var(-shadow-lg);width:100%;max-width:620px;max-height:90vh;
 overflow-y:auto;animation:slideUp .3s ease;
 }
-.modal-header{padding:20px 24px;border-bottom:1px solid var(–neutral-100);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(–white);z-index:1}
-.modal-title{font-family:‘DM Serif Display’,serif;font-size:1.25rem;color:var(–primary)}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(-neutral-100);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(-white);z-index:1}
+.modal-title{font-family:‘DM Serif Display’,serif;font-size:1.25rem;color:var(-primary)}
 .modal-body{padding:24px}
-.modal-footer{padding:16px 24px;border-top:1px solid var(–neutral-100);display:flex;justify-content:flex-end;gap:12px;background:var(–neutral-50)}
-.modal-close{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(–neutral-500);transition:all .2s}
-.modal-close:hover{background:var(–neutral-100);color:var(–neutral-900)}
+.modal-footer{padding:16px 24px;border-top:1px solid var(-neutral-100);display:flex;justify-content:flex-end;gap:12px;background:var(-neutral-50)}
+.modal-close{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(-neutral-500);transition:all .2s}
+.modal-close:hover{background:var(-neutral-100);color:var(-neutral-900)}
 
 /* ─── ALERT ──────────────────────────────────────────────────── */
 .alert{padding:12px 16px;border-radius:10px;font-size:.9rem;display:flex;align-items:flex-start;gap:10px;border:1px solid transparent}
@@ -221,55 +221,55 @@ overflow-y:auto;animation:slideUp .3s ease;
 .alert-danger{background:#fde8e8;border-color:#f5b5b5;color:#7a1a1a}
 
 /* ─── PROGRESS ───────────────────────────────────────────────── */
-.progress-bar-wrap{background:var(–neutral-200);border-radius:20px;overflow:hidden;height:8px}
-.progress-bar{height:100%;background:var(–primary);border-radius:20px;transition:width .4s ease}
-.progress-bar.success{background:var(–success)}
-.progress-bar.warning{background:var(–warning)}
-.progress-bar.danger{background:var(–danger)}
+.progress-bar-wrap{background:var(-neutral-200);border-radius:20px;overflow:hidden;height:8px}
+.progress-bar{height:100%;background:var(-primary);border-radius:20px;transition:width .4s ease}
+.progress-bar.success{background:var(-success)}
+.progress-bar.warning{background:var(-warning)}
+.progress-bar.danger{background:var(-danger)}
 
 /* ─── STATS CARD ─────────────────────────────────────────────── */
 .stat-card{
-background:var(–white);border-radius:var(–radius-lg);padding:20px 24px;
-border:1px solid var(–neutral-200);box-shadow:var(–shadow-sm);
+background:var(-white);border-radius:var(-radius-lg);padding:20px 24px;
+border:1px solid var(-neutral-200);box-shadow:var(-shadow-sm);
 }
 .stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
-.stat-value{font-family:‘DM Serif Display’,serif;font-size:2rem;color:var(–primary);line-height:1}
-.stat-label{font-size:.8rem;color:var(–neutral-500);font-weight:500;margin-top:4px}
+.stat-value{font-family:‘DM Serif Display’,serif;font-size:2rem;color:var(-primary);line-height:1}
+.stat-label{font-size:.8rem;color:var(-neutral-500);font-weight:500;margin-top:4px}
 .stat-change{font-size:.75rem;font-weight:600;margin-top:6px}
-.stat-change.up{color:var(–success)}.stat-change.down{color:var(–danger)}
+.stat-change.up{color:var(-success)}.stat-change.down{color:var(-danger)}
 
 /* ─── NOTIFICATION TOAST ─────────────────────────────────────── */
 #toast-container{position:fixed;top:80px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
 .toast{
-background:var(–neutral-900);color:#fff;padding:12px 18px;border-radius:10px;
-font-size:.875rem;font-weight:500;box-shadow:var(–shadow-lg);pointer-events:all;
+background:var(-neutral-900);color:#fff;padding:12px 18px;border-radius:10px;
+font-size:.875rem;font-weight:500;box-shadow:var(-shadow-lg);pointer-events:all;
 display:flex;align-items:center;gap:10px;min-width:280px;max-width:400px;
 animation:slideUp .3s ease;transition:all .3s;
 }
-.toast.success{background:var(–success)}.toast.danger{background:var(–danger)}.toast.warning{background:var(–warning)}.toast.info{background:var(–primary)}
+.toast.success{background:var(-success)}.toast.danger{background:var(-danger)}.toast.warning{background:var(-warning)}.toast.info{background:var(-primary)}
 .toast.removing{opacity:0;transform:translateX(100%)}
 
 /* ─── LANDING / LOGIN ────────────────────────────────────────── */
-#screen-landing{background:linear-gradient(135deg,var(–primary) 0%,var(–primary-light) 50%,#1a4a7a 100%);position:relative;overflow:hidden}
+#screen-landing{background:linear-gradient(135deg,var(-primary) 0%,var(-primary-light) 50%,#1a4a7a 100%);position:relative;overflow:hidden}
 #screen-landing::before{content:’’;position:absolute;inset:0;background:url(“data:image/svg+xml,%3Csvg width=‘60’ height=‘60’ viewBox=‘0 0 60 60’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cg fill=‘none’ fill-rule=‘evenodd’%3E%3Cg fill=’%23ffffff’ fill-opacity=‘0.04’%3E%3Cpath d=‘M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z’/%3E%3C/g%3E%3C/g%3E%3C/svg%3E”)}
 .landing-container{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
 .landing-box{background:rgba(255,255,255,.97);border-radius:24px;box-shadow:0 24px 80px rgba(0,0,0,.25);width:100%;max-width:460px;overflow:hidden}
-.landing-header{background:var(–primary,#1a3a5c);padding:32px;text-align:center;color:#fff}
-.landing-logo{width:72px;height:72px;border-radius:18px;background:var(–accent,#e8a020);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-family:‘DM Serif Display’,serif;font-size:1.8rem;color:var(–primary,#1a3a5c);position:relative;overflow:hidden}
+.landing-header{background:var(-primary,#1a3a5c);padding:32px;text-align:center;color:#fff}
+.landing-logo{width:72px;height:72px;border-radius:18px;background:var(-accent,#e8a020);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-family:‘DM Serif Display’,serif;font-size:1.8rem;color:var(-primary,#1a3a5c);position:relative;overflow:hidden}
 .landing-title{font-family:‘DM Serif Display’,serif;font-size:1.75rem;margin-bottom:4px}
 .landing-sub{opacity:.7;font-size:.9rem}
 .landing-body{padding:32px}
-.landing-tabs{display:flex;background:var(–neutral-100,#f0f2f7);border-radius:12px;padding:4px;margin-bottom:24px;gap:4px}
-.landing-tab{flex:1;padding:8px;border-radius:8px;font-weight:600;font-size:.875rem;color:var(–neutral-500);transition:all .2s;text-align:center;cursor:pointer;user-select:none}
-.landing-tab.active{background:#ffffff;color:var(–primary,#1a3a5c);box-shadow:0 2px 8px rgba(26,58,92,.08)}
-.landing-footer-link{text-align:center;font-size:.82rem;color:var(–neutral-500);margin-top:20px}
-.landing-footer-link a{color:var(–primary);font-weight:600}
+.landing-tabs{display:flex;background:var(-neutral-100,#f0f2f7);border-radius:12px;padding:4px;margin-bottom:24px;gap:4px}
+.landing-tab{flex:1;padding:8px;border-radius:8px;font-weight:600;font-size:.875rem;color:var(-neutral-500);transition:all .2s;text-align:center;cursor:pointer;user-select:none}
+.landing-tab.active{background:#ffffff;color:var(-primary,#1a3a5c);box-shadow:0 2px 8px rgba(26,58,92,.08)}
+.landing-footer-link{text-align:center;font-size:.82rem;color:var(-neutral-500);margin-top:20px}
+.landing-footer-link a{color:var(-primary);font-weight:600}
 
 /* ─── ADMIN LAYOUT ───────────────────────────────────────────── */
 #screen-admin{flex-direction:column}
 .admin-layout{display:flex;flex:1;min-height:0}
 .sidebar{
-width:240px;background:var(–primary);color:#fff;
+width:240px;background:var(-primary);color:#fff;
 display:flex;flex-direction:column;padding:12px 0;
 flex-shrink:0;overflow-y:auto;
 }
@@ -281,20 +281,20 @@ font-size:.875rem;font-weight:500;color:rgba(255,255,255,.7);
 border-radius:0;transition:all .2s;cursor:pointer;border:none;background:none;width:100%;text-align:left;
 }
 .sidebar-item:hover{background:rgba(255,255,255,.1);color:#fff}
-.sidebar-item.active{background:rgba(255,255,255,.18);color:#fff;border-left:3px solid var(–accent)}
+.sidebar-item.active{background:rgba(255,255,255,.18);color:#fff;border-left:3px solid var(-accent)}
 .sidebar-item .icon{width:20px;text-align:center;flex-shrink:0}
-.sidebar-badge{margin-left:auto;background:var(–accent);color:var(–primary);border-radius:10px;padding:1px 7px;font-size:.7rem;font-weight:700}
-.admin-content{flex:1;overflow-y:auto;padding:28px;background:var(–neutral-50)}
+.sidebar-badge{margin-left:auto;background:var(-accent);color:var(-primary);border-radius:10px;padding:1px 7px;font-size:.7rem;font-weight:700}
+.admin-content{flex:1;overflow-y:auto;padding:28px;background:var(-neutral-50)}
 .admin-page{display:none;animation:fadeIn .3s ease}
 .admin-page.active{display:block}
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
-.page-title{font-family:‘DM Serif Display’,serif;font-size:1.75rem;color:var(–primary)}
-.page-subtitle{color:var(–neutral-500);font-size:.9rem;margin-top:2px}
+.page-title{font-family:‘DM Serif Display’,serif;font-size:1.75rem;color:var(-primary)}
+.page-subtitle{color:var(-neutral-500);font-size:.9rem;margin-top:2px}
 
 /* ─── TEST INTERFACE ─────────────────────────────────────────── */
-#screen-test{background:var(–neutral-50)}
+#screen-test{background:var(-neutral-50)}
 .test-header{
-background:var(–primary);color:#fff;padding:0 24px;
+background:var(-primary);color:#fff;padding:0 24px;
 height:64px;display:flex;align-items:center;justify-content:space-between;
 position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.2);
 }
@@ -308,50 +308,50 @@ font-family:‘DM Serif Display’,serif;font-size:1.3rem;letter-spacing:.05em;
 .test-timer.danger{background:rgba(192,57,43,.4);animation:pulse .5s infinite}
 .test-layout{display:flex;flex:1;min-height:0;overflow:hidden}
 .test-main{flex:1;overflow-y:auto;padding:24px}
-.test-sidebar{width:280px;background:var(–white);border-left:1px solid var(–neutral-200);overflow-y:auto;padding:16px;flex-shrink:0}
-.question-card{background:var(–white);border-radius:var(–radius-lg);padding:24px;box-shadow:var(–shadow-sm);border:1px solid var(–neutral-200);animation:slideUp .3s ease}
+.test-sidebar{width:280px;background:var(-white);border-left:1px solid var(-neutral-200);overflow-y:auto;padding:16px;flex-shrink:0}
+.question-card{background:var(-white);border-radius:var(-radius-lg);padding:24px;box-shadow:var(-shadow-sm);border:1px solid var(-neutral-200);animation:slideUp .3s ease}
 .question-meta{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.question-num{font-size:.8rem;font-weight:600;color:var(–neutral-500);text-transform:uppercase;letter-spacing:.05em}
-.question-marks{font-size:.8rem;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(26,58,92,.08);color:var(–primary)}
-.question-text{font-size:1.05rem;line-height:1.7;color:var(–neutral-900);margin-bottom:20px}
+.question-num{font-size:.8rem;font-weight:600;color:var(-neutral-500);text-transform:uppercase;letter-spacing:.05em}
+.question-marks{font-size:.8rem;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(26,58,92,.08);color:var(-primary)}
+.question-text{font-size:1.05rem;line-height:1.7;color:var(-neutral-900);margin-bottom:20px}
 .option-list{display:flex;flex-direction:column;gap:10px}
 .option-item{
 display:flex;align-items:flex-start;gap:12px;padding:14px 16px;
-border:2px solid var(–neutral-200);border-radius:12px;cursor:pointer;
+border:2px solid var(-neutral-200);border-radius:12px;cursor:pointer;
 transition:all .2s;
 }
-.option-item:hover{border-color:var(–primary);background:rgba(26,58,92,.04)}
-.option-item.selected{border-color:var(–primary);background:rgba(26,58,92,.07)}
-.option-item.correct{border-color:var(–success)!important;background:rgba(26,140,90,.08)!important}
-.option-item.incorrect{border-color:var(–danger)!important;background:rgba(192,57,43,.06)!important}
-.option-letter{width:28px;height:28px;border-radius:8px;background:var(–neutral-100);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;flex-shrink:0;color:var(–neutral-700);transition:all .2s}
-.option-item.selected .option-letter{background:var(–primary);color:#fff}
-.option-item.correct .option-letter{background:var(–success);color:#fff}
-.option-item.incorrect .option-letter{background:var(–danger);color:#fff}
+.option-item:hover{border-color:var(-primary);background:rgba(26,58,92,.04)}
+.option-item.selected{border-color:var(-primary);background:rgba(26,58,92,.07)}
+.option-item.correct{border-color:var(-success)!important;background:rgba(26,140,90,.08)!important}
+.option-item.incorrect{border-color:var(-danger)!important;background:rgba(192,57,43,.06)!important}
+.option-letter{width:28px;height:28px;border-radius:8px;background:var(-neutral-100);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;flex-shrink:0;color:var(-neutral-700);transition:all .2s}
+.option-item.selected .option-letter{background:var(-primary);color:#fff}
+.option-item.correct .option-letter{background:var(-success);color:#fff}
+.option-item.incorrect .option-letter{background:var(-danger);color:#fff}
 .option-text{font-size:.95rem;line-height:1.5;padding-top:4px}
 .q-nav-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:16px}
 .q-nav-btn{
 width:100%;aspect-ratio:1;border-radius:8px;font-size:.8rem;font-weight:600;
-border:2px solid var(–neutral-200);color:var(–neutral-700);transition:all .15s;cursor:pointer;background:var(–white);
+border:2px solid var(-neutral-200);color:var(-neutral-700);transition:all .15s;cursor:pointer;background:var(-white);
 }
-.q-nav-btn.answered{background:var(–primary);color:#fff;border-color:var(–primary)}
-.q-nav-btn.current{border-color:var(–accent);color:var(–accent)}
-.q-nav-btn.flagged{background:rgba(232,160,32,.15);border-color:var(–accent);color:#b07800}
-.q-nav-btn.reviewed{background:rgba(26,140,90,.1);border-color:var(–success);color:var(–success)}
+.q-nav-btn.answered{background:var(-primary);color:#fff;border-color:var(-primary)}
+.q-nav-btn.current{border-color:var(-accent);color:var(-accent)}
+.q-nav-btn.flagged{background:rgba(232,160,32,.15);border-color:var(-accent);color:#b07800}
+.q-nav-btn.reviewed{background:rgba(26,140,90,.1);border-color:var(-success);color:var(-success)}
 .test-nav-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
-.legend-item{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(–neutral-500)}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(-neutral-500)}
 .legend-dot{width:12px;height:12px;border-radius:3px;border:2px solid transparent}
-.legend-dot.unanswered{border-color:var(–neutral-300)}
-.legend-dot.answered{background:var(–primary);border-color:var(–primary)}
-.legend-dot.flagged{background:rgba(232,160,32,.4);border-color:var(–accent)}
+.legend-dot.unanswered{border-color:var(-neutral-300)}
+.legend-dot.answered{background:var(-primary);border-color:var(-primary)}
+.legend-dot.flagged{background:rgba(232,160,32,.4);border-color:var(-accent)}
 
 /* ─── RESULTS ────────────────────────────────────────────────── */
-#screen-result{background:var(–neutral-50)}
+#screen-result{background:var(-neutral-50)}
 .result-header{
-background:linear-gradient(135deg,var(–primary),var(–primary-light));
+background:linear-gradient(135deg,var(-primary),var(-primary-light));
 color:#fff;padding:40px 24px;text-align:center;position:relative;overflow:hidden;
 }
-.result-header::after{content:’’;position:absolute;bottom:-1px;left:0;right:0;height:40px;background:var(–neutral-50);border-radius:40px 40px 0 0}
+.result-header::after{content:’’;position:absolute;bottom:-1px;left:0;right:0;height:40px;background:var(-neutral-50);border-radius:40px 40px 0 0}
 .result-score-ring{
 width:130px;height:130px;border-radius:50%;
 background:rgba(255,255,255,.12);border:3px solid rgba(255,255,255,.3);
@@ -365,16 +365,16 @@ margin:24px auto 16px;backdrop-filter:blur(8px);
 .section-score-header{display:flex;justify-content:space-between;margin-bottom:6px;font-size:.85rem;font-weight:600}
 
 /* ─── LOGO UPLOAD ────────────────────────────────────────────── */
-.logo-upload-zone{border:2px dashed var(–neutral-300);border-radius:var(–radius);padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(–neutral-50)}
-.logo-upload-zone:hover{border-color:var(–primary);background:rgba(26,58,92,.04)}
-.logo-upload-zone.dragover{border-color:var(–accent);background:rgba(232,160,32,.05)}
-.logo-preview-img{width:64px;height:64px;border-radius:14px;object-fit:contain;border:2px solid var(–neutral-200)}
-.logo-badge-img{width:40px;height:40px;border-radius:10px;object-fit:contain;background:var(–white)}
+.logo-upload-zone{border:2px dashed var(-neutral-300);border-radius:var(-radius);padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(-neutral-50)}
+.logo-upload-zone:hover{border-color:var(-primary);background:rgba(26,58,92,.04)}
+.logo-upload-zone.dragover{border-color:var(-accent);background:rgba(232,160,32,.05)}
+.logo-preview-img{width:64px;height:64px;border-radius:14px;object-fit:contain;border:2px solid var(-neutral-200)}
+.logo-badge-img{width:40px;height:40px;border-radius:10px;object-fit:contain;background:var(-white)}
 
 /* ─── FIREBASE STATUS BAR ────────────────────────────────────── */
 #firebase-status-bar{
 position:fixed;bottom:0;left:0;right:0;height:32px;z-index:999;
-background:var(–neutral-900);color:#fff;font-size:.75rem;
+background:var(-neutral-900);color:#fff;font-size:.75rem;
 display:flex;align-items:center;justify-content:center;gap:12px;
 transform:translateY(100%);transition:transform .3s;
 }
@@ -382,32 +382,32 @@ transform:translateY(100%);transition:transform .3s;
 .fb-dot{width:8px;height:8px;border-radius:50%;background:#9ca3af}
 .fb-dot.connected{background:#34d399;box-shadow:0 0 6px #34d399}
 .fb-dot.error{background:#f87171}
-.fb-dot.syncing{animation:pulse .8s infinite;background:var(–accent)}
+.fb-dot.syncing{animation:pulse .8s infinite;background:var(-accent)}
 
 /* ─── FIREBASE CONFIG MODAL ──────────────────────────────────── */
-.config-step{display:flex;align-items:flex-start;gap:14px;padding:14px;border-radius:10px;background:var(–neutral-50);border:1px solid var(–neutral-200);margin-bottom:10px}
-.config-step-num{width:28px;height:28px;border-radius:50%;background:var(–primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.config-step{display:flex;align-items:flex-start;gap:14px;padding:14px;border-radius:10px;background:var(-neutral-50);border:1px solid var(-neutral-200);margin-bottom:10px}
+.config-step-num{width:28px;height:28px;border-radius:50%;background:var(-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
 
 /* ─── COLOR PICKER ───────────────────────────────────────────── */
 .theme-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:6px}
 .color-swatch{width:36px;height:36px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .2s;flex-shrink:0;position:relative}
-.color-swatch.active,.color-swatch:hover{border-color:var(–neutral-900);transform:scale(1.15)}
+.color-swatch.active,.color-swatch:hover{border-color:var(-neutral-900);transform:scale(1.15)}
 .color-swatch .swatch-check{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;opacity:0}
 .color-swatch.active .swatch-check{opacity:1}
-.custom-color-row{display:flex;gap:10px;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(–neutral-200)}
+.custom-color-row{display:flex;gap:10px;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(-neutral-200)}
 
 /* ─── CANDIDATE BULK UPLOAD ──────────────────────────────────── */
 #modal-cand-bulk .modal{max-width:640px}
-.upload-drop-zone{border:2px dashed var(–neutral-300);border-radius:var(–radius);padding:28px;text-align:center;cursor:pointer;transition:all .2s}
-.upload-drop-zone:hover,.upload-drop-zone.dragover{border-color:var(–primary);background:rgba(26,58,92,.03)}
+.upload-drop-zone{border:2px dashed var(-neutral-300);border-radius:var(-radius);padding:28px;text-align:center;cursor:pointer;transition:all .2s}
+.upload-drop-zone:hover,.upload-drop-zone.dragover{border-color:var(-primary);background:rgba(26,58,92,.03)}
 .upload-drop-zone input{display:none}
 .import-progress{margin-top:14px}
-.import-row-ok{color:var(–success);font-size:.8rem}
-.import-row-err{color:var(–danger);font-size:.8rem}
+.import-row-ok{color:var(-success);font-size:.8rem}
+.import-row-err{color:var(-danger);font-size:.8rem}
 
 /* ─── QUESTION EDITOR ────────────────────────────────────────── */
 .option-editor{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.option-correct-check{width:20px;height:20px;accent-color:var(–success);cursor:pointer;flex-shrink:0}
+.option-correct-check{width:20px;height:20px;accent-color:var(-success);cursor:pointer;flex-shrink:0}
 
 /* ─── RESPONSIVE ─────────────────────────────────────────────── */
 @media(max-width:900px){
@@ -420,7 +420,7 @@ transform:translateY(100%);transition:transform .3s;
 }
 @media(max-width:680px){
 .test-layout{flex-direction:column}
-.test-sidebar{width:100%;border-left:none;border-top:1px solid var(–neutral-200)}
+.test-sidebar{width:100%;border-left:none;border-top:1px solid var(-neutral-200)}
 .admin-layout{flex-direction:column}
 .sidebar{width:100%;flex-direction:row;padding:8px;overflow-x:auto}
 .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
@@ -437,28 +437,28 @@ transform:translateY(100%);transition:transform .3s;
 /* ─── SMART PASTE STYLES ─────────────────────────────────────── */
 .paste-fmt-btn{
 padding:5px 12px;border-radius:20px;font-size:.75rem;font-weight:600;
-border:2px solid var(–neutral-200);color:var(–neutral-500);
-background:var(–white);cursor:pointer;transition:all .15s;white-space:nowrap;
+border:2px solid var(-neutral-200);color:var(-neutral-500);
+background:var(-white);cursor:pointer;transition:all .15s;white-space:nowrap;
 }
-.paste-fmt-btn:hover{border-color:var(–primary);color:var(–primary)}
-.paste-fmt-btn.active{border-color:var(–primary);background:var(–primary);color:#fff}
+.paste-fmt-btn:hover{border-color:var(-primary);color:var(-primary)}
+.paste-fmt-btn.active{border-color:var(-primary);background:var(-primary);color:#fff}
 .paste-preview-card{
-padding:14px 16px;border-radius:10px;border:1px solid var(–neutral-200);
-background:var(–white);font-size:.85rem;position:relative;
-border-left:4px solid var(–primary);animation:fadeIn .2s ease;
+padding:14px 16px;border-radius:10px;border:1px solid var(-neutral-200);
+background:var(-white);font-size:.85rem;position:relative;
+border-left:4px solid var(-primary);animation:fadeIn .2s ease;
 }
-.paste-preview-card.warning{border-left-color:var(–warning)}
-.paste-preview-card.subjective{border-left-color:var(–accent)}
-.paste-preview-card.multi{border-left-color:var(–success)}
+.paste-preview-card.warning{border-left-color:var(-warning)}
+.paste-preview-card.subjective{border-left-color:var(-accent)}
+.paste-preview-card.multi{border-left-color:var(-success)}
 .parse-option-correct{
 display:inline-flex;align-items:center;gap:4px;padding:2px 8px;
 border-radius:20px;font-size:.72rem;font-weight:600;
-background:rgba(26,140,90,.12);color:var(–success);
+background:rgba(26,140,90,.12);color:var(-success);
 }
 .parse-option-wrong{
 display:inline-flex;align-items:center;gap:4px;padding:2px 8px;
 border-radius:20px;font-size:.72rem;
-background:var(–neutral-100);color:var(–neutral-500);
+background:var(-neutral-100);color:var(-neutral-500);
 }
 
 </style>
@@ -469,7 +469,7 @@ background:var(–neutral-100);color:var(–neutral-500);
 
 <div id="firebase-status-bar">
   <div class="fb-dot" id="fb-dot"></div>
-  <span id="fb-status-text">Local mode — data saved on this device only</span>
+  <span id="fb-status-text">Local mode - data saved on this device only</span>
   <button onclick="openFirebaseModal()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:2px 10px;border-radius:6px;font-size:.72rem;cursor:pointer;margin-left:8px">Enable Sync →</button>
 </div>
 
@@ -498,7 +498,7 @@ background:var(–neutral-100);color:var(–neutral-500);
     <div class="modal-body">
       <div class="alert alert-info mb-3">
         <span>ℹ️</span>
-        <div>Firebase sync requires the app to be served over <strong>HTTPS</strong>. The easiest way is <strong>GitHub Pages</strong> — free, instant, no server needed.</div>
+        <div>Firebase sync requires the app to be served over <strong>HTTPS</strong>. The easiest way is <strong>GitHub Pages</strong> - free, instant, no server needed.</div>
       </div>
 
 ```
@@ -548,7 +548,7 @@ background:var(–neutral-100);color:var(–neutral-500);
 
   <div class="alert alert-success mt-2">
     <span>✅</span>
-    <div><strong>Your Firebase project is already configured</strong> in the app — <code>admission-test-v2</code>. Once hosted on GitHub Pages, just click Connect and it will work immediately.</div>
+    <div><strong>Your Firebase project is already configured</strong> in the app - <code>admission-test-v2</code>. Once hosted on GitHub Pages, just click Connect and it will work immediately.</div>
   </div>
 </div>
 <div class="modal-footer" style="justify-content:space-between">
@@ -577,7 +577,7 @@ background:var(–neutral-100);color:var(–neutral-500);
     <div class="modal-body">
       <div class="alert alert-success mb-3">
         <span>🔥</span>
-        <div><strong>Project pre-configured!</strong> Your Firebase project <strong>admission-test-v2</strong> is already set up below. Just click <strong>Connect Firebase</strong> — no copy-paste needed.<br>
+        <div><strong>Project pre-configured!</strong> Your Firebase project <strong>admission-test-v2</strong> is already set up below. Just click <strong>Connect Firebase</strong> - no copy-paste needed.<br>
         <span style="font-size:.8rem;opacity:.8">Make sure Firestore is in <strong>test mode</strong> (allow read, write: if true) in the Firebase console.</span></div>
       </div>
       <div class="config-step">
@@ -603,7 +603,7 @@ background:var(–neutral-100);color:var(–neutral-500);
       </div>
       <div class="flex flex-col gap-2 mt-2">
         <div class="alert alert-success" style="font-size:.82rem">
-          <span>✅</span><span>Project <strong>admission-test-v2</strong> is pre-configured. Just click <strong>Connect Firebase</strong> below — no setup needed!</span>
+          <span>✅</span><span>Project <strong>admission-test-v2</strong> is pre-configured. Just click <strong>Connect Firebase</strong> below - no setup needed!</span>
         </div>
         <div class="form-group">
           <label class="form-label">API Key *</label>
@@ -653,7 +653,7 @@ background:var(–neutral-100);color:var(–neutral-500);
         <input type="file" id="cand-bulk-file" accept=".csv,.txt" onchange="previewCandBulk(this)">
         <div style="font-size:2rem;margin-bottom:8px">📂</div>
         <div class="font-semibold">Click to upload or drag & drop</div>
-        <div class="text-xs text-muted mt-1">Supports CSV, TXT — max 5MB</div>
+        <div class="text-xs text-muted mt-1">Supports CSV, TXT - max 5MB</div>
       </div>
       <div id="cand-bulk-preview" class="mt-2 hidden">
         <div class="flex justify-between items-center mb-1">
@@ -689,8 +689,8 @@ background:var(–neutral-100);color:var(–neutral-500);
           <div class="form-group">
             <label class="form-label">Question Type</label>
             <select class="form-control" id="q-type" onchange="updateQuestionEditor()">
-              <option value="mcq-single">MCQ — Single Correct</option>
-              <option value="mcq-multi">MCQ — Multiple Correct</option>
+              <option value="mcq-single">MCQ - Single Correct</option>
+              <option value="mcq-multi">MCQ - Multiple Correct</option>
               <option value="subjective">Subjective / Descriptive</option>
             </select>
           </div>
@@ -828,7 +828,7 @@ background:var(–neutral-100);color:var(–neutral-500);
         </div>
         <div style="position:relative">
           <textarea id="smart-paste-area"
-            placeholder="Paste questions in ANY format — numbered lists, Word/PDF copy, Q1. style, pipe-separated…&#10;&#10;Examples accepted:&#10;1. What is Newton's second law?&#10;(A) F = ma   (B) E = mc²   (C) v = u+at   (D) P = mv&#10;Answer: A   Explanation: Force equals mass times acceleration.&#10;&#10;Q2. Most abundant gas in atmosphere? [Marks: 4]&#10;a) Oxygen  b) Nitrogen  c) CO₂  d) Hydrogen&#10;Ans: b&#10;&#10;3. Name the capital of France. (Subjective)&#10;&#10;Q4. Select all vector quantities: [Multi]&#10;A. Speed  B. Velocity  C. Force  D. Distance&#10;Correct: B, C"
+            placeholder="Paste questions in ANY format - numbered lists, Word/PDF copy, Q1. style, pipe-separated…&#10;&#10;Examples accepted:&#10;1. What is Newton's second law?&#10;(A) F = ma   (B) E = mc²   (C) v = u+at   (D) P = mv&#10;Answer: A   Explanation: Force equals mass times acceleration.&#10;&#10;Q2. Most abundant gas in atmosphere? [Marks: 4]&#10;a) Oxygen  b) Nitrogen  c) CO₂  d) Hydrogen&#10;Ans: b&#10;&#10;3. Name the capital of France. (Subjective)&#10;&#10;Q4. Select all vector quantities: [Multi]&#10;A. Speed  B. Velocity  C. Force  D. Distance&#10;Correct: B, C"
             style="width:100%;height:220px;padding:14px 16px;border:2px solid var(--neutral-200);border-radius:12px;font-size:.875rem;line-height:1.7;font-family:'DM Sans',sans-serif;resize:vertical;outline:none;transition:border-color .2s;color:var(--neutral-900);background:var(--white)"
             oninput="onSmartPasteInput()"
             onfocus="this.style.borderColor='var(--primary)'"
@@ -876,7 +876,7 @@ background:var(–neutral-100);color:var(–neutral-500);
           <input type="file" id="bulk-file" accept=".csv,.txt" style="display:none" onchange="onCSVFileChange(this)">
           <div style="font-size:2rem;margin-bottom:8px">📂</div>
           <div class="font-semibold">Click to upload or drag &amp; drop</div>
-          <div class="text-xs text-muted mt-1">CSV or TXT — max 10MB</div>
+          <div class="text-xs text-muted mt-1">CSV or TXT - max 10MB</div>
         </div>
         <div id="bulk-preview" class="mt-2 hidden">
           <div class="form-label mb-1">Preview (first 6 rows)</div>
@@ -1335,7 +1335,7 @@ background:var(–neutral-100);color:var(–neutral-500);
                   <input type="file" id="logo-file-input" accept="image/*" style="display:none" onchange="handleLogoUpload(this)">
                   <div style="font-size:1.3rem;margin-bottom:4px">📁</div>
                   <div style="font-size:.82rem;font-weight:600">Upload Logo</div>
-                  <div class="text-xs text-muted">PNG, JPG, SVG — recommended 200×200px</div>
+                  <div class="text-xs text-muted">PNG, JPG, SVG - recommended 200×200px</div>
                 </div>
                 <div class="flex gap-1 mt-1">
                   <button class="btn btn-ghost btn-sm" onclick="autoExtractColors()" id="extract-colors-btn" style="display:none">🎨 Extract Colors from Logo</button>
@@ -1398,7 +1398,7 @@ background:var(–neutral-100);color:var(–neutral-500);
         <div class="card-header"><span class="font-semibold">🔥 Firebase / Multi-Device</span></div>
         <div class="card-body flex flex-col gap-3">
           <div id="fb-settings-status" class="alert alert-success">
-            <span>✅</span><span>Running in <strong>local mode</strong> — all data saved on this device. Connect Firebase to sync across devices.</span>
+            <span>✅</span><span>Running in <strong>local mode</strong> - all data saved on this device. Connect Firebase to sync across devices.</span>
           </div>
           <div class="grid grid-2 gap-2 mb-2">
             <div style="padding:12px;border-radius:10px;background:var(--neutral-50);border:1px solid var(--neutral-200)">
@@ -1599,7 +1599,7 @@ background:var(–neutral-100);color:var(–neutral-500);
           <button class="btn btn-ghost btn-sm" id="review-filter-all" onclick="filterReview('all', this)">All</button>
           <button class="btn btn-ghost btn-sm" onclick="filterReview('correct',this)">✓ Correct</button>
           <button class="btn btn-ghost btn-sm" onclick="filterReview('incorrect',this)">✗ Wrong</button>
-          <button class="btn btn-ghost btn-sm" onclick="filterReview('skipped',this)">— Skipped</button>
+          <button class="btn btn-ghost btn-sm" onclick="filterReview('skipped',this)">- Skipped</button>
         </div>
       </div>
       <div class="card-body" id="result-review"></div>
@@ -1815,7 +1815,7 @@ function applyBranding() {
   ['admin-logo-text'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=s.logoText; });
   // Institute names
   ['admin-institute-name','instr-institute','login-institute-name'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=s.instituteName; });
-  document.title = `${s.instituteName} — Admission Test Portal`;
+  document.title = `${s.instituteName} - Admission Test Portal`;
 
   // Apply logo image or text badge across all placements
   applyLogoToUI(logoUrl);
@@ -2052,28 +2052,28 @@ function saveSettings() {
 // ADMIN PAGES
 // ═══════════════════════════════════════════════════════════════
 function showAdminPage(page, btn) {
-  // 1. Remove active class from ALL admin pages
-  document.querySelectorAll('.admin-page').forEach(p => {
+  // 1. Hide all pages first
+  const allPages = document.querySelectorAll('.admin-page');
+  allPages.forEach(p => {
     p.classList.remove('active');
-    p.style.display = 'none'; // Force hide
+    p.style.display = 'none'; 
   });
 
-  // 2. Remove active class from ALL sidebar items
-  document.querySelectorAll('.sidebar-item').forEach(b => {
-    b.classList.remove('active');
-  });
+  // 2. Remove active state from all sidebar buttons
+  const allButtons = document.querySelectorAll('.sidebar-item');
+  allButtons.forEach(b => b.classList.remove('active'));
 
-  // 3. Show only the target page
-  const targetPage = document.getElementById(`page-${page}`);
+  // 3. Show the selected page
+  const targetPage = document.getElementById('page-' + page);
   if (targetPage) {
     targetPage.classList.add('active');
-    targetPage.style.display = 'block'; // Force show
+    targetPage.style.display = 'block';
   }
 
-  // 4. Set the clicked button to active
+  // 4. Highlight the clicked button
   if (btn) btn.classList.add('active');
 
-  // 5. Trigger the specific render function
+  // 5. Run the specific render function
   const renders = { 
     dashboard: renderDashboard, 
     questions: renderQuestions, 
@@ -2277,7 +2277,7 @@ function doDelete(type, id) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// BULK IMPORT — SMART PASTE ENGINE
+// BULK IMPORT - SMART PASTE ENGINE
 // ═══════════════════════════════════════════════════════════════
 const BulkParser = {
   format: 'auto',       // current selected format
@@ -2807,7 +2807,7 @@ function renderCandidates() {
       <td><span class="badge badge-primary">${c.roll}</span></td>
       <td class="text-sm">${c.email}</td>
       <td class="text-sm" style="max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-        ${((function(){var _t=Store.tests.find(function(t){return t.id===c.testId;});return _t?_t.name:''})())||'<span class="text-muted">—</span>'}
+        ${((function(){var _t=Store.tests.find(function(t){return t.id===c.testId;});return _t?_t.name:''})())||'<span class="text-muted">-</span>'}
       </td>
       <td><span class="badge ${c.status==='completed'?'badge-success':c.status==='in_progress'?'badge-warning':'badge-primary'}">${(c.status||'not_started').replace('_',' ')}</span></td>
       <td>
@@ -2949,7 +2949,7 @@ function processCandBulkUpload() {
 
   _candBulkRows.forEach((row,i) => {
     const dup = Store.candidates.find(c=>c.roll===row.roll);
-    if(dup) { skipped++; logLines.push(`<div class="import-row-err">Row ${i+2}: Roll ${row.roll} already exists — skipped</div>`); return; }
+    if(dup) { skipped++; logLines.push(`<div class="import-row-err">Row ${i+2}: Roll ${row.roll} already exists - skipped</div>`); return; }
     const cand = {
       id: `C${Date.now()}${i}`, name:row.name, roll:row.roll,
       email:row.email, password:row.password,
@@ -3006,8 +3006,8 @@ function renderResults() {
       <td><span class="badge badge-accent">${r.roll}</span></td>
       <td class="text-sm text-muted">${((function(){var _t=Store.tests.find(function(t){return t.id===r.testId;});return _t?_t.name:''})())||r.testId}</td>
       <td>${visible?`<strong>${r.score}</strong>/<span class="text-muted">${r.totalMarks}</span>`:'<span class="badge">Hidden</span>'}</td>
-      <td>${visible?`<span class="${r.percentage>=60?'text-success':r.percentage>=40?'text-accent':'text-danger'}">${r.percentage.toFixed(1)}%</span>`:'—'}</td>
-      <td class="text-sm text-muted">${r.timeTaken||'—'} min</td>
+      <td>${visible?`<span class="${r.percentage>=60?'text-success':r.percentage>=40?'text-accent':'text-danger'}">${r.percentage.toFixed(1)}%</span>`:'-'}</td>
+      <td class="text-sm text-muted">${r.timeTaken||'-'} min</td>
       <td><button class="btn btn-ghost btn-sm" onclick="viewDetailResult('${r.id}')">View →</button></td>
     </tr>`).join('')
   : '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--neutral-500)">No results yet.</td></tr>';
@@ -3284,7 +3284,7 @@ document.getElementById(‘progress-unanswered’).textContent = `Unanswered: ${
 function startTimer() {
 clearInterval(App.testState.timer);
 App.testState.timer = setInterval(() => {
-App.testState.timeLeft–;
+App.testState.timeLeft-;
 updateTimerDisplay();
 if(App.testState.timeLeft <= 0) { clearInterval(App.testState.timer); finalSubmitTest(); }
 }, 1000);
@@ -3370,7 +3370,7 @@ if(ans===undefined||ans===null||ans===''||(Array.isArray(ans)&&!ans.length)) {
 const timeTaken = Math.floor((Date.now()-ts.startTime)/60000);
 return {
 id:`R${Date.now()}`, candidateId:(App.currentUser && App.currentUser.id), testId:test.id,
-candidateName:(App.currentUser && App.currentUser.name)||‘Candidate’, roll:(App.currentUser && App.currentUser.roll)||’—’,
+candidateName:(App.currentUser && App.currentUser.name)||‘Candidate’, roll:(App.currentUser && App.currentUser.roll)||’-’,
 score:Math.max(0,score), totalMarks:test.totalMarks||300,
 percentage:Math.max(0,Math.min(100,Math.round(score/test.totalMarks*1000)/10)),
 correct, incorrect, unanswered, attempted:correct+incorrect,
@@ -3386,13 +3386,13 @@ document.getElementById(‘result-score’).textContent = result.score;
 document.getElementById(‘result-total’).textContent = ‘/’+result.totalMarks;
 const pct = result.percentage;
 document.getElementById(‘result-verdict’).textContent = pct>=75?‘🏆 Excellent!’:pct>=60?‘✅ Passed’:pct>=40?‘⚠️ Average’:‘❌ Needs Improvement’;
-document.getElementById(‘result-percentage’).textContent = `${pct.toFixed(1)}% — Rank #${Store.results.filter(r=>r.testId===result.testId).sort((a,b)=>b.score-a.score).findIndex(r=>r.id===result.id)+1}`;
+document.getElementById(‘result-percentage’).textContent = `${pct.toFixed(1)}% - Rank #${Store.results.filter(r=>r.testId===result.testId).sort((a,b)=>b.score-a.score).findIndex(r=>r.id===result.id)+1}`;
 
 document.getElementById(‘result-stats’).innerHTML = [
-{label:‘Correct’,val:result.correct,icon:‘✅’,color:‘var(–success)’},
-{label:‘Incorrect’,val:result.incorrect,icon:‘❌’,color:‘var(–danger)’},
-{label:‘Skipped’,val:result.unanswered,icon:’—’,color:‘var(–neutral-500)’},
-{label:‘Time Taken’,val:result.timeTaken+‘m’,icon:‘⏱’,color:‘var(–primary)’},
+{label:‘Correct’,val:result.correct,icon:‘✅’,color:‘var(-success)’},
+{label:‘Incorrect’,val:result.incorrect,icon:‘❌’,color:‘var(-danger)’},
+{label:‘Skipped’,val:result.unanswered,icon:’-’,color:‘var(-neutral-500)’},
+{label:‘Time Taken’,val:result.timeTaken+‘m’,icon:‘⏱’,color:‘var(-primary)’},
 ].map(s=>`<div class="stat-card text-center">
 <div style="font-size:1.5rem">${s.icon}</div>
 <div style="font-family:'DM Serif Display',serif;font-size:1.75rem;color:${s.color}">${s.val}</div>
@@ -3405,7 +3405,7 @@ const sections = result.sections || {};
 document.getElementById(‘result-sections’).innerHTML = Object.keys(sections).length ?
 Object.entries(sections).map(([name,s])=>{
 const pct = s.max ? Math.round(s.score/s.max*100) : 0;
-return `<div class="section-score-bar"> <div class="section-score-header"> <span class="font-semibold">${name}</span> <span>${s.score}/${s.max} (${pct}%)</span> </div> <div class="progress-bar-wrap mb-1"> <div class="progress-bar ${pct>=60?'success':pct>=40?'warning':'danger'}" style="width:${pct}%"></div> </div> <div class="flex gap-2 text-xs text-muted"> <span>✅ ${s.correct||0} correct</span> <span>❌ ${s.incorrect||0} wrong</span> <span>— ${s.skipped||0} skipped</span> </div> </div>`;
+return `<div class="section-score-bar"> <div class="section-score-header"> <span class="font-semibold">${name}</span> <span>${s.score}/${s.max} (${pct}%)</span> </div> <div class="progress-bar-wrap mb-1"> <div class="progress-bar ${pct>=60?'success':pct>=40?'warning':'danger'}" style="width:${pct}%"></div> </div> <div class="flex gap-2 text-xs text-muted"> <span>✅ ${s.correct||0} correct</span> <span>❌ ${s.incorrect||0} wrong</span> <span>- ${s.skipped||0} skipped</span> </div> </div>`;
 }).join(’’)
 : ‘<div class="text-muted text-sm">Section data not available.</div>’;
 
@@ -3436,7 +3436,7 @@ const status = (ans && ans.status) || ‘skipped’;
 if(filter!==‘all’ && filter!==status && !(filter===‘incorrect’&&status===‘incorrect’) && !(filter===‘correct’&&status===‘correct’) && !(filter===‘skipped’&&status===‘skipped’)) return ‘’;
 
 ```
-const statusConfig = {correct:{icon:'✅',color:'var(--success)',bg:'rgba(26,140,90,.06)'},incorrect:{icon:'❌',color:'var(--danger)',bg:'rgba(192,57,43,.05)'},skipped:{icon:'—',color:'var(--neutral-500)',bg:'var(--neutral-50)'},manual:{icon:'📝',color:'var(--warning)',bg:'rgba(230,126,34,.06)'}};
+const statusConfig = {correct:{icon:'✅',color:'var(--success)',bg:'rgba(26,140,90,.06)'},incorrect:{icon:'❌',color:'var(--danger)',bg:'rgba(192,57,43,.05)'},skipped:{icon:'-',color:'var(--neutral-500)',bg:'var(--neutral-50)'},manual:{icon:'📝',color:'var(--warning)',bg:'rgba(230,126,34,.06)'}};
 const sc = statusConfig[status] || statusConfig.skipped;
 
 const userAns = (ans && ans.userAnswer);
@@ -3444,7 +3444,7 @@ const userAnsText = userAns===undefined||userAns===null||userAns==='' ? 'Not ans
   typeof userAns==='string' ? userAns.substring(0,100)+'...' :
   Array.isArray(userAns) ? userAns.map(i=>letters[i]).join(', ') :
   letters[userAns]||userAns;
-const correctAnsText = q.type==='subjective' ? 'Manual evaluation' : (q.correct||[]).map(i=>letters[i]).join(', ') + ` — ${(q.correct||[]).map(i=>q.options[i]).join(' / ')}`;
+const correctAnsText = q.type==='subjective' ? 'Manual evaluation' : (q.correct||[]).map(i=>letters[i]).join(', ') + ` - ${(q.correct||[]).map(i=>q.options[i]).join(' / ')}`;
 
 return `<div style="padding:16px;border:1px solid var(--neutral-200);border-radius:12px;margin-bottom:10px;background:${sc.bg};border-left:4px solid ${sc.color}">
   <div class="flex justify-between items-center mb-2">
@@ -3481,7 +3481,7 @@ toast(`⚠️ Tab switch detected! (${App.testState.tabSwitches}${max?' of '+max
 // UTILITIES
 // ═══════════════════════════════════════════════════════════════
 function shuffle(arr) {
-for(let i=arr.length-1;i>0;i–){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
 return arr;
 }
 function arraysEqual(a,b) {
@@ -3489,12 +3489,12 @@ if(a.length!==b.length) return false;
 return a.every((v,i)=>v===b[i]);
 }
 function formatDate(iso) {
-if(!iso) return ‘—’;
+if(!iso) return ‘-’;
 return new Date(iso).toLocaleDateString(‘en-IN’,{day:‘2-digit’,month:‘short’,year:‘numeric’});
 }
 
 // ═══════════════════════════════════════════════════════════════
-// FIREBASE MODULE  — Pure REST API (zero SDK, works everywhere)
+// FIREBASE MODULE  - Pure REST API (zero SDK, works everywhere)
 // ═══════════════════════════════════════════════════════════════
 
 const DEFAULT_CONFIG = {
@@ -3566,7 +3566,7 @@ async connect(config, silent) {
 this.cfg = config;
 if(!silent) this._setStatus(‘syncing’, ‘Connecting to Firebase…’);
 try {
-// Lightweight ping — just check if Firestore is reachable
+// Lightweight ping - just check if Firestore is reachable
 var testRes = await fetch(
 ‘https://firestore.googleapis.com/v1/projects/’ + config.projectId + ‘/databases/(default)/documents/_ping/test’ + this._key(),
 { method: ‘GET’, mode: ‘cors’ }
@@ -3593,10 +3593,10 @@ throw new Error(‘offline’);
 } catch(err) {
   this.cfg = null; // Reset so app stays in local mode
   if(err.message === 'offline') {
-    // Silent fail — no internet, app works fine in local mode
+    // Silent fail - no internet, app works fine in local mode
     if(!silent) toast('No internet connection. Running in local mode.', 'warning', 4000);
   } else {
-    // Real config error — tell the user
+    // Real config error - tell the user
     if(!silent) toast('Firebase: ' + err.message, 'danger', 6000);
     console.warn('Firebase connect failed:', err.message);
   }
@@ -3611,7 +3611,7 @@ disconnect() {
 this._stopPolling();
 this.cfg = null;
 localStorage.removeItem(‘admitpro_fb_config’);
-this._setStatus(‘off’, ‘Firebase disconnected — local mode’);
+this._setStatus(‘off’, ‘Firebase disconnected - local mode’);
 this._updateSettingsUI(false);
 toast(‘Firebase disconnected. Running in local mode.’, ‘info’);
 },
@@ -3680,8 +3680,8 @@ this._getDoc(‘settings’, ‘main’),
   var alreadySeeded = localStorage.getItem('admitpro_fb_seeded_' + this.cfg.projectId);
 
   if(fbIsEmpty && !alreadySeeded) {
-    // ── FIRST RUN: Firebase is empty — auto-push all local data ──
-    this._setStatus('syncing', 'First run — uploading data to Firebase…');
+    // ── FIRST RUN: Firebase is empty - auto-push all local data ──
+    this._setStatus('syncing', 'First run - uploading data to Firebase…');
     await this.pushLocalData(true); // true = silent (no toast)
     localStorage.setItem('admitpro_fb_seeded_' + this.cfg.projectId, '1');
     this._setStatus('connected', 'Auto-seeded · ' + this.cfg.projectId);
@@ -3728,7 +3728,7 @@ Store.save();
 renderAll();
 updateSidebarCounts();
 }
-} catch(e) { /* offline — will retry silently next poll */ }
+} catch(e) { /* offline - will retry silently next poll */ }
 }, self.POLL_MS);
 });
 },
@@ -3793,7 +3793,7 @@ var connEl   = document.getElementById(‘fb-connect-status’);
 if(statusEl) {
 statusEl.className = ’alert ’ + (connected ? ‘alert-success’ : ‘alert-warning’);
 statusEl.innerHTML = connected
-? ‘<span>✅</span><span>Connected to <strong>’ + projId + ‘</strong> — sync active</span>’
+? ‘<span>✅</span><span>Connected to <strong>’ + projId + ‘</strong> - sync active</span>’
 : ‘<span>⚠️</span><span>Firebase not connected. Running in local mode.</span>’;
 }
 if(projEl)   projEl.classList.toggle(‘hidden’, !connected);
@@ -3822,7 +3822,7 @@ var connEl = document.getElementById(‘fb-connect-status’);
 if(connEl) connEl.innerHTML = ‘<div class="alert alert-info"><span>⏳</span><span>Connecting to Firebase…</span></div>’;
 var ok = await FB.connect(config);
 if(ok) {
-// Auto-seed happens inside pullAll() — nothing manual needed
+// Auto-seed happens inside pullAll() - nothing manual needed
 if(connEl) {
 connEl.innerHTML = ‘<div class="alert alert-success"><span>✅</span><span>Connected! Data is syncing automatically.</span></div>’;
 }
@@ -3880,7 +3880,7 @@ if(banner) banner.classList.remove(‘hidden’);
 }
 }
 // ═══════════════════════════════════════════════════════════════
-// INIT  — runs after DOM is fully parsed (ESM deferred by default)
+// INIT  - runs after DOM is fully parsed (ESM deferred by default)
 // ═══════════════════════════════════════════════════════════════
 function _setupDragDropZones() {
 // Logo drop zone
@@ -4067,7 +4067,7 @@ analytics: renderAnalytics
 if(fns[pid]) fns[pid]();
 }
 
-// Scripts run after page parses — DOM ready
+// Scripts run after page parses - DOM ready
 init();
 
 </script>
