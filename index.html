@@ -254,14 +254,14 @@ animation:slideUp .3s ease;transition:all .3s;
 #screen-landing::before{content:’’;position:absolute;inset:0;background:url(“data:image/svg+xml,%3Csvg width=‘60’ height=‘60’ viewBox=‘0 0 60 60’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cg fill=‘none’ fill-rule=‘evenodd’%3E%3Cg fill=’%23ffffff’ fill-opacity=‘0.04’%3E%3Cpath d=‘M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z’/%3E%3C/g%3E%3C/g%3E%3C/svg%3E”)}
 .landing-container{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
 .landing-box{background:rgba(255,255,255,.97);border-radius:24px;box-shadow:0 24px 80px rgba(0,0,0,.25);width:100%;max-width:460px;overflow:hidden}
-.landing-header{background:var(–primary);padding:32px;text-align:center;color:#fff}
-.landing-logo{width:72px;height:72px;border-radius:18px;background:var(–accent);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-family:‘DM Serif Display’,serif;font-size:1.8rem;color:var(–primary)}
+.landing-header{background:var(–primary,#1a3a5c);padding:32px;text-align:center;color:#fff}
+.landing-logo{width:72px;height:72px;border-radius:18px;background:var(–accent,#e8a020);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-family:‘DM Serif Display’,serif;font-size:1.8rem;color:var(–primary,#1a3a5c);position:relative;overflow:hidden}
 .landing-title{font-family:‘DM Serif Display’,serif;font-size:1.75rem;margin-bottom:4px}
 .landing-sub{opacity:.7;font-size:.9rem}
 .landing-body{padding:32px}
-.landing-tabs{display:flex;background:var(–neutral-100);border-radius:12px;padding:4px;margin-bottom:24px;gap:4px}
-.landing-tab{flex:1;padding:8px;border-radius:8px;font-weight:600;font-size:.875rem;color:var(–neutral-500);transition:all .2s;text-align:center}
-.landing-tab.active{background:var(–white);color:var(–primary);box-shadow:var(–shadow-sm)}
+.landing-tabs{display:flex;background:var(–neutral-100,#f0f2f7);border-radius:12px;padding:4px;margin-bottom:24px;gap:4px}
+.landing-tab{flex:1;padding:8px;border-radius:8px;font-weight:600;font-size:.875rem;color:var(–neutral-500);transition:all .2s;text-align:center;cursor:pointer;user-select:none}
+.landing-tab.active{background:#ffffff;color:var(–primary,#1a3a5c);box-shadow:0 2px 8px rgba(26,58,92,.08)}
 .landing-footer-link{text-align:center;font-size:.82rem;color:var(–neutral-500);margin-top:20px}
 .landing-footer-link a{color:var(–primary);font-weight:600}
 
@@ -987,18 +987,18 @@ background:var(–neutral-100);color:var(–neutral-500);
 <div id="screen-landing" class="screen active">
   <div class="landing-container">
     <div class="landing-box shadow-lg animate-slide-up">
-      <div class="landing-header">
-        <div class="landing-logo" id="login-logo-badge" style="overflow:hidden;padding:0">
+      <div class="landing-header" style="background:var(--primary,#1a3a5c);padding:32px;text-align:center;color:#fff;border-radius:0">
+        <div class="landing-logo" id="login-logo-badge" style="background:var(--accent,#e8a020);width:72px;height:72px;border-radius:18px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
           <span id="login-logo-text" style="font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--primary)">AP</span>
-          <img id="login-logo-img" src="" alt="Logo" style="display:none;width:100%;height:100%;object-fit:contain;border-radius:18px">
+          <img id="login-logo-img" src="" alt="Logo" style="display:none;width:100%;height:100%;object-fit:contain;border-radius:18px;position:absolute;inset:0">
         </div>
         <div class="landing-title" id="login-institute-name">AdmitPro Institute</div>
         <div class="landing-sub">Online Admission Test Portal</div>
       </div>
       <div class="landing-body">
-        <div class="landing-tabs">
-          <div class="landing-tab active" onclick="switchLoginTab('candidate')">Candidate</div>
-          <div class="landing-tab" onclick="switchLoginTab('admin')">Admin</div>
+        <div class="landing-tabs" style="display:flex;background:#f0f2f7;border-radius:12px;padding:4px;margin-bottom:24px;gap:4px">
+          <div class="landing-tab active" onclick="switchLoginTab('candidate')" style="cursor:pointer;flex:1;padding:8px;border-radius:8px;font-weight:600;font-size:.875rem;text-align:center;transition:all .2s;background:#ffffff;color:var(--primary,#1a3a5c);box-shadow:0 2px 8px rgba(26,58,92,.08)" id="tab-candidate">Candidate</div>
+          <div class="landing-tab" onclick="switchLoginTab('admin')" style="cursor:pointer;flex:1;padding:8px;border-radius:8px;font-weight:600;font-size:.875rem;text-align:center;transition:all .2s;color:#8090b0" id="tab-admin">Admin</div>
         </div>
         <!-- Candidate Login -->
         <div id="login-candidate">
@@ -1045,9 +1045,9 @@ background:var(–neutral-100);color:var(–neutral-500);
   <!-- Topbar -->
   <div class="topbar">
     <div class="topbar-logo">
-      <div class="logo-badge" id="admin-logo-badge" style="overflow:hidden;padding:2px">
+      <div class="logo-badge" id="admin-logo-badge" style="position:relative;overflow:hidden">
           <span id="admin-logo-text">AP</span>
-          <img id="admin-logo-img" src="" alt="" style="display:none;width:100%;height:100%;object-fit:contain;border-radius:8px">
+          <img id="admin-logo-img" src="" alt="" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;border-radius:8px">
         </div>
       <div>
         <div class="logo-text" id="admin-institute-name">AdmitPro Institute</div>
@@ -1743,7 +1743,13 @@ window.addEventListener('keydown', e => { if(e.key==='Escape') document.querySel
 let loginTab = 'candidate';
 function switchLoginTab(tab) {
   loginTab = tab;
-  document.querySelectorAll('.landing-tab').forEach((t,i) => t.classList.toggle('active', (i===0&&tab==='candidate')||(i===1&&tab==='admin')));
+  // Active tab styles
+  var activeStyle = 'cursor:pointer;flex:1;padding:8px;border-radius:8px;font-weight:600;font-size:.875rem;text-align:center;transition:all .2s;background:#ffffff;color:var(--primary,#1a3a5c);box-shadow:0 2px 8px rgba(26,58,92,.08)';
+  var inactiveStyle = 'cursor:pointer;flex:1;padding:8px;border-radius:8px;font-weight:600;font-size:.875rem;text-align:center;transition:all .2s;color:#8090b0;background:transparent';
+  var tCand = document.getElementById('tab-candidate');
+  var tAdmin = document.getElementById('tab-admin');
+  if(tCand) { tCand.setAttribute('style', tab==='candidate' ? activeStyle : inactiveStyle); }
+  if(tAdmin) { tAdmin.setAttribute('style', tab==='admin' ? activeStyle : inactiveStyle); }
   document.getElementById('login-candidate').classList.toggle('hidden', tab!=='candidate');
   document.getElementById('login-admin').classList.toggle('hidden', tab!=='admin');
 }
@@ -1855,15 +1861,12 @@ function applyLogoToUI(logoUrl) {
   // Landing login box
   const loginText = document.getElementById('login-logo-text');
   const loginImg  = document.getElementById('login-logo-img');
-  const loginBadge= document.getElementById('login-logo-badge');
   if(logoUrl) {
     if(loginText) loginText.style.display='none';
     if(loginImg)  { loginImg.src=logoUrl; loginImg.style.display='block'; }
-    if(loginBadge){ loginBadge.style.background='transparent'; loginBadge.style.padding='2px'; }
   } else {
     if(loginText) loginText.style.display='';
     if(loginImg)  loginImg.style.display='none';
-    if(loginBadge){ loginBadge.style.background=''; loginBadge.style.padding=''; }
   }
 
   // Instructions screen logo
