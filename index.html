@@ -675,6 +675,11 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
     </div>
     <div class="modal-body">
       <div class="flex flex-col gap-3">
+        <div class="form-group">
+          <label class="form-label">Test (which test does this question belong to?)</label>
+          <select class="form-control" id="q-test" onchange="repopulateQSectionFromTest()"></select>
+          <div class="text-xs text-muted mt-1">Sections below are pulled from the selected test. Change the test in <em>Tests</em> page to edit its sections.</div>
+        </div>
         <div class="grid grid-2 gap-2">
           <div class="form-group">
             <label class="form-label">Question Type</label>
@@ -685,7 +690,7 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label">Section</label>
+            <label class="form-label">Section / Category</label>
             <select class="form-control" id="q-section"></select>
           </div>
         </div>
@@ -1455,6 +1460,19 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
               <label class="checkbox-label"><input type="checkbox" id="setting-allow-review" checked> Allow question review before submit</label>
             </div>
           </div>
+          <!-- Result Display & Self-Scoring -->
+          <div class="card">
+            <div class="card-header"><span class="font-semibold">📊 Result Display & Self-Scoring</span></div>
+            <div class="card-body flex flex-col gap-2">
+              <label class="checkbox-label"><input type="checkbox" id="setting-self-scoring" checked> Enable self-scoring (auto-grade MCQs on submit)</label>
+              <div class="text-xs text-muted" style="margin-top:-4px;margin-bottom:6px">When off, the test only collects answers — admin grades manually.</div>
+              <label class="checkbox-label"><input type="checkbox" id="setting-res-score" checked> Show score & percentage to students</label>
+              <label class="checkbox-label"><input type="checkbox" id="setting-res-answers" checked> Show correct answers in review</label>
+              <label class="checkbox-label"><input type="checkbox" id="setting-res-explanations" checked> Show explanations in review</label>
+              <label class="checkbox-label"><input type="checkbox" id="setting-res-sections" checked> Show section-wise breakdown</label>
+              <label class="checkbox-label"><input type="checkbox" id="setting-res-rank"> Show rank to students</label>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1611,8 +1629,15 @@ const Store = {
   settings: {
     instituteName: 'AdmitPro Institute', logoText: 'AP', tagline: 'Online Admission Test Portal',
     theme: '', tabSwitch: true, rightClick: true, copyBlock: false, fullscreen: false,
-    maxTabSwitches: 3, showCalc: false, allowReview: true, defMarks: 4, defNeg: 1,
+    maxTabSwitches: 3, showCalc: false, allowReview: true, defMarks: 4, defNeg: 0,
     resultsVisible: true,
+    // Self-scoring + per-section result visibility (admin controlled)
+    selfScoring: true,        // auto-grade MCQs immediately on submit
+    resShowScore: true,       // students see their score
+    resShowAnswers: true,     // students see correct answers in review
+    resShowExplanations: true,// students see explanations
+    resShowSections: true,    // students see section-wise breakdown
+    resShowRank: false,       // students see rank
   },
   questions: [],
   tests: [],
@@ -1870,6 +1895,25 @@ function applyBranding() {
   f('custom-primary-hex', s.customPrimary||'#1a3a5c');
   f('custom-accent-color', s.customAccent||'#e8a020');
   f('custom-accent-hex', s.customAccent||'#e8a020');
+  f('setting-max-tabs', s.maxTabSwitches);
+  f('setting-def-marks', s.defMarks);
+  f('setting-def-neg', s.defNeg);
+
+  // Sync ALL checkboxes so settings carry across pages, devices and reloads
+  const ck = (id, val) => { const e=document.getElementById(id); if(e) e.checked = !!val; };
+  ck('setting-tabswitch',        s.tabSwitch);
+  ck('setting-rightclick',       s.rightClick);
+  ck('setting-copyblock',        s.copyBlock);
+  ck('setting-fullscreen',       s.fullscreen);
+  ck('setting-singledevice',     s.singleDevice);
+  ck('setting-show-calc',        s.showCalc);
+  ck('setting-allow-review',     s.allowReview);
+  ck('setting-self-scoring',     s.selfScoring !== false);
+  ck('setting-res-score',        s.resShowScore !== false);
+  ck('setting-res-answers',      s.resShowAnswers !== false);
+  ck('setting-res-explanations', s.resShowExplanations !== false);
+  ck('setting-res-sections',     s.resShowSections !== false);
+  ck('setting-res-rank',         !!s.resShowRank);
 
   // Sync swatches
   document.querySelectorAll('.color-swatch').forEach(sw => sw.classList.toggle('active', sw.dataset.theme===(s.theme||'')));
@@ -2068,18 +2112,32 @@ function applyTheme(theme, el) {
 }
 
 function saveSettings() {
-  Store.settings.instituteName = document.getElementById('setting-name').value;
-  Store.settings.logoText      = document.getElementById('setting-logo').value;
-  Store.settings.tagline       = document.getElementById('setting-tagline').value;
-  Store.settings.tabSwitch     = document.getElementById('setting-tabswitch').checked;
-  Store.settings.rightClick    = document.getElementById('setting-rightclick').checked;
-  Store.settings.maxTabSwitches= +document.getElementById('setting-max-tabs').value;
-  Store.settings.defMarks      = +document.getElementById('setting-def-marks').value;
-  Store.settings.defNeg        = +document.getElementById('setting-def-neg').value;
+  const _v = (id, fb='') => { const e=document.getElementById(id); return e ? e.value : fb; };
+  const _c = (id, fb=false) => { const e=document.getElementById(id); return e ? e.checked : fb; };
+  Store.settings.instituteName  = _v('setting-name', Store.settings.instituteName);
+  Store.settings.logoText       = _v('setting-logo', Store.settings.logoText);
+  Store.settings.tagline        = _v('setting-tagline', Store.settings.tagline);
+  Store.settings.tabSwitch      = _c('setting-tabswitch', Store.settings.tabSwitch);
+  Store.settings.rightClick     = _c('setting-rightclick', Store.settings.rightClick);
+  Store.settings.copyBlock      = _c('setting-copyblock', Store.settings.copyBlock);
+  Store.settings.fullscreen     = _c('setting-fullscreen', Store.settings.fullscreen);
+  Store.settings.singleDevice   = _c('setting-singledevice', Store.settings.singleDevice);
+  Store.settings.maxTabSwitches = +_v('setting-max-tabs', Store.settings.maxTabSwitches);
+  Store.settings.defMarks       = +_v('setting-def-marks', Store.settings.defMarks);
+  Store.settings.defNeg         = +_v('setting-def-neg', Store.settings.defNeg);
+  Store.settings.showCalc       = _c('setting-show-calc', Store.settings.showCalc);
+  Store.settings.allowReview    = _c('setting-allow-review', Store.settings.allowReview);
+  // Result-display + self-scoring
+  Store.settings.selfScoring        = _c('setting-self-scoring',     Store.settings.selfScoring);
+  Store.settings.resShowScore       = _c('setting-res-score',        Store.settings.resShowScore);
+  Store.settings.resShowAnswers     = _c('setting-res-answers',      Store.settings.resShowAnswers);
+  Store.settings.resShowExplanations= _c('setting-res-explanations', Store.settings.resShowExplanations);
+  Store.settings.resShowSections    = _c('setting-res-sections',     Store.settings.resShowSections);
+  Store.settings.resShowRank        = _c('setting-res-rank',         Store.settings.resShowRank);
   Store.save();
   if(FB.cfg) FB.syncSettings();
   applyBranding();
-  toast('Settings saved successfully!', 'success');
+  toast('Settings saved successfully across all devices!', 'success');
 }
 
 
@@ -2193,13 +2251,23 @@ function openQuestionModal(id=null) {
   document.getElementById('q-text').value = (q && q.text)||'';
   document.getElementById('q-type').value = (q && q.type)||'mcq-single';
   document.getElementById('q-marks').value = (q && q.marks !== undefined) ? q.marks : Store.settings.defMarks;
-  document.getElementById('q-negative').value = (q && q.negative !== undefined) ? q.negative : Store.settings.defNeg;
+  // Negative defaults to settings.defNeg (0 means no negative marking by default)
+  document.getElementById('q-negative').value = (q && q.negative !== undefined) ? q.negative : (Store.settings.defNeg||0);
   document.getElementById('q-explanation').value = (q && q.explanation)||'';
   document.getElementById('q-tags').value = ((q && q.tags)||[]).join(', ');
   document.getElementById('q-model-answer').value = (q && q.modelAnswer)||'';
-  // Populate section dropdown
-  const sections = (Store.questions.map(function(q){return q.section;}).concat(['Physics','Chemistry','Mathematics','Biology','English','General Knowledge'])).filter(function(v,i,a){return a.indexOf(v)===i;});
-  document.getElementById('q-section').innerHTML = sections.map(s=>`<option${q && q.section===s?' selected':''}>${s}</option>`).join('');
+
+  // Populate Test dropdown
+  const tSel = document.getElementById('q-test');
+  if(tSel){
+    const opts = ['<option value="">— Unassigned (general bank) —</option>']
+      .concat(Store.tests.map(t=>`<option value="${t.id}"${q && q.testId===t.id?' selected':''}>${t.name}</option>`));
+    tSel.innerHTML = opts.join('');
+    if(!q && !tSel.value && Store.tests[0]) tSel.value = Store.tests[0].id;
+  }
+  // Populate Section dropdown from chosen test's sections (or fallback)
+  repopulateQSectionFromTest(q && q.section);
+
   // Options
   document.getElementById('q-options-list').innerHTML = '';
   if(q && q.options && q.options.length) {
@@ -2209,6 +2277,21 @@ function openQuestionModal(id=null) {
   }
   updateQuestionEditor();
   openModal('modal-question');
+}
+function repopulateQSectionFromTest(preferred){
+  const tSel = document.getElementById('q-test');
+  const sSel = document.getElementById('q-section');
+  if(!sSel) return;
+  const testId = tSel ? tSel.value : '';
+  const t = Store.tests.find(x=>x.id===testId);
+  let sections = [];
+  if(t && t.sections && t.sections.length) sections = t.sections.map(s=>s.name);
+  else sections = Array.from(new Set(Store.questions.map(q=>q.section).filter(Boolean)));
+  if(!sections.length) sections = ['General'];
+  sSel.innerHTML = sections.map(s=>`<option value="${s}"${preferred===s?' selected':''}>${s}</option>`).join('');
+  if(preferred && !sections.includes(preferred)){
+    sSel.insertAdjacentHTML('afterbegin', `<option value="${preferred}" selected>${preferred} (legacy)</option>`);
+  }
 }
 function addOptionEditor(val='', checked=false, multi=false) {
   optionCount++;
@@ -2253,6 +2336,7 @@ function saveQuestion() {
   const q = {
     id: App.editingQuestionId || `Q${Date.now()}`,
     type, section: document.getElementById('q-section').value,
+    testId: (document.getElementById('q-test') ? document.getElementById('q-test').value : '') || '',
     text, options, correct,
     marks: +document.getElementById('q-marks').value,
     negative: +document.getElementById('q-negative').value,
@@ -2724,7 +2808,7 @@ function openTestModal(id=null) {
   document.getElementById('t-instructions').value = (t && t.instructions)||'';
   document.getElementById('t-randomize').checked = (t && t.randomize)||false;
   document.getElementById('t-randomize-options').checked = (t && t.randomizeOptions)||false;
-  document.getElementById('t-negative').checked = (t && t.negativeMarking !== undefined) ? t.negativeMarking : true;
+  document.getElementById('t-negative').checked = (t && t.negativeMarking !== undefined) ? t.negativeMarking : ((Store.settings.defNeg||0) > 0);
   document.getElementById('t-show-result').checked = (t && t.showResult !== undefined) ? t.showResult : true;
   document.getElementById('t-sectional-timing').checked = (t && t.sectionalTiming)||false;
   // Sections
@@ -2770,6 +2854,11 @@ function renderTestQuestionPicker(preSelected){
   // populate section dropdown from THIS test's defined sections
   _refreshTestSectionFilter();
   const list = Store.questions.filter(q=>{
+    // Only show questions assigned to THIS test, or unassigned (no testId)
+    const assigned = q.testId || '';
+    if(App.editingTestId){
+      if(assigned && assigned !== App.editingTestId) return false;
+    }
     if(sec && q.section!==sec) return false;
     if(search && !(q.text||'').toLowerCase().includes(search)) return false;
     if(tag && !((q.tags||[]).some(t=>(t||'').toLowerCase().includes(tag)))) return false;
@@ -2855,7 +2944,6 @@ function renderCandidates() {
     tSel.innerHTML = '<option value="">All Tests</option>' +
       Store.tests.map(t=>`<option value="${t.id}"${cur===t.id?' selected':''}>${t.name}</option>`).join('');
   }
-
   let cands = Store.candidates.filter(c =>
     (!search || c.name.toLowerCase().includes(search) || c.roll.toLowerCase().includes(search) || c.email.toLowerCase().includes(search)) &&
     (!testFil || c.testId===testFil) &&
@@ -2882,6 +2970,7 @@ function renderCandidates() {
       <td>
         <div class="flex gap-1">
           <button class="btn btn-ghost btn-icon btn-sm" onclick="openAddCandidateModal('${c.id}')" title="Edit">✏️</button>
+          <button class="btn btn-ghost btn-icon btn-sm" onclick="resetCandidatePassword('${c.id}')" title="Reset password">🔑</button>
           <button class="btn btn-ghost btn-icon btn-sm" onclick="resetCandidate('${c.id}')" title="Reset progress">🔄</button>
           <button class="btn btn-ghost btn-icon btn-sm" onclick="confirmDeleteCandidate('${c.id}')" title="Remove">🗑️</button>
         </div>
@@ -3053,7 +3142,17 @@ Meera Nair,CAND2025004,meera@example.com,secure456,,General`;
   const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='sample_candidates.csv'; a.click();
 }
 
-
+async function resetCandidatePassword(id){
+  const c = Store.candidates.find(x=>x.id===id);
+  if(!c){ toast('Candidate not found.','danger'); return; }
+  const np = prompt('Set a NEW password for '+c.name+' ('+c.roll+'). Min 4 characters:');
+  if(!np) return;
+  if(np.length < 4){ toast('Password too short (min 4).','danger'); return; }
+  c.password = await _hash(np);
+  Store.save();
+  if(FB.cfg) FB.syncCandidate(c);
+  toast('Password reset for '+c.name+'. New password: '+np,'success');
+}
 
 // ─── RESULTS ─────────────────────────────────────────────────
 function renderResults() {
@@ -3450,7 +3549,11 @@ function scoreTest() {
         score+=q.marks; correct++; sectionScores[secName].score+=q.marks; sectionScores[secName].correct++;
         answersForResult[i].status='correct';
       } else {
-        if(test.negativeMarking) { score-=q.negative; }
+        // Negative marking: ONLY when test has it enabled AND the question carries a positive negative value
+        if(test.negativeMarking && (+q.negative > 0)) {
+          score        -= +q.negative;
+          sectionScores[secName].score -= +q.negative;
+        }
         incorrect++; sectionScores[secName].incorrect++;
         answersForResult[i].status='incorrect';
       }
@@ -3470,15 +3573,24 @@ function scoreTest() {
 }
 
 function showResultScreen(result) {
+  const S = Store.settings;
+  const showScore       = S.resShowScore       !== false;
+  const showSections    = S.resShowSections    !== false;
+  const showRank        = !!S.resShowRank;
+
   document.getElementById('result-test-name').textContent = Store.tests.find(t=>t.id===result.testId)?.name||'Test Result';
   document.getElementById('result-candidate-name').textContent = result.candidateName;
-  document.getElementById('result-score').textContent = result.score;
-  document.getElementById('result-total').textContent = '/'+result.totalMarks;
+  document.getElementById('result-score').textContent = showScore ? result.score : '—';
+  document.getElementById('result-total').textContent = showScore ? ('/'+result.totalMarks) : '';
   const pct = result.percentage;
-  document.getElementById('result-verdict').textContent = pct>=75?'🏆 Excellent!':pct>=60?'✅ Passed':pct>=40?'⚠️ Average':'❌ Needs Improvement';
-  document.getElementById('result-percentage').textContent = `${pct.toFixed(1)}% — Rank #${Store.results.filter(r=>r.testId===result.testId).sort((a,b)=>b.score-a.score).findIndex(r=>r.id===result.id)+1}`;
+  document.getElementById('result-verdict').textContent = !showScore ? 'Submitted — awaiting evaluation'
+    : (pct>=75?'🏆 Excellent!':pct>=60?'✅ Passed':pct>=40?'⚠️ Average':'❌ Needs Improvement');
+  const rank = Store.results.filter(r=>r.testId===result.testId).sort((a,b)=>b.score-a.score).findIndex(r=>r.id===result.id)+1;
+  document.getElementById('result-percentage').textContent = showScore
+    ? (`${pct.toFixed(1)}%` + (showRank ? ` — Rank #${rank}` : ''))
+    : 'Your responses have been recorded.';
 
-  document.getElementById('result-stats').innerHTML = [
+  document.getElementById('result-stats').innerHTML = showScore ? [
     {label:'Correct',val:result.correct,icon:'✅',color:'var(--success)'},
     {label:'Incorrect',val:result.incorrect,icon:'❌',color:'var(--danger)'},
     {label:'Skipped',val:result.unanswered,icon:'—',color:'var(--neutral-500)'},
@@ -3487,29 +3599,36 @@ function showResultScreen(result) {
     <div style="font-size:1.5rem">${s.icon}</div>
     <div style="font-family:'DM Serif Display',serif;font-size:1.75rem;color:${s.color}">${s.val}</div>
     <div class="stat-label">${s.label}</div>
-  </div>`).join('');
+  </div>`).join('') : `<div class="text-muted text-sm" style="grid-column:1/-1;text-align:center;padding:14px">Detailed score will be released by the administrator.</div>`;
 
-  // Section performance
+  // Section performance — admin-controlled
   const sections = result.sections || {};
-  document.getElementById('result-sections').innerHTML = Object.keys(sections).length ?
-    Object.entries(sections).map(([name,s])=>{
-      const pct = s.max ? Math.round(s.score/s.max*100) : 0;
-      return `<div class="section-score-bar">
-        <div class="section-score-header">
-          <span class="font-semibold">${name}</span>
-          <span>${s.score}/${s.max} (${pct}%)</span>
-        </div>
-        <div class="progress-bar-wrap mb-1">
-          <div class="progress-bar ${pct>=60?'success':pct>=40?'warning':'danger'}" style="width:${pct}%"></div>
-        </div>
-        <div class="flex gap-2 text-xs text-muted">
-          <span>✅ ${s.correct||0} correct</span>
-          <span>❌ ${s.incorrect||0} wrong</span>
-          <span>— ${s.skipped||0} skipped</span>
-        </div>
-      </div>`;
-    }).join('')
-  : '<div class="text-muted text-sm">Section data not available.</div>';
+  const secEl = document.getElementById('result-sections');
+  if(secEl){
+    if(!showSections || !showScore){
+      secEl.innerHTML = '<div class="text-muted text-sm">Section breakdown is hidden by the administrator.</div>';
+    } else {
+      secEl.innerHTML = Object.keys(sections).length ?
+        Object.entries(sections).map(([name,s])=>{
+          const p = s.max ? Math.round(s.score/s.max*100) : 0;
+          return `<div class="section-score-bar">
+            <div class="section-score-header">
+              <span class="font-semibold">${name}</span>
+              <span>${s.score}/${s.max} (${p}%)</span>
+            </div>
+            <div class="progress-bar-wrap mb-1">
+              <div class="progress-bar ${p>=60?'success':p>=40?'warning':'danger'}" style="width:${p}%"></div>
+            </div>
+            <div class="flex gap-2 text-xs text-muted">
+              <span>✅ ${s.correct||0} correct</span>
+              <span>❌ ${s.incorrect||0} wrong</span>
+              <span>— ${s.skipped||0} skipped</span>
+            </div>
+          </div>`;
+        }).join('')
+      : '<div class="text-muted text-sm">Section data not available.</div>';
+    }
+  }
 
   // Answer review
   App.reviewFilter = 'all';
@@ -3555,9 +3674,9 @@ function renderReview(result) {
       <div style="font-size:.9rem;margin-bottom:10px">${q.text}</div>
       ${q.type!=='subjective'?`
         <div class="text-xs mb-1"><strong>Your answer:</strong> <span style="color:${sc.color}">${userAnsText}</span></div>
-        <div class="text-xs mb-1"><strong>Correct answer:</strong> <span style="color:var(--success)">${correctAnsText}</span></div>
+        ${(Store.settings.resShowAnswers!==false) ? `<div class="text-xs mb-1"><strong>Correct answer:</strong> <span style="color:var(--success)">${correctAnsText}</span></div>` : ''}
       `:`<div class="text-xs"><strong>Your answer:</strong> ${typeof userAns==='string'&&userAns?userAns.substring(0,150)+'...':'Not answered'}</div>`}
-      ${q.explanation?`<div class="text-xs text-muted mt-1" style="font-style:italic">💡 ${q.explanation}</div>`:''}
+      ${(q.explanation && Store.settings.resShowExplanations!==false)?`<div class="text-xs text-muted mt-1" style="font-style:italic">💡 ${q.explanation}</div>`:''}
     </div>`;
   }).join('') || '<div class="text-muted text-sm">No questions in this filter.</div>';
 }
