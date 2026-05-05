@@ -762,6 +762,10 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
           </div>
         </div>
         <div class="form-group">
+          <label class="form-label">Passing Percentage (for Pass/Fail) </label>
+          <input type="number" class="form-control" id="t-pass-pct" value="40" min="0" max="100" step="1">
+        </div>
+        <div class="form-group">
           <label class="form-label">Instructions</label>
           <textarea class="form-control" id="t-instructions" rows="3" placeholder="Test instructions shown to candidates..."></textarea>
         </div>
@@ -1247,6 +1251,7 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
             <div class="page-subtitle">View and manage test results</div>
           </div>
           <div class="flex gap-1">
+            <button class="btn btn-primary btn-sm" onclick="publishAllResults()">📢 Publish All (filtered)</button>
             <button class="btn btn-outline btn-sm" onclick="exportResults()">⬇ Export CSV</button>
             <button class="btn btn-ghost btn-sm" id="toggle-results-btn" onclick="toggleResultsVisibility()">👁 Toggle Visibility</button>
           </div>
@@ -1263,7 +1268,7 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
             <div class="data-table-wrap">
               <table class="data-table">
                 <thead>
-                  <tr><th>Rank</th><th>Candidate</th><th>Roll No.</th><th>Test</th><th>Score</th><th>Percentage</th><th>Time</th><th>Actions</th></tr>
+                  <tr><th>Rank</th><th>Candidate</th><th>Roll No.</th><th>Test</th><th>Score</th><th>Percentage</th><th>Pass/Fail</th><th>Time</th><th>Published</th><th>Actions</th></tr>
                 </thead>
                 <tbody id="results-tbody"></tbody>
               </table>
@@ -2805,6 +2810,7 @@ function openTestModal(id=null) {
   document.getElementById('t-name').value = (t && t.name)||'';
   document.getElementById('t-duration').value = (t && t.duration)||180;
   document.getElementById('t-total-marks').value = (t && t.totalMarks)||300;
+  document.getElementById('t-pass-pct').value = (t && t.passPercentage!==undefined) ? t.passPercentage : 40;
   document.getElementById('t-instructions').value = (t && t.instructions)||'';
   document.getElementById('t-randomize').checked = (t && t.randomize)||false;
   document.getElementById('t-randomize-options').checked = (t && t.randomizeOptions)||false;
@@ -2903,6 +2909,7 @@ function saveTest() {
     id: App.editingTestId || `T${Date.now()}`,
     name, duration:+document.getElementById('t-duration').value,
     totalMarks:+document.getElementById('t-total-marks').value,
+    passPercentage:+document.getElementById('t-pass-pct').value || 40,
     instructions:document.getElementById('t-instructions').value,
     sections, questions: qIds,
     randomize:document.getElementById('t-randomize').checked,
@@ -2982,6 +2989,22 @@ function renderCandidates() {
     </td></tr>`;
 }
 
+function defaultPasswordFor(name){
+  if(!name) return '';
+  const first = String(name).trim().split(/\s+/)[0]||'';
+  // Convention: First name (capitalized) + 123, e.g. "Rahul123"
+  return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() + '123';
+}
+
+function _autoFillCandPassword(){
+  const pwdEl = document.getElementById('cand-password');
+  const nameEl = document.getElementById('cand-name');
+  if(!pwdEl || !nameEl) return;
+  // Only auto-fill while creating (not editing) and field is empty
+  if(App.editingCandidateId) return;
+  if(!pwdEl.value.trim()) pwdEl.value = defaultPasswordFor(nameEl.value);
+}
+
 function openAddCandidateModal(editId=null) {
   App.editingCandidateId = editId;
   document.getElementById('cand-modal-title').textContent = editId ? 'Edit Candidate' : 'Add Candidate';
@@ -2989,9 +3012,13 @@ function openAddCandidateModal(editId=null) {
   document.getElementById('cand-name').value     = (c && c.name)||'';
   document.getElementById('cand-roll').value     = (c && c.roll)||'';
   document.getElementById('cand-email').value    = (c && c.email)||'';
+  // For new candidates, password starts blank and auto-fills as soon as a name is typed
   document.getElementById('cand-password').value = (c && c.password)||'';
   document.getElementById('cand-phone').value    = (c && c.phone)||'';
   document.getElementById('cand-category').value = (c && c.category)||'';
+  // Wire up auto-fill (idempotent — replaces handler each open)
+  const nameEl = document.getElementById('cand-name');
+  nameEl.oninput = _autoFillCandPassword;
   // Populate test dropdown
   const sel = document.getElementById('cand-test-assign');
   sel.innerHTML = Store.tests.map(t=>`<option value="${t.id}"${c && c.testId===t.id?' selected':''}>${t.name}</option>`).join('');
@@ -3003,7 +3030,9 @@ async function saveSingleCandidate() {
   const name  = document.getElementById('cand-name').value.trim();
   const roll  = document.getElementById('cand-roll').value.trim();
   const email = document.getElementById('cand-email').value.trim();
-  const pass  = document.getElementById('cand-password').value.trim();
+  let   pass  = document.getElementById('cand-password').value.trim();
+  // If admin left password blank for a new candidate, auto-generate "Firstname123"
+  if(!pass && !App.editingCandidateId) pass = defaultPasswordFor(name);
   const testId= document.getElementById('cand-test-assign').value;
   if(!name||!roll||!email||!pass) { toast('Name, roll, email and password are required.','danger'); return; }
 
@@ -3078,7 +3107,7 @@ function previewCandBulk(input) {
       const cols = line.split(',').map(s=>s.trim().replace(/^"|"$/g,''));
       if(cols.length < 2) return;
       const [name,roll,email,password,testId,category] = cols;
-      if(name && roll) _candBulkRows.push({name,roll,email:email||`${roll}@candidate.com`,password:password||'test123',testId:testId||Store.tests[0]?.id||'',category:category||''});
+      if(name && roll) _candBulkRows.push({name,roll,email:email||`${roll}@candidate.com`,password:password||defaultPasswordFor(name),testId:testId||Store.tests[0]?.id||'',category:category||''});
     });
 
     document.getElementById('cand-preview-count').textContent = `${_candBulkRows.length} candidates`;
@@ -3167,18 +3196,48 @@ function renderResults() {
     .map(function(r,i){ return Object.assign({},r,{rank:i+1}); });
   const visible = Store.settings.resultsVisible;
 
-  document.getElementById('results-tbody').innerHTML = results.length ? results.map(r=>`
+  document.getElementById('results-tbody').innerHTML = results.length ? results.map(r=>{
+    const test = Store.tests.find(t=>t.id===r.testId);
+    const passPct = (test && test.passPercentage!==undefined) ? test.passPercentage : 40;
+    const passed = r.percentage >= passPct;
+    const isPublished = !!r.published;
+    return `
     <tr>
       <td><span class="badge badge-primary">#${r.rank}</span></td>
       <td class="font-medium">${r.candidateName}</td>
       <td><span class="badge badge-accent">${r.roll}</span></td>
-      <td class="text-sm text-muted">${((function(){var _t=Store.tests.find(function(t){return t.id===r.testId;});return _t?_t.name:''})())||r.testId}</td>
+      <td class="text-sm text-muted">${(test?test.name:'')||r.testId}</td>
       <td>${visible?`<strong>${r.score}</strong>/<span class="text-muted">${r.totalMarks}</span>`:'<span class="badge">Hidden</span>'}</td>
       <td>${visible?`<span class="${r.percentage>=60?'text-success':r.percentage>=40?'text-accent':'text-danger'}">${r.percentage.toFixed(1)}%</span>`:'—'}</td>
+      <td><span class="badge ${passed?'badge-success':'badge-danger'}">${passed?'PASS':'FAIL'}</span> <span class="text-xs text-muted">(≥${passPct}%)</span></td>
       <td class="text-sm text-muted">${r.timeTaken||'—'} min</td>
-      <td><button class="btn btn-ghost btn-sm" onclick="viewDetailResult('${r.id}')">View →</button></td>
-    </tr>`).join('')
-  : '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--neutral-500)">No results yet.</td></tr>';
+      <td>${isPublished?'<span class="badge badge-success">📢 Published</span>':'<span class="badge">Pending</span>'}</td>
+      <td>
+        <div class="flex gap-1">
+          <button class="btn btn-ghost btn-sm" onclick="viewDetailResult('${r.id}')">View</button>
+          <button class="btn ${isPublished?'btn-outline':'btn-primary'} btn-sm" onclick="togglePublishResult('${r.id}')">${isPublished?'Unpublish':'Publish'}</button>
+        </div>
+      </td>
+    </tr>`;}).join('')
+  : '<tr><td colspan="10" style="text-align:center;padding:24px;color:var(--neutral-500)">No results yet.</td></tr>';
+}
+
+function togglePublishResult(id){
+  const r = Store.results.find(x=>x.id===id); if(!r) return;
+  r.published = !r.published;
+  r.publishedAt = r.published ? new Date().toISOString() : null;
+  Store.save();
+  if(FB.cfg && FB.syncResult) FB.syncResult(r);
+  renderResults();
+  toast(r.published?'Result published to candidate.':'Result unpublished.', r.published?'success':'info');
+}
+
+function publishAllResults(){
+  const filter = (document.getElementById('result-filter-test')?.value)||'';
+  let n=0;
+  Store.results.forEach(r=>{ if((!filter||r.testId===filter) && !r.published){ r.published=true; r.publishedAt=new Date().toISOString(); if(FB.cfg && FB.syncResult) FB.syncResult(r); n++; }});
+  Store.save(); renderResults();
+  toast(`Published ${n} result(s).`, n?'success':'info');
 }
 function toggleResultsVisibility() {
   Store.settings.resultsVisible = !Store.settings.resultsVisible;
@@ -3275,7 +3334,7 @@ function showInstructions(test) {
 
   document.getElementById('instr-instructions').innerHTML = (test.instructions||'Read all questions carefully.').replace(/\n/g,'<br>');
   document.getElementById('instr-stats').innerHTML = [
-    {label:'Each MCQ',val:`+${Store.questions[0]?.marks||4} / -${Store.questions[0]?.negative||1}`},
+    {label:'Each MCQ',val:`+${Store.questions[0]?.marks||4}${test.negativeMarking?` / -${Store.questions[0]?.negative||1}`:''}`},
     {label:'Duration',val:`${test.duration} min`},
     {label:'Negative Marking',val:test.negativeMarking?'Yes':'No'},
   ].map(s=>`<div style="text-align:center;padding:14px;background:var(--neutral-50);border-radius:10px;border:1px solid var(--neutral-200)">
@@ -3375,7 +3434,7 @@ function renderQuestion() {
       <div class="question-meta">
         <span class="question-num">Q${ts.currentIndex+1} of ${ts.questions.length}</span>
         <span class="badge badge-primary">${q.section}</span>
-        <span class="question-marks">+${q.marks}${q.negative?` / -${q.negative}`:''}</span>
+        <span class="question-marks">+${q.marks}${(App.currentTest?.negativeMarking && +q.negative>0)?` / -${q.negative}`:''}</span>
         <span class="badge ${q.type==='subjective'?'badge-accent':'badge-primary'} ml-auto">${q.type==='mcq-multi'?'Multi-correct':q.type==='subjective'?'Subjective':'Single correct'}</span>
         ${isFlagged?'<span class="badge badge-warning">🚩 Flagged</span>':''}
       </div>
@@ -3386,7 +3445,10 @@ function renderQuestion() {
 
   // Nav buttons
   document.getElementById('btn-prev').disabled = ts.currentIndex === 0;
-  document.getElementById('btn-next').textContent = ts.currentIndex===ts.questions.length-1 ? 'Finish →' : 'Next →';
+  const isLast = ts.currentIndex === ts.questions.length-1;
+  const btnNext = document.getElementById('btn-next');
+  btnNext.textContent = isLast ? 'Finish →' : 'Next →';
+  btnNext.onclick = isLast ? (()=>showSubmitModal()) : (()=>navigateQuestion(1));
   updateProgress();
 }
 
@@ -3505,6 +3567,8 @@ function finalSubmitTest() {
   clearInterval(App.testState.timer);
   document.removeEventListener('visibilitychange', handleTabSwitch);
   const result = scoreTest();
+  // Auto-publish when admin chose "Show result immediately after submission"
+  if(App.currentTest.showResult){ result.published = true; result.publishedAt = new Date().toISOString(); }
   Store.results.push(result);
   if(FB.cfg) FB.syncResult(result);
   const c = App.currentUser;
@@ -3513,7 +3577,7 @@ function finalSubmitTest() {
   if(App.currentTest.showResult && Store.settings.resultsVisible) {
     showResultScreen(result);
   } else {
-    toast('Test submitted successfully! Results will be announced shortly.','success');
+    toast('Test submitted! Your result will be released by the administrator.','success');
     setTimeout(()=>showScreen('screen-landing'),3000);
   }
 }
@@ -3583,8 +3647,11 @@ function showResultScreen(result) {
   document.getElementById('result-score').textContent = showScore ? result.score : '—';
   document.getElementById('result-total').textContent = showScore ? ('/'+result.totalMarks) : '';
   const pct = result.percentage;
+  const _test = Store.tests.find(t=>t.id===result.testId);
+  const passPct = (_test && _test.passPercentage!==undefined) ? _test.passPercentage : 40;
+  const passed = pct >= passPct;
   document.getElementById('result-verdict').textContent = !showScore ? 'Submitted — awaiting evaluation'
-    : (pct>=75?'🏆 Excellent!':pct>=60?'✅ Passed':pct>=40?'⚠️ Average':'❌ Needs Improvement');
+    : (passed ? `✅ PASS (≥ ${passPct}%)` : `❌ FAIL (< ${passPct}%)`);
   const rank = Store.results.filter(r=>r.testId===result.testId).sort((a,b)=>b.score-a.score).findIndex(r=>r.id===result.id)+1;
   document.getElementById('result-percentage').textContent = showScore
     ? (`${pct.toFixed(1)}%` + (showRank ? ` — Rank #${rank}` : ''))
