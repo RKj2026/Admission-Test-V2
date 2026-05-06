@@ -372,10 +372,10 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
 
 /* ─── FIREBASE STATUS BAR ────────────────────────────────────── */
 #firebase-status-bar{
-  position:fixed;bottom:0;left:0;right:0;height:32px;z-index:999;
-  background:var(--neutral-900);color:#fff;font-size:.75rem;
-  display:flex;align-items:center;justify-content:center;gap:12px;
-  transform:translateY(100%);transition:transform .3s;
+  position:fixed;bottom:14px;right:14px;z-index:9999;
+  background:rgba(15,32,52,.92);color:#fff;padding:6px 12px;border-radius:999px;
+  font-size:.72rem;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(0,0,0,.25);
+  transform:translateY(120%);transition:transform .3s ease;backdrop-filter:blur(8px);
 }
 #firebase-status-bar.show{transform:translateY(0)}
 .fb-dot{width:8px;height:8px;border-radius:50%;background:#9ca3af}
@@ -1086,6 +1086,9 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
       <button class="sidebar-item" onclick="showAdminPage('analytics', this)">
         <span class="icon">🔍</span><span>Analytics</span>
       </button>
+      <button class="sidebar-item" onclick="showAdminPage('evaluation', this)">
+        <span class="icon">📝</span><span>Evaluation</span><span id="eval-pending-badge" class="badge badge-warning ml-auto" style="display:none"></span>
+      </button>
       <div class="sidebar-section">Config</div>
       <button class="sidebar-item" onclick="showAdminPage('settings', this)">
         <span class="icon">⚙️</span><span>Settings</span>
@@ -1303,6 +1306,26 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
               <table class="data-table">
                 <thead><tr><th>Question</th><th>Attempts</th><th>Correct %</th><th>Avg Time</th><th>Difficulty</th></tr></thead>
                 <tbody id="difficulty-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVALUATION PAGE (subjective grading queue) -->
+      <div id="page-evaluation" class="admin-page">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Pending Evaluation</div>
+            <div class="page-subtitle">Grade subjective answers before publishing pass/fail</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body p-0">
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Candidate</th><th>Test</th><th>Pending Items</th><th>Submitted</th><th>Action</th></tr></thead>
+                <tbody id="eval-tbody"></tbody>
               </table>
             </div>
           </div>
@@ -1833,6 +1856,7 @@ async function loginAdmin() {
   if(!ok){ toast('Invalid admin credentials.','danger'); return; }
   showScreen('screen-admin');
   renderDashboard(); updateSidebarCounts(); applyBranding();
+  if(!FB.cfg) tryAutoConnect();
   toast('Welcome back, Administrator!','success');
 }
 async function forgotAdminPassword(){
@@ -1865,6 +1889,7 @@ async function loginCandidate() {
   }
   App.currentUser = c;
   App.currentTest = test;
+  if(!FB.cfg) tryAutoConnect();
   showInstructions(test);
 }
 
@@ -3128,18 +3153,20 @@ function previewCandBulk(input) {
   reader.readAsText(file);
 }
 
-function processCandBulkUpload() {
+async function processCandBulkUpload() {
   if(!_candBulkRows.length) { toast('No valid rows to import.','warning'); return; }
-  let added=0, skipped=0, errors=[];
+  let added=0, skipped=0;
   const logLines = [];
   const defaultTestId = ((function(){var _t=Store.tests.find(function(t){return t.status==='active';});return _t?_t.id:''})()) || Store.tests[0]?.id || '';
 
-  _candBulkRows.forEach((row,i) => {
+  for(let i=0;i<_candBulkRows.length;i++){
+    const row = _candBulkRows[i];
     const dup = Store.candidates.find(c=>c.roll===row.roll);
-    if(dup) { skipped++; logLines.push(`<div class="import-row-err">Row ${i+2}: Roll ${row.roll} already exists — skipped</div>`); return; }
+    if(dup) { skipped++; logLines.push(`<div class="import-row-err">Row ${i+2}: Roll ${row.roll} already exists — skipped</div>`); continue; }
+    const plainPwd = row.password || defaultPasswordFor(row.name);
     const cand = {
       id: `C${Date.now()}${i}`, name:row.name, roll:row.roll,
-      email:row.email, password:row.password,
+      email:row.email, password: await _hash(plainPwd), // hashed at rest
       testId: row.testId||defaultTestId,
       category: row.category||'', phone:'',
       status: 'not_started', createdAt: new Date().toISOString()
@@ -3147,8 +3174,8 @@ function processCandBulkUpload() {
     Store.candidates.push(cand);
     if(FB.cfg) FB.syncCandidate(cand);
     added++;
-    logLines.push(`<div class="import-row-ok">✅ Row ${i+2}: ${row.name} (${row.roll}) imported</div>`);
-  });
+    logLines.push(`<div class="import-row-ok">✅ Row ${i+2}: ${row.name} (${row.roll}) imported (pwd: ${plainPwd})</div>`);
+  }
 
   Store.save();
   document.getElementById('cand-import-log').classList.remove('hidden');
@@ -3211,11 +3238,11 @@ function renderResults() {
       <td>${visible?`<span class="${r.percentage>=60?'text-success':r.percentage>=40?'text-accent':'text-danger'}">${r.percentage.toFixed(1)}%</span>`:'—'}</td>
       <td><span class="badge ${passed?'badge-success':'badge-danger'}">${passed?'PASS':'FAIL'}</span> <span class="text-xs text-muted">(≥${passPct}%)</span></td>
       <td class="text-sm text-muted">${r.timeTaken||'—'} min</td>
-      <td>${isPublished?'<span class="badge badge-success">📢 Published</span>':'<span class="badge">Pending</span>'}</td>
+      <td>${r.needsEvaluation?'<span class="badge badge-warning">⏳ Awaiting Eval</span>':isPublished?'<span class="badge badge-success">📢 Published</span>':'<span class="badge">Pending</span>'}</td>
       <td>
         <div class="flex gap-1">
           <button class="btn btn-ghost btn-sm" onclick="viewDetailResult('${r.id}')">View</button>
-          <button class="btn ${isPublished?'btn-outline':'btn-primary'} btn-sm" onclick="togglePublishResult('${r.id}')">${isPublished?'Unpublish':'Publish'}</button>
+          ${r.needsEvaluation?`<button class="btn btn-accent btn-sm" onclick="openEvaluator('${r.id}')">Grade</button>`:`<button class="btn ${isPublished?'btn-outline':'btn-primary'} btn-sm" onclick="togglePublishResult('${r.id}')">${isPublished?'Unpublish':'Publish'}</button>`}
         </div>
       </td>
     </tr>`;}).join('')
@@ -3224,6 +3251,7 @@ function renderResults() {
 
 function togglePublishResult(id){
   const r = Store.results.find(x=>x.id===id); if(!r) return;
+  if(!r.published && r.needsEvaluation){ toast('Evaluate subjective answers first.','warning'); return; }
   r.published = !r.published;
   r.publishedAt = r.published ? new Date().toISOString() : null;
   Store.save();
@@ -3234,10 +3262,16 @@ function togglePublishResult(id){
 
 function publishAllResults(){
   const filter = (document.getElementById('result-filter-test')?.value)||'';
-  let n=0;
-  Store.results.forEach(r=>{ if((!filter||r.testId===filter) && !r.published){ r.published=true; r.publishedAt=new Date().toISOString(); if(FB.cfg && FB.syncResult) FB.syncResult(r); n++; }});
+  let n=0, blocked=0;
+  Store.results.forEach(r=>{
+    if((!filter||r.testId===filter) && !r.published){
+      if(r.needsEvaluation){ blocked++; return; }
+      r.published=true; r.publishedAt=new Date().toISOString();
+      if(FB.cfg && FB.syncResult) FB.syncResult(r); n++;
+    }
+  });
   Store.save(); renderResults();
-  toast(`Published ${n} result(s).`, n?'success':'info');
+  toast(`Published ${n} result(s)${blocked?', '+blocked+' blocked (need evaluation)':''}.`, n?'success':'info');
 }
 function toggleResultsVisibility() {
   Store.settings.resultsVisible = !Store.settings.resultsVisible;
@@ -3355,12 +3389,23 @@ function startTest() {
   let qs = qs0;
   if(test.randomize) qs = shuffle(qs.slice());
 
-  App.testState = {
+  // Restore in-progress state if same user/test was interrupted
+  let restored = null;
+  try {
+    const raw = localStorage.getItem('admitpro_test_progress');
+    if(raw) {
+      const p = JSON.parse(raw);
+      if(p && p.testId===test.id && p.candidateId===(App.currentUser&&App.currentUser.id)) restored = p;
+    }
+  } catch(e){}
+
+  App.testState = restored ? Object.assign({}, restored.state, {questions:qs, timer:null}) : {
     questions: qs, currentIndex: 0, answers: {}, flags: {},
     visited: {0:true}, timer: null, timeLeft: test.duration*60,
     currentSection: 0, tabSwitches: 0, startTime: Date.now(),
     sectionIdx: 0,
   };
+  if(restored) toast('Resumed your previous attempt.','info', 3000);
 
   // Anti-cheat: tab switch detection
   if(Store.settings.tabSwitch) {
@@ -3370,11 +3415,28 @@ function startTest() {
     document.addEventListener('contextmenu', e => e.preventDefault(), {once:false});
   }
 
+  // Auto-save every 10 s
+  if(App._autoSaveTimer) clearInterval(App._autoSaveTimer);
+  App._autoSaveTimer = setInterval(saveTestProgress, 10000);
+
   renderTestScreen();
   startTimer();
   showScreen('screen-test');
   toast('Test started! Good luck!','success', 2500);
 }
+
+function saveTestProgress(){
+  try {
+    if(!App.testState || !App.currentTest) return;
+    const {questions, timer, ...rest} = App.testState; // strip non-serialisable
+    localStorage.setItem('admitpro_test_progress', JSON.stringify({
+      testId: App.currentTest.id,
+      candidateId: App.currentUser && App.currentUser.id,
+      state: rest, savedAt: Date.now()
+    }));
+  } catch(e){}
+}
+function clearTestProgress(){ try { localStorage.removeItem('admitpro_test_progress'); } catch(e){} }
 
 function renderTestScreen() {
   const test = App.currentTest;
@@ -3565,16 +3627,23 @@ function showSubmitModal() {
 function finalSubmitTest() {
   closeModal('modal-submit');
   clearInterval(App.testState.timer);
+  if(App._autoSaveTimer) clearInterval(App._autoSaveTimer);
   document.removeEventListener('visibilitychange', handleTabSwitch);
   const result = scoreTest();
-  // Auto-publish when admin chose "Show result immediately after submission"
-  if(App.currentTest.showResult){ result.published = true; result.publishedAt = new Date().toISOString(); }
+  // Mark as awaiting evaluation when subjective items exist
+  const hasSubjective = App.testState.questions.some(q=>q.type==='subjective');
+  result.needsEvaluation = hasSubjective;
+  // Auto-publish only when no manual grading is required AND admin chose immediate-show
+  if(App.currentTest.showResult && !hasSubjective){
+    result.published = true; result.publishedAt = new Date().toISOString();
+  }
   Store.results.push(result);
   if(FB.cfg) FB.syncResult(result);
   const c = App.currentUser;
-  if(c) { const ci=Store.candidates.find(x=>x.id===c.id); if(ci) ci.status='completed'; }
+  if(c) { const ci=Store.candidates.find(x=>x.id===c.id); if(ci) ci.status='completed'; if(ci && FB.cfg) FB.syncCandidate(ci); }
   Store.save();
-  if(App.currentTest.showResult && Store.settings.resultsVisible) {
+  clearTestProgress();
+  if(App.currentTest.showResult && Store.settings.resultsVisible && !hasSubjective) {
     showResultScreen(result);
   } else {
     toast('Test submitted! Your result will be released by the administrator.','success');
@@ -3603,9 +3672,9 @@ function scoreTest() {
       unanswered++; sectionScores[secName].skipped++;
       answersForResult[i].status='skipped';
     } else if(q.type==='subjective') {
-      // Manual evaluation - partial credit for demo
-      score+=Math.floor(q.marks*0.5); sectionScores[secName].score+=Math.floor(q.marks*0.5);
+      // Awarded marks default to 0 until evaluator grades it
       answersForResult[i].status='manual';
+      answersForResult[i].awardedMarks = 0;
     } else {
       const userArr = Array.isArray(ans)?ans:[ans];
       const isCorrect = arraysEqual(userArr.sort(), (q.correct||[]).sort());
@@ -3871,6 +3940,7 @@ const FB = {
       this._setStatus('connected', 'Connected · ' + config.projectId);
       this._updateSettingsUI(true, config.projectId);
       await this.pullAll();
+      await this._flushOutbox();
       this._startPolling();
       return true;
 
@@ -3898,28 +3968,60 @@ const FB = {
     toast('Firebase disconnected. Running in local mode.', 'info');
   },
 
-  // ── CRUD via REST ─────────────────────────────────────────
-  async _set(col, id, data) {
+  // ── CRUD via REST (with offline outbox) ───────────────────
+  _outboxKey: 'admitpro_fb_outbox',
+  _readOutbox(){ try { return JSON.parse(localStorage.getItem(this._outboxKey)||'[]'); } catch(e){ return []; } },
+  _writeOutbox(arr){ try { localStorage.setItem(this._outboxKey, JSON.stringify(arr)); } catch(e){} },
+  _enqueue(op){
+    var box = this._readOutbox();
+    // de-dupe: collapse same op+col+id keeping latest
+    box = box.filter(function(x){ return !(x.op===op.op && x.col===op.col && x.id===op.id); });
+    box.push(op); this._writeOutbox(box);
+  },
+  async _flushOutbox(){
+    if(!this.cfg || !navigator.onLine) return;
+    var box = this._readOutbox(); if(!box.length) return;
+    this._setStatus('syncing', 'Flushing '+box.length+' queued change(s)…');
+    var remaining = [];
+    for(var i=0;i<box.length;i++){
+      var op = box[i];
+      try {
+        if(op.op==='set')         await this._setRaw(op.col, op.id, op.data);
+        else if(op.op==='delete') await this._deleteRaw(op.col, op.id);
+      } catch(e){ remaining.push(op); }
+    }
+    this._writeOutbox(remaining);
+    this._setStatus(remaining.length?'error':'connected',
+      remaining.length ? remaining.length+' change(s) still queued' : 'All changes synced ✓');
+  },
+
+  async _setRaw(col, id, data) {
     var fields = this._encodeObj(data);
     var url = this._docURL(col, id);
     var res = await fetch(url, {
-      method: 'PATCH',
-      mode: 'cors',
+      method: 'PATCH', mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ fields: fields })
     });
     if(!res.ok) {
-      var errBody = '';
-      try { errBody = await res.text(); } catch(e){}
+      var errBody=''; try { errBody = await res.text(); } catch(e){}
       throw new Error('Write failed (' + res.status + '): ' + errBody.slice(0,120));
     }
     return res.json();
   },
-
-  async _delete(col, id) {
-    var res = await fetch(this._docURL(col, id), { method: 'DELETE', mode: 'cors' });
-    // 404 is fine (already deleted)
+  async _set(col, id, data){
+    if(!this.cfg || !navigator.onLine){ this._enqueue({op:'set', col, id, data}); return; }
+    try { return await this._setRaw(col,id,data); }
+    catch(e){ this._enqueue({op:'set', col, id, data}); throw e; }
+  },
+  async _deleteRaw(col, id){
+    var res = await fetch(this._docURL(col, id), { method:'DELETE', mode:'cors' });
     if(!res.ok && res.status !== 404) throw new Error('Delete failed: ' + res.status);
+  },
+  async _delete(col, id) {
+    if(!this.cfg || !navigator.onLine){ this._enqueue({op:'delete', col, id}); return; }
+    try { return await this._deleteRaw(col,id); }
+    catch(e){ this._enqueue({op:'delete', col, id}); }
   },
 
   async _getAll(col) {
@@ -4055,12 +4157,11 @@ const FB = {
     var dot  = document.getElementById('fb-dot');
     var text = document.getElementById('fb-status-text');
     if(!bar) return;
-    if(state === 'off' || state === '') return; // Don't show bar for inactive/local states
     bar.classList.add('show');
     dot.className = 'fb-dot ' + (state==='connected'?'connected':state==='error'?'error':state==='syncing'?'syncing':'');
-    text.textContent = msg;
-    if(state==='connected') setTimeout(function(){ bar.classList.remove('show'); }, 5000);
-    if(state==='error')     setTimeout(function(){ bar.classList.remove('show'); }, 8000);
+    var prefix = state==='connected' ? '☁ Cloud: ' : state==='syncing' ? '⏳ ' : state==='error' ? '⚠ ' : '';
+    text.textContent = prefix + msg;
+    // Persistent chip — never auto-hides; users always see live cloud state
   },
 
   _updateSettingsUI(connected, projId) {
@@ -4137,27 +4238,26 @@ function _isLocalFile() {
 }
 
 async function tryAutoConnect() {
+  // Always try to auto-connect using saved or default config — silent on failure.
   var saved = null;
   try { saved = JSON.parse(localStorage.getItem('admitpro_fb_config')); } catch(e){}
-
-  if(saved && saved.projectId) {
-    if(_isLocalFile()) {
+  var cfg = (saved && saved.projectId) ? saved : DEFAULT_CONFIG;
+  if(_isLocalFile()) {
+    // file:// can't reach Firebase — show banner only if there's local data to sync
+    var hasData = Store.questions.length > 0 || Store.candidates.length > 0;
+    if(hasData) {
       var banner = document.getElementById('sync-setup-banner');
       if(banner) banner.classList.remove('hidden');
-      return;
     }
-    FB._setStatus('syncing', 'Reconnecting…');
-    await FB.connect(saved, true); // silent=true: no console errors if offline
-  } else {
-    var hasData = Store.questions.length > 0 || Store.candidates.length > 0;
-    if(hasData && _isLocalFile()) {
-      setTimeout(function() {
-        var banner = document.getElementById('sync-setup-banner');
-        if(banner) banner.classList.remove('hidden');
-      }, 3000);
-    }
+    return;
   }
+  FB._setStatus('syncing', 'Connecting…');
+  await FB.connect(cfg, true); // silent reconnect
 }
+
+// Re-flush outbox & re-attempt connection whenever browser comes back online
+window.addEventListener('online',  function(){ if(!FB.cfg) tryAutoConnect(); else FB._flushOutbox(); });
+window.addEventListener('offline', function(){ FB._setStatus('error', 'Offline — changes queued locally'); });
 // ═══════════════════════════════════════════════════════════════
 // INIT  — runs after DOM is fully parsed (ESM deferred by default)
 // ═══════════════════════════════════════════════════════════════
@@ -4342,9 +4442,86 @@ function renderAll() {
     tests: renderTests,
     candidates: renderCandidates,
     results: renderResults,
-    analytics: renderAnalytics
+    analytics: renderAnalytics,
+    evaluation: renderEvaluation
   };
   if(fns[pid]) fns[pid]();
+  updateEvalBadge();
+}
+
+// ─── PENDING EVALUATION QUEUE ─────────────────────────────────
+function _pendingEvalResults(){
+  return Store.results.filter(r => r.needsEvaluation && !r.evaluated);
+}
+function updateEvalBadge(){
+  const b = document.getElementById('eval-pending-badge');
+  if(!b) return;
+  const n = _pendingEvalResults().length;
+  b.textContent = n; b.style.display = n ? 'inline-flex' : 'none';
+}
+function renderEvaluation(){
+  const tbody = document.getElementById('eval-tbody'); if(!tbody) return;
+  const pending = _pendingEvalResults();
+  tbody.innerHTML = pending.length ? pending.map(r=>{
+    const t = Store.tests.find(t=>t.id===r.testId);
+    const subjCount = Object.values(r.answers||{}).filter(a=>a.type==='subjective').length;
+    return `<tr>
+      <td>${r.candidateName} <span class="badge badge-accent">${r.roll}</span></td>
+      <td>${t?t.name:r.testId}</td>
+      <td>${subjCount} subjective answer(s)</td>
+      <td class="text-sm text-muted">${new Date(r.submittedAt).toLocaleString()}</td>
+      <td><button class="btn btn-primary btn-sm" onclick="openEvaluator('${r.id}')">Grade →</button></td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--neutral-500)">Nothing to evaluate. ✅</td></tr>';
+}
+function openEvaluator(rid){
+  const r = Store.results.find(x=>x.id===rid); if(!r) return;
+  const t = Store.tests.find(t=>t.id===r.testId);
+  const items = Object.entries(r.answers||{}).filter(([,a])=>a.type==='subjective');
+  const html = items.map(([idx,a])=>{
+    const q = Store.questions.find(q=>q.id===a.qId);
+    if(!q) return '';
+    const cur = a.awardedMarks||0;
+    return `<div class="card mb-2"><div class="card-body">
+      <div class="text-xs text-muted">Q · ${q.section} · max ${q.marks}</div>
+      <div class="font-medium mb-1">${q.text}</div>
+      <div class="alert" style="background:var(--neutral-50);padding:8px;border-radius:6px;font-size:.85rem;white-space:pre-wrap">${a.userAnswer||'(no answer)'}</div>
+      ${q.modelAnswer?`<div class="text-xs text-muted mt-1">Model: ${q.modelAnswer}</div>`:''}
+      <div class="form-group mt-2"><label class="form-label">Award marks (0–${q.marks})</label>
+        <input type="number" min="0" max="${q.marks}" value="${cur}" class="form-control eval-mark-input" data-qidx="${idx}" data-max="${q.marks}" style="max-width:140px">
+      </div>
+    </div></div>`;
+  }).join('');
+  document.getElementById('confirm-title').textContent = 'Evaluate: '+r.candidateName;
+  document.getElementById('confirm-message').innerHTML = '<div style="max-height:60vh;overflow-y:auto;text-align:left">'+html+'</div>';
+  document.getElementById('confirm-btn').textContent = 'Save & Finalise';
+  document.getElementById('confirm-btn').onclick = function(){ saveEvaluation(rid); };
+  openModal('modal-confirm');
+}
+function saveEvaluation(rid){
+  const r = Store.results.find(x=>x.id===rid); if(!r) return;
+  const test = Store.tests.find(t=>t.id===r.testId);
+  document.querySelectorAll('.eval-mark-input').forEach(el=>{
+    const idx = el.dataset.qidx; const max = +el.dataset.max;
+    const v = Math.max(0, Math.min(max, +el.value||0));
+    if(r.answers[idx]){
+      const prev = r.answers[idx].awardedMarks||0;
+      r.answers[idx].awardedMarks = v;
+      r.score += (v - prev);
+      const q = Store.questions.find(q=>q.id===r.answers[idx].qId);
+      if(q && r.sections && r.sections[q.section]) r.sections[q.section].score += (v - prev);
+    }
+  });
+  r.score = Math.max(0, r.score);
+  r.percentage = Math.max(0, Math.min(100, Math.round(r.score/r.totalMarks*1000)/10));
+  r.evaluated = true; r.needsEvaluation = false;
+  r.evaluatedAt = new Date().toISOString();
+  Store.save();
+  if(FB.cfg) FB.syncResult(r);
+  closeModal('modal-confirm');
+  document.getElementById('confirm-btn').textContent = 'Confirm';
+  toast('Evaluation saved. Now publish to release the result.','success');
+  renderEvaluation(); updateEvalBadge();
 }
 
 // Scripts run after page parses — DOM ready
