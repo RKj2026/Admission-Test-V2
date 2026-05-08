@@ -426,6 +426,8 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
   .topbar-nav{display:none}
   .landing-box{border-radius:16px}
   .q-nav-grid{grid-template-columns:repeat(6,1fr)}
+  .col-secondary{display:none!important}
+  .data-table th,.data-table td{font-size:.78rem;padding:6px 4px}
 }
 @media print{
   .topbar,.sidebar,.test-sidebar,.btn:not(.btn-print){display:none!important}
@@ -1269,10 +1271,10 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
         </div>
         <div class="card mb-3">
           <div class="card-body p-2" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-            <select class="form-control" id="result-filter-test" style="max-width:280px;flex:1" onchange="renderResults()">
+            <select class="form-control" id="result-filter-test" style="max-width:280px;flex:1" onchange="ResultsPager.page=1;renderResults()">
               <option value="">All Tests</option>
             </select>
-            <select class="form-control" id="result-filter-status" style="max-width:200px" onchange="renderResults()">
+            <select class="form-control" id="result-filter-status" style="max-width:200px" onchange="ResultsPager.page=1;renderResults()">
               <option value="">All Statuses</option>
               <option value="published">Published</option>
               <option value="pending">Pending Publish</option>
@@ -1280,7 +1282,7 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
               <option value="pass">Pass</option>
               <option value="fail">Fail</option>
             </select>
-            <input type="text" class="form-control" id="result-filter-search" placeholder="Search name / roll" style="max-width:220px" oninput="renderResults()">
+            <input type="text" class="form-control" id="result-filter-search" placeholder="Search name / roll" style="max-width:220px" oninput="ResultsPager.page=1;renderResults()">
             <span class="text-xs text-muted" id="result-selected-count">0 selected</span>
           </div>
         </div>
@@ -1360,7 +1362,10 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
             <div class="page-title">Settings</div>
             <div class="page-subtitle">Customize branding and platform configuration</div>
           </div>
-          <button class="btn btn-primary" onclick="saveSettings()">Save Changes</button>
+          <div class="flex gap-1">
+            <button class="btn btn-ghost btn-sm" onclick="downloadAuditLog()" title="Download security audit log (logins, password resets, kicks)">📜 Audit Log</button>
+            <button class="btn btn-primary" onclick="saveSettings()">Save Changes</button>
+          </div>
         </div>
         <div class="grid grid-2 gap-3">
           <!-- Branding -->
@@ -1727,7 +1732,7 @@ const Store = {
     this.tests.push({
       id: testId, name: 'Engineering Entrance Mock Test 2025',
       duration: 180, totalMarks: 300,
-      instructions: 'This test consists of 3 sections. Each MCQ carries 4 marks. Wrong answers carry -1 mark. Subjective questions carry 8 marks with no negative marking. Read all questions carefully before answering.',
+      instructions: 'This test consists of 3 sections. Each MCQ carries the marks shown next to it. Subjective questions are graded by an evaluator. Read all questions carefully before answering.',
       sections: [{name:'Physics',time:60},{name:'Chemistry',time:60},{name:'Mathematics',time:60}],
       randomize: false, randomizeOptions: false, negativeMarking: true,
       showResult: true, sectionalTiming: false, status: 'active',
@@ -1840,14 +1845,76 @@ async function _hash(t){
   const h = await crypto.subtle.digest('SHA-256', buf);
   return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
+// Auth-lite: salted hash. Stored format "s$<saltHex>$<sha256(salt+plain)>"
+function _randSalt(){
+  const a = new Uint8Array(12); crypto.getRandomValues(a);
+  return Array.from(a).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function _hashSalted(plain, salt){ return await _hash(salt + ':' + plain); }
+async function _makePwd(plain){
+  const salt = _randSalt();
+  return 's$' + salt + '$' + (await _hashSalted(plain, salt));
+}
 async function _verifyPwd(plain, stored){
   if(!stored) return false;
-  // backward compat: stored may be plain text
+  if(typeof stored === 'string' && stored.startsWith('s$')){
+    const parts = stored.split('$'); if(parts.length<3) return false;
+    return (await _hashSalted(plain, parts[1])) === parts[2];
+  }
+  // backward compat: legacy unsalted SHA-256 or plain text
   if(stored.length === 64 && /^[0-9a-f]+$/.test(stored)) return (await _hash(plain)) === stored;
   return plain === stored;
 }
-function _ensureAdminBootstrap(){
-  // First-time setup if no admin credential exists
+// Lockout: 5 failed attempts → 15 min cooldown, per identifier (admin email or candidate roll)
+const _LOCK_MAX = 5, _LOCK_MS = 15*60*1000;
+function _lockKey(id){ return 'admitpro_lock_' + (id||'').toLowerCase(); }
+function _checkLock(id){
+  try{
+    const raw = localStorage.getItem(_lockKey(id)); if(!raw) return null;
+    const o = JSON.parse(raw);
+    if(o.until && Date.now() < o.until) return Math.ceil((o.until-Date.now())/60000);
+    if(o.until && Date.now() >= o.until){ localStorage.removeItem(_lockKey(id)); }
+  }catch(e){}
+  return null;
+}
+function _recordFail(id){
+  try{
+    const raw = localStorage.getItem(_lockKey(id));
+    const o = raw?JSON.parse(raw):{count:0};
+    o.count = (o.count||0)+1;
+    if(o.count >= _LOCK_MAX){ o.until = Date.now()+_LOCK_MS; o.count = 0; }
+    localStorage.setItem(_lockKey(id), JSON.stringify(o));
+  }catch(e){}
+}
+function _clearFails(id){ try{ localStorage.removeItem(_lockKey(id)); }catch(e){} }
+// Audit log
+function auditLog(actor, action, meta){
+  try{
+    const k = 'admitpro_audit';
+    const arr = JSON.parse(localStorage.getItem(k)||'[]');
+    arr.push({ts:new Date().toISOString(), actor, action, meta:meta||{}});
+    if(arr.length>500) arr.splice(0, arr.length-500);
+    localStorage.setItem(k, JSON.stringify(arr));
+  }catch(e){}
+}
+function getAuditLog(){ try{ return JSON.parse(localStorage.getItem('admitpro_audit')||'[]'); }catch(e){return [];} }
+function downloadAuditLog(){
+  const arr = getAuditLog();
+  if(!arr.length){ toast('Audit log is empty.','info'); return; }
+  const rows = [['timestamp','actor','action','meta']].concat(arr.map(r=>[r.ts,r.actor,r.action,JSON.stringify(r.meta||{})]));
+  const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = 'audit_log.csv'; a.click();
+  toast(`Downloaded ${arr.length} audit events.`,'success');
+}
+// Candidate single-device session token
+function _newSessionToken(){
+  const a = new Uint8Array(16); crypto.getRandomValues(a);
+  return Array.from(a).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function _localSessionKey(cid){ return 'admitpro_sess_'+cid; }
+async function _ensureAdminBootstrap(){
   if(Store.settings.adminEmail && Store.settings.adminPasswordHash) return true;
   const email = prompt('First-time setup — set Admin email:');
   if(!email) { toast('Admin setup cancelled.','warning'); return false; }
@@ -1855,26 +1922,31 @@ function _ensureAdminBootstrap(){
   if(!pwd || pwd.length < 6) { toast('Password must be at least 6 characters.','danger'); return false; }
   const recovery = prompt('Set a recovery code (used if you forget your password). Save it somewhere safe:');
   if(!recovery || recovery.length < 4) { toast('Recovery code required.','danger'); return false; }
-  return _hash(pwd).then(async ph => {
-    Store.settings.adminEmail = email.trim().toLowerCase();
-    Store.settings.adminPasswordHash = ph;
-    Store.settings.adminRecoveryHash = await _hash(recovery);
-    Store.save();
-    toast('Admin account created. You can now log in.','success');
-    return true;
-  });
+  Store.settings.adminEmail = email.trim().toLowerCase();
+  Store.settings.adminPasswordHash = await _makePwd(pwd);
+  Store.settings.adminRecoveryHash = await _makePwd(recovery);
+  Store.save();
+  auditLog(email,'admin_bootstrap',{});
+  toast('Admin account created. You can now log in.','success');
+  return true;
 }
 async function loginAdmin() {
   const email = (document.getElementById('admin-email').value||'').trim().toLowerCase();
   const pass  = document.getElementById('admin-pass').value;
   if(!email || !pass){ toast('Enter email and password.','warning'); return; }
+  const lockMin = _checkLock('admin:'+email);
+  if(lockMin){ toast(`Too many failed attempts. Try again in ${lockMin} min.`,'danger',5000); return; }
   if(!Store.settings.adminEmail || !Store.settings.adminPasswordHash){
     const ok = await _ensureAdminBootstrap();
     if(!ok) return;
   }
-  if(email !== Store.settings.adminEmail){ toast('Invalid admin credentials.','danger'); return; }
-  const ok = await _verifyPwd(pass, Store.settings.adminPasswordHash);
-  if(!ok){ toast('Invalid admin credentials.','danger'); return; }
+  if(email !== Store.settings.adminEmail || !(await _verifyPwd(pass, Store.settings.adminPasswordHash))){
+    _recordFail('admin:'+email);
+    auditLog(email,'admin_login_fail',{});
+    toast('Invalid admin credentials.','danger'); return;
+  }
+  _clearFails('admin:'+email);
+  auditLog(email,'admin_login_ok',{});
   showScreen('screen-admin');
   renderDashboard(); updateSidebarCounts(); applyBranding();
   if(!FB.cfg) tryAutoConnect();
@@ -1886,31 +1958,48 @@ async function forgotAdminPassword(){
   }
   const code = prompt('Enter your recovery code:');
   if(!code) return;
-  const ch = await _hash(code);
-  if(ch !== Store.settings.adminRecoveryHash){ toast('Invalid recovery code.','danger'); return; }
+  if(!(await _verifyPwd(code, Store.settings.adminRecoveryHash))){
+    auditLog(Store.settings.adminEmail||'?','admin_recovery_fail',{});
+    toast('Invalid recovery code.','danger'); return;
+  }
   const np = prompt('Enter new admin password (min 6 chars):');
   if(!np || np.length<6){ toast('Password too short.','danger'); return; }
-  Store.settings.adminPasswordHash = await _hash(np);
+  Store.settings.adminPasswordHash = await _makePwd(np);
   Store.save();
+  auditLog(Store.settings.adminEmail||'?','admin_password_reset',{});
   toast('Password updated. Please log in.','success');
 }
 async function loginCandidate() {
   const roll = document.getElementById('login-roll').value.trim();
   const pass = document.getElementById('login-dob').value.trim();
   if(!roll || !pass){ toast('Please enter your roll number and password.','warning'); return; }
+  const lockMin = _checkLock('cand:'+roll);
+  if(lockMin){ toast(`Too many failed attempts. Try again in ${lockMin} min.`,'danger',5000); return; }
   const c = Store.candidates.find(x=>x.roll.toLowerCase()===roll.toLowerCase() || (x.email||'').toLowerCase()===roll.toLowerCase());
   if(!c || !(await _verifyPwd(pass, c.password))){
+    _recordFail('cand:'+roll);
+    auditLog(roll,'cand_login_fail',{});
     toast('Invalid roll number or password.','danger'); return;
   }
+  _clearFails('cand:'+roll);
+
+  // SINGLE-DEVICE ENFORCEMENT — candidates only (admins can use multiple devices)
+  const newToken = _newSessionToken();
+  c.activeSessionToken = newToken;
+  c.activeSessionAt = new Date().toISOString();
+  c.activeSessionUA = (navigator.userAgent||'').slice(0,140);
+  try { localStorage.setItem(_localSessionKey(c.id), newToken); } catch(e){}
+  Store.save();
+  if(FB.cfg) FB.syncCandidate(c);
+  auditLog(c.roll,'cand_login_ok',{ua:c.activeSessionUA});
+
   const test = Store.tests.find(t=>t.id===c.testId);
   if(!test){ toast('No test assigned. Contact admin.','warning'); return; }
 
-  // If the candidate already submitted, show published result (or a waiting message)
   const existingResult = Store.results.find(r=>r.candidateId===c.id && r.testId===test.id);
   if(existingResult){
     App.currentUser = c; App.currentTest = test;
     if(existingResult.published){
-      // Reconstruct testState.questions so review can render
       App.testState = App.testState || {};
       App.testState.questions = (test.questions||[]).map(qid=>Store.questions.find(q=>q.id===qid)).filter(Boolean);
       showResultScreen(existingResult);
@@ -1927,6 +2016,25 @@ async function loginCandidate() {
   App.currentUser = c;
   App.currentTest = test;
   if(!FB.cfg) tryAutoConnect();
+
+  // Periodic session-validity check during test — kicks user out if another device logs in
+  if(App._sessionWatcher) clearInterval(App._sessionWatcher);
+  App._sessionWatcher = setInterval(()=>{
+    try{
+      const localTok = localStorage.getItem(_localSessionKey(c.id));
+      const live = Store.candidates.find(x=>x.id===c.id);
+      if(!live) return;
+      if(live.activeSessionToken && localTok && live.activeSessionToken !== localTok){
+        clearInterval(App._sessionWatcher);
+        if(App.testState && App.testState.timer) clearInterval(App.testState.timer);
+        if(App._autoSaveTimer) clearInterval(App._autoSaveTimer);
+        auditLog(c.roll,'cand_session_kicked',{});
+        toast('You have been signed out — this account logged in on another device.','danger',6000);
+        setTimeout(()=>showScreen('screen-landing'), 2500);
+      }
+    }catch(e){}
+  }, 8000);
+
   showInstructions(test);
 }
 
@@ -3114,7 +3222,7 @@ async function saveSingleCandidate() {
 
   const cand = {
     id: App.editingCandidateId||`C${Date.now()}`,
-    name, roll, email, password: await _hash(pass), testId,
+    name, roll, email, password: await _makePwd(pass), testId,
     phone: document.getElementById('cand-phone').value.trim(),
     category: document.getElementById('cand-category').value.trim(),
     status: App.editingCandidateId ? (Store.candidates.find(c=>c.id===App.editingCandidateId)?.status||'not_started') : 'not_started',
@@ -3213,7 +3321,7 @@ async function processCandBulkUpload() {
     const plainPwd = row.password || defaultPasswordFor(row.name);
     const cand = {
       id: `C${Date.now()}${i}`, name:row.name, roll:row.roll,
-      email:row.email, password: await _hash(plainPwd), // hashed at rest
+      email:row.email, password: await _makePwd(plainPwd), // hashed at rest
       testId: row.testId||defaultTestId,
       category: row.category||'', phone:'',
       status: 'not_started', createdAt: new Date().toISOString()
@@ -3251,7 +3359,7 @@ async function resetCandidatePassword(id){
   const np = prompt('Set a NEW password for '+c.name+' ('+c.roll+'). Min 4 characters:');
   if(!np) return;
   if(np.length < 4){ toast('Password too short (min 4).','danger'); return; }
-  c.password = await _hash(np);
+  c.password = await _makePwd(np);
   Store.save();
   if(FB.cfg) FB.syncCandidate(c);
   toast('Password reset for '+c.name+'. New password: '+np,'success');
@@ -3263,6 +3371,8 @@ function _resultStatus(r, passPct){
   if(r.published)       return 'published';
   return 'pending';
 }
+// Pagination state for results
+const ResultsPager = { page: 1, pageSize: 50 };
 function renderResults() {
   const filter = (document.getElementById('result-filter-test')?.value)||'';
   const status = (document.getElementById('result-filter-status')?.value)||'';
@@ -3276,7 +3386,6 @@ function renderResults() {
     .sort((a,b)=>b.score-a.score)
     .map((r,i)=>Object.assign({},r,{rank:i+1}));
 
-  // status + search filters
   results = results.filter(r=>{
     const t = Store.tests.find(x=>x.id===r.testId);
     const passPct = (t && t.passPercentage!==undefined) ? t.passPercentage : 40;
@@ -3291,8 +3400,15 @@ function renderResults() {
     return true;
   });
 
+  // Pagination
+  const total = results.length;
+  const totalPages = Math.max(1, Math.ceil(total/ResultsPager.pageSize));
+  if(ResultsPager.page > totalPages) ResultsPager.page = totalPages;
+  const start = (ResultsPager.page-1)*ResultsPager.pageSize;
+  const pageResults = results.slice(start, start+ResultsPager.pageSize);
+
   const visible = Store.settings.resultsVisible;
-  document.getElementById('results-tbody').innerHTML = results.length ? results.map(r=>{
+  document.getElementById('results-tbody').innerHTML = pageResults.length ? pageResults.map(r=>{
     const test = Store.tests.find(t=>t.id===r.testId);
     const passPct = (test && test.passPercentage!==undefined) ? test.passPercentage : 40;
     const excPct  = (test && test.excellentPercentage!==undefined) ? test.excellentPercentage : 75;
@@ -3306,11 +3422,11 @@ function renderResults() {
       <td><span class="badge badge-primary">#${r.rank}</span></td>
       <td class="font-medium">${r.candidateName}</td>
       <td><span class="badge badge-accent">${r.roll}</span></td>
-      <td class="text-sm text-muted">${(test?test.name:'')||r.testId}</td>
+      <td class="text-sm text-muted col-secondary">${(test?test.name:'')||r.testId}</td>
       <td>${visible?`<strong>${r.score}</strong>/<span class="text-muted">${r.totalMarks}</span>`:'<span class="badge">Hidden</span>'}</td>
       <td>${visible?`<span class="${excellent?'text-success':passed?'text-accent':'text-danger'}">${r.percentage.toFixed(1)}%</span>`:'—'}</td>
-      <td><span class="badge ${tier.cls}">${tier.label}</span> <span class="text-xs text-muted">(≥${passPct}% pass · ≥${excPct}% excellent)</span></td>
-      <td class="text-sm text-muted">${r.timeTaken||'—'} min</td>
+      <td><span class="badge ${tier.cls}">${tier.label}</span> <span class="text-xs text-muted col-secondary">(≥${passPct}% pass · ≥${excPct}% excellent)</span></td>
+      <td class="text-sm text-muted col-secondary">${r.timeTaken||'—'} min</td>
       <td>${r.needsEvaluation?'<span class="badge badge-warning">⏳ Awaiting Eval</span>':isPublished?'<span class="badge badge-success">📢 Published</span>':'<span class="badge">Pending</span>'}</td>
       <td>
         <div class="flex gap-1">
@@ -3320,6 +3436,22 @@ function renderResults() {
       </td>
     </tr>`;}).join('')
   : '<tr><td colspan="11" style="text-align:center;padding:24px;color:var(--neutral-500)">No results match these filters.</td></tr>';
+
+  // Pagination footer
+  const tbody = document.getElementById('results-tbody');
+  let pager = document.getElementById('results-pager');
+  if(!pager){
+    pager = document.createElement('div');
+    pager.id = 'results-pager';
+    pager.style.cssText = 'display:flex;gap:8px;align-items:center;justify-content:flex-end;padding:10px 4px;font-size:.82rem;color:var(--neutral-600);flex-wrap:wrap';
+    tbody.closest('table')?.parentNode?.appendChild(pager);
+  }
+  pager.innerHTML = total ? `
+    <span>Showing ${start+1}–${Math.min(start+ResultsPager.pageSize,total)} of ${total}</span>
+    <button class="btn btn-ghost btn-sm" ${ResultsPager.page<=1?'disabled':''} onclick="ResultsPager.page=Math.max(1,ResultsPager.page-1);renderResults()">‹ Prev</button>
+    <span>Page ${ResultsPager.page} / ${totalPages}</span>
+    <button class="btn btn-ghost btn-sm" ${ResultsPager.page>=totalPages?'disabled':''} onclick="ResultsPager.page=Math.min(${totalPages},ResultsPager.page+1);renderResults()">Next ›</button>
+  ` : '';
   updateSelectedCount();
 }
 
@@ -3478,7 +3610,18 @@ function showInstructions(test) {
     {icon:'❓',val:`${(test.questions||[]).length} questions`},
   ].map(m=>`<span class="badge badge-primary"><span>${m.icon}</span><span>${m.val}</span></span>`).join('');
 
-  document.getElementById('instr-instructions').innerHTML = (test.instructions||'Read all questions carefully.').replace(/\n/g,'<br>');
+  // Dynamic instructions — strip stale "-1 mark" sentence when negative marking is OFF
+  let instrHTML = (test.instructions||'Read all questions carefully.');
+  if(!test.negativeMarking){
+    instrHTML = instrHTML.replace(/[^.]*wrong answers?[^.]*-?\s*\d+\s*mark[^.]*\.\s*/gi,'')
+                         .replace(/[^.]*negative marking[^.]*\.\s*/gi,'');
+  }
+  // Append a generated line so the policy is always accurate
+  const negLine = test.negativeMarking
+    ? ' Wrong MCQ answers carry a negative penalty (varies per question).'
+    : ' No negative marking — wrong answers do not deduct marks.';
+  instrHTML = instrHTML.trim() + negLine;
+  document.getElementById('instr-instructions').innerHTML = instrHTML.replace(/\n/g,'<br>');
   document.getElementById('instr-stats').innerHTML = [
     {label:'Each MCQ',val:`+${Store.questions[0]?.marks||4}${test.negativeMarking?` / -${Store.questions[0]?.negative||1}`:''}`},
     {label:'Duration',val:`${test.duration} min`},
@@ -3596,9 +3739,10 @@ function renderQuestion() {
     </div>`;
   } else {
     const textVal = typeof ans==='string' ? ans : '';
+    const wc = (textVal.trim() ? textVal.trim().split(/\s+/).length : 0);
     optionsHTML = `<div class="form-group">
-      <label class="form-label">Your Answer</label>
-      <textarea class="form-control" id="subj-answer" rows="6" placeholder="Write your answer here..." onchange="saveSubjectiveAnswer(this.value)" oninput="saveSubjectiveAnswer(this.value)">${textVal}</textarea>
+      <label class="form-label">Your Answer <span class="text-muted" style="font-weight:400">(<span id="subj-wordcount">${wc}</span> words)</span></label>
+      <textarea class="form-control" id="subj-answer" rows="6" placeholder="Write your answer here..." onchange="saveSubjectiveAnswer(this.value)" oninput="saveSubjectiveAnswer(this.value);document.getElementById('subj-wordcount').textContent=(this.value.trim()?this.value.trim().split(/\\s+/).length:0)">${textVal}</textarea>
       <div class="form-hint">Write a detailed answer. This will be reviewed by the evaluator.</div>
     </div>`;
   }
