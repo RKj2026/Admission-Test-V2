@@ -90,26 +90,29 @@ a{color:inherit;text-decoration:none}
 
 /* ─── TOPBAR ─────────────────────────────────────────────────── */
 .topbar{
-  background:var(--primary);
+  background:linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 82%, #000 18%) 100%);
   color:var(--white);
-  padding:0 24px;
-  height:64px;
+  padding:0 28px;
+  height:68px;
   display:flex;
   align-items:center;
   justify-content:space-between;
   position:sticky;top:0;z-index:50;
-  box-shadow:0 2px 12px rgba(0,0,0,.15);
+  box-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 8px 24px rgba(0,0,0,.18);
+  backdrop-filter:saturate(140%);
 }
-.topbar-logo{display:flex;align-items:center;gap:12px}
+.topbar-logo{display:flex;align-items:center;gap:14px}
 .logo-badge{
-  width:40px;height:40px;border-radius:10px;
-  background:var(--accent);color:var(--primary);
+  width:42px;height:42px;border-radius:12px;
+  background:#ffffff;color:var(--primary);
   display:flex;align-items:center;justify-content:center;
-  font-family:'DM Serif Display',serif;font-size:1.1rem;font-weight:700;
+  font-family:'DM Serif Display',serif;font-size:1.15rem;font-weight:700;
   flex-shrink:0;
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 6px 18px rgba(0,0,0,.18), 0 0 0 1px rgba(255,255,255,.08);
+  letter-spacing:.01em;
 }
-.logo-text{font-family:'DM Serif Display',serif;font-size:1.2rem;letter-spacing:-.01em}
-.logo-sub{font-size:.7rem;opacity:.65;letter-spacing:.08em;text-transform:uppercase}
+.logo-text{font-family:'DM Serif Display',serif;font-size:1.25rem;letter-spacing:-.01em;line-height:1.1}
+.logo-sub{font-size:.68rem;opacity:.7;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
 .topbar-nav{display:flex;gap:4px}
 .topbar-nav button{
   padding:6px 14px;border-radius:8px;color:rgba(255,255,255,.75);
@@ -252,9 +255,9 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
 #screen-landing{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 50%,#1a4a7a 100%);position:relative;overflow:hidden}
 #screen-landing::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
 .landing-container{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
-.landing-box{background:rgba(255,255,255,.97);border-radius:24px;box-shadow:0 24px 80px rgba(0,0,0,.25);width:100%;max-width:460px;overflow:hidden}
-.landing-header{background:var(--primary,#1a3a5c);padding:32px;text-align:center;color:#fff}
-.landing-logo{width:72px;height:72px;border-radius:18px;background:var(--accent,#e8a020);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--primary,#1a3a5c);position:relative;overflow:hidden}
+.landing-box{background:rgba(255,255,255,.98);border-radius:28px;box-shadow:0 30px 90px rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.5) inset;width:100%;max-width:460px;overflow:hidden;backdrop-filter:blur(12px)}
+.landing-header{background:linear-gradient(135deg,var(--primary,#1a3a5c) 0%, color-mix(in srgb, var(--primary,#1a3a5c) 78%, #000 22%) 100%);padding:40px 32px 36px;text-align:center;color:#fff;position:relative}
+.landing-logo{width:80px;height:80px;border-radius:22px;background:#ffffff;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:2rem;color:var(--primary,#1a3a5c);position:relative;overflow:hidden;box-shadow:0 12px 32px rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.18),0 1px 0 rgba(255,255,255,.6) inset}
 .landing-title{font-family:'DM Serif Display',serif;font-size:1.75rem;margin-bottom:4px}
 .landing-sub{opacity:.7;font-size:.9rem}
 .landing-body{padding:32px}
@@ -1002,7 +1005,7 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
   <div class="landing-container">
     <div class="landing-box shadow-lg animate-slide-up">
       <div class="landing-header" style="background:var(--primary,#1a3a5c);padding:32px;text-align:center;color:#fff;border-radius:0">
-        <div class="landing-logo" id="login-logo-badge" style="background:var(--accent,#e8a020);width:72px;height:72px;border-radius:18px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+        <div class="landing-logo" id="login-logo-badge" style="background:#ffffff;width:80px;height:80px;border-radius:22px;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;box-shadow:0 12px 32px rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.18),0 1px 0 rgba(255,255,255,.6) inset">
           <span id="login-logo-text" style="font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--primary)">AP</span>
           <img id="login-logo-img" src="" alt="Logo" style="display:none;width:100%;height:100%;object-fit:contain;border-radius:18px;position:absolute;inset:0">
         </div>
@@ -3192,8 +3195,14 @@ function openAddCandidateModal(editId=null) {
   document.getElementById('cand-name').value     = (c && c.name)||'';
   document.getElementById('cand-roll').value     = (c && c.roll)||'';
   document.getElementById('cand-email').value    = (c && c.email)||'';
-  // For new candidates, password starts blank and auto-fills as soon as a name is typed
-  document.getElementById('cand-password').value = (c && c.password)||'';
+  // For new candidates, password starts blank and auto-fills as soon as a name is typed.
+  // For EDITS, never pre-fill (the stored value is a salted hash, not the plaintext).
+  // Admin can either leave it blank (keep current) or type a new password to replace.
+  const pwdInput = document.getElementById('cand-password');
+  pwdInput.value = '';
+  pwdInput.placeholder = editId
+    ? 'Leave blank to keep current password'
+    : 'Auto-fills as Firstname123 — edit if needed';
   document.getElementById('cand-phone').value    = (c && c.phone)||'';
   document.getElementById('cand-category').value = (c && c.category)||'';
   // Wire up auto-fill (idempotent — replaces handler each open)
@@ -3211,22 +3220,36 @@ async function saveSingleCandidate() {
   const roll  = document.getElementById('cand-roll').value.trim();
   const email = document.getElementById('cand-email').value.trim();
   let   pass  = document.getElementById('cand-password').value.trim();
-  // If admin left password blank for a new candidate, auto-generate "Firstname123"
-  if(!pass && !App.editingCandidateId) pass = defaultPasswordFor(name);
   const testId= document.getElementById('cand-test-assign').value;
-  if(!name||!roll||!email||!pass) { toast('Name, roll, email and password are required.','danger'); return; }
+  const editing = !!App.editingCandidateId;
+  const existing = editing ? Store.candidates.find(c=>c.id===App.editingCandidateId) : null;
+
+  // New candidate with blank password → auto-generate "Firstname123"
+  if(!pass && !editing) pass = defaultPasswordFor(name);
+
+  // Required-field check (password only required when creating)
+  if(!name||!roll||!email||(!editing && !pass)) {
+    toast('Name, roll, email and password are required.','danger'); return;
+  }
 
   // Check for duplicate roll
   const dup = Store.candidates.find(c => c.roll===roll && c.id!==App.editingCandidateId);
   if(dup) { toast(`Roll number ${roll} already exists.`,'danger'); return; }
 
+  // Hash policy:
+  //  - Editing + blank password → keep existing hash (do NOT re-hash anything)
+  //  - Otherwise → hash the plaintext once
+  const passwordHash = (editing && !pass)
+    ? existing.password
+    : await _makePwd(pass);
+
   const cand = {
     id: App.editingCandidateId||`C${Date.now()}`,
-    name, roll, email, password: await _makePwd(pass), testId,
+    name, roll, email, password: passwordHash, testId,
     phone: document.getElementById('cand-phone').value.trim(),
     category: document.getElementById('cand-category').value.trim(),
-    status: App.editingCandidateId ? (Store.candidates.find(c=>c.id===App.editingCandidateId)?.status||'not_started') : 'not_started',
-    createdAt: App.editingCandidateId ? (Store.candidates.find(c=>c.id===App.editingCandidateId)?.createdAt||new Date().toISOString()) : new Date().toISOString()
+    status: editing ? (existing?.status||'not_started') : 'not_started',
+    createdAt: editing ? (existing?.createdAt||new Date().toISOString()) : new Date().toISOString()
   };
 
   if(App.editingCandidateId) {
