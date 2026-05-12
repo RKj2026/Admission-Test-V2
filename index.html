@@ -3205,9 +3205,10 @@ function openAddCandidateModal(editId=null) {
     : 'Auto-fills as Firstname123 — edit if needed';
   document.getElementById('cand-phone').value    = (c && c.phone)||'';
   document.getElementById('cand-category').value = (c && c.category)||'';
-  // Wire up auto-fill (idempotent — replaces handler each open)
+  // Wire up auto-fill ONLY for new candidates. In edit mode we must never
+  // touch the password field — leaving it blank means "keep existing hash".
   const nameEl = document.getElementById('cand-name');
-  nameEl.oninput = _autoFillCandPassword;
+  nameEl.oninput = editId ? null : _autoFillCandPassword;
   // Populate test dropdown
   const sel = document.getElementById('cand-test-assign');
   sel.innerHTML = Store.tests.map(t=>`<option value="${t.id}"${c && c.testId===t.id?' selected':''}>${t.name}</option>`).join('');
@@ -4351,11 +4352,12 @@ const FB = {
         this._setStatus('connected', 'Auto-seeded · ' + this.cfg.projectId);
         toast('✅ Connected! All data auto-uploaded to Firebase.', 'success', 4000);
       } else {
-        // ── SUBSEQUENT RUNS: use Firebase as source of truth ──────────
-        if(fbQuestions.length)  Store.questions  = fbQuestions;
-        if(fbTests.length)      Store.tests      = fbTests;
-        if(fbCandidates.length) Store.candidates = fbCandidates;
-        if(fbResults.length)    Store.results    = fbResults;
+        // ── SUBSEQUENT RUNS: use Firebase as source of truth, but
+        // protect any record that's still in its local-edit window.
+        if(fbQuestions.length)  Store.questions  = this._mergeRemote('questions',  fbQuestions);
+        if(fbTests.length)      Store.tests      = this._mergeRemote('tests',      fbTests);
+        if(fbCandidates.length) Store.candidates = this._mergeRemote('candidates', fbCandidates);
+        if(fbResults.length)    Store.results    = this._mergeRemote('results',    fbResults);
         if(fbSettings && fbSettings.instituteName) Object.assign(Store.settings, fbSettings);
         this._setStatus('connected', 'Synced · ' + this.cfg.projectId);
       }
@@ -4373,6 +4375,42 @@ const FB = {
   },
 
   // ── POLLING (simulates real-time) ─────────────────────────
+  // Track recently-edited-locally records so the poller can't clobber
+  // a fresh local change (e.g. a password reset) with a stale FB doc
+  // that hasn't received our async upload yet.
+  _pendingWrites: {},        // { col: { id: timestampMs } }
+  PENDING_TTL_MS: 15000,     // protect local edits for 15s after sync call
+
+  _markPending(col, id) {
+    if(!this._pendingWrites[col]) this._pendingWrites[col] = {};
+    this._pendingWrites[col][id] = Date.now();
+  },
+  _clearPending(col, id) {
+    if(this._pendingWrites[col]) delete this._pendingWrites[col][id];
+  },
+  _isPending(col, id) {
+    var t = this._pendingWrites[col] && this._pendingWrites[col][id];
+    return !!(t && (Date.now() - t) < this.PENDING_TTL_MS);
+  },
+  // Merge remote docs into local store: keep local copy for any record
+  // currently inside its "recently edited" protection window.
+  _mergeRemote(col, remoteDocs) {
+    var self = this;
+    var localById = {};
+    (Store[col] || []).forEach(function(d){ if(d && d.id) localById[d.id] = d; });
+    var remoteIds = {};
+    var merged = remoteDocs.map(function(rd){
+      remoteIds[rd.id] = true;
+      if(self._isPending(col, rd.id) && localById[rd.id]) return localById[rd.id];
+      return rd;
+    });
+    // Append local-only records that haven't reached FB yet
+    (Store[col] || []).forEach(function(d){
+      if(d && d.id && !remoteIds[d.id] && self._isPending(col, d.id)) merged.push(d);
+    });
+    return merged;
+  },
+
   _startPolling() {
     this._stopPolling();
     var self = this;
@@ -4385,7 +4423,7 @@ const FB = {
           var sig = docs.length + '|' + (docs[0] ? JSON.stringify(docs[0]).length : 0);
           if(sig !== self._etags[col]) {
             self._etags[col] = sig;
-            Store[col] = docs;
+            Store[col] = self._mergeRemote(col, docs);
             Store.save();
             renderAll();
             updateSidebarCounts();
@@ -4401,10 +4439,12 @@ const FB = {
   },
 
   // ── SYNC HELPERS ─────────────────────────────────────────
-  syncQuestion(q)   { if(this.cfg) this._set('questions',  q.id, q).catch(()=>{}); },
-  syncTest(t)       { if(this.cfg) this._set('tests',      t.id, t).catch(()=>{}); },
-  syncCandidate(c)  { if(this.cfg) this._set('candidates', c.id, c).catch(()=>{}); },
-  syncResult(r)     { if(this.cfg) this._set('results',    r.id, r).catch(()=>{}); },
+  // Mark each record pending BEFORE the async upload, clear it once FB confirms,
+  // so a poll tick mid-flight cannot clobber the local edit with stale data.
+  syncQuestion(q)   { if(!this.cfg) return; this._markPending('questions', q.id);  this._set('questions',  q.id, q).then(()=>this._clearPending('questions',  q.id)).catch(()=>{}); },
+  syncTest(t)       { if(!this.cfg) return; this._markPending('tests', t.id);      this._set('tests',      t.id, t).then(()=>this._clearPending('tests',      t.id)).catch(()=>{}); },
+  syncCandidate(c)  { if(!this.cfg) return; this._markPending('candidates', c.id); this._set('candidates', c.id, c).then(()=>this._clearPending('candidates', c.id)).catch(()=>{}); },
+  syncResult(r)     { if(!this.cfg) return; this._markPending('results', r.id);    this._set('results',    r.id, r).then(()=>this._clearPending('results',    r.id)).catch(()=>{}); },
   syncSettings()    { if(this.cfg) this._set('settings', 'main', Store.settings).catch(()=>{}); },
   deleteQuestion(id){ if(this.cfg) this._delete('questions',  id).catch(()=>{}); },
   deleteTest(id)    { if(this.cfg) this._delete('tests',      id).catch(()=>{}); },
